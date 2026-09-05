@@ -75,7 +75,7 @@ figure.narrow img{ max-width:70%; }
 figure.tall img{ max-width:58%; }
 
 /* 표 */
-.tw{ margin:11pt 0; } .tw.small{ break-inside:avoid; page-break-inside:avoid; }   /* 8행 이하 표는 쪼개지 않는다 — 두 줄만 다음 쪽에 남는 것보다 통째로 넘기는 게 낫다 */
+.tw{ margin:11pt 0; } .tw.small{ break-inside:avoid; page-break-inside:avoid; }   /* 6행 이하 표는 쪼개지 않는다(7행부터는 쪼개는 편이 앞 쪽 빈 바닥보다 낫다) — 두 줄만 다음 쪽에 남는 것보다 통째로 넘기는 게 낫다 */
 table tr{ page-break-inside:avoid; } thead{ display:table-header-group; }
 .tw > .cap{ font-size:8.8pt; color:var(--muted); text-align:center; margin-bottom:4pt; }
 .tw > .cap .num{ color:var(--fg); font-weight:600; }
@@ -172,7 +172,7 @@ def _render_table(rows, chno, n, cap, issues):
               % (chno, n, _esc(cap))) if cap else ""
     return ('<div class="tw%s">%s<div class="scroll">'
             '<table class="%s"><thead><tr>%s</tr></thead><tbody>%s</tbody></table>'
-            "</div></div>" % (" small" if len(body) <= 8 else "", capdiv, cls, h, b))
+            "</div></div>" % (" small" if len(body) <= 6 else "", capdiv, cls, h, b))
 
 
 # ── 보강 장(3+ · 23+ · 28+) 표기 ──────────────────────────────────────────────

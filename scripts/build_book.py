@@ -145,6 +145,21 @@ def online_titles():
     return out
 
 
+def sparse_pages(pdf_path):
+    """채움 40% 미만인 쪽(파트 표지 제외) — 헐렁(loose)보다 넓은 그물. 장 꼬리가 여기 걸리면 조이기만 시도한다."""
+    import fitz
+    d = fitz.open(pdf_path)
+    H = d[0].rect.height
+    out = set()
+    for i, pg in enumerate(d, 1):
+        if pg.get_text().strip().startswith(("Pa r t", "Part")):
+            continue
+        bl = [b for b in pg.get_text("dict")["blocks"] if b.get("lines") and b["bbox"][3] > 36 and b["bbox"][1] < H - 36]
+        if not bl or max(b["bbox"][3] for b in bl) / H < 0.40:
+            out.add(i)
+    return out
+
+
 def loose_pages(pdf_path):
     """검수기(type_qa)와 같은 기준 — 머리·꼬리 뺀 본문 블록이 300자 미만이고 쪽의 55%도 못 채우면 헐렁."""
     import fitz
@@ -513,14 +528,25 @@ def main():
     LADDER = ["tight1", "tight2", "loose1", "loose2"]
     NO_FIT = {"apponline", "appindex"}        # 조판 클래스를 받지 않는 구간 — 사다리를 헛돌리지 않는다
     tight = {}
+    def _ends(pages_map, total):
+        ks = [(k, v) for k, v in sorted(pages_map.items(), key=lambda kv: kv[1])]
+        return {k: (ks[i + 1][1] - 1 if i + 1 < len(ks) else total) for i, (k, _) in enumerate(ks)}, dict(ks)
+
+    must = set()                                       # 한 번이라도 헐렁했던 구간 — 되돌리지 않는다
     for _pass in range(len(LADDER)):
         loose = loose_pages(bp)
-        keys = [(k, v) for k, v in sorted(pages2.items(), key=lambda kv: kv[1])]
+        sparse = sparse_pages(bp)                      # 헐렁보다 넓은 그물 — 조이기만 허용
+        ends, starts = _ends(pages2, n2)
         spill = []
-        for idx, (k, start) in enumerate(keys):
-            end = keys[idx + 1][1] - 1 if idx + 1 < len(keys) else n2
+        for k, end in ends.items():
+            start = starts[k]
             cur = LADDER.index(tight[k]) if k in tight else -1
-            if k not in NO_FIT and end > start and end in loose and cur < len(LADDER) - 1:
+            if k in NO_FIT or end <= start:
+                continue
+            if end in loose and cur < len(LADDER) - 1:
+                spill.append(k)
+                must.add(k)
+            elif end in sparse and cur < 1:            # 성긴 꼬리: tight1 → tight2 까지만
                 spill.append(k)
         if not spill:
             break
@@ -531,6 +557,20 @@ def main():
         render_pdf(bh, bp)
         pages2, n2 = chapter_pages(bp, entries)
         print("  카피피팅 %d패스: %s" % (_pass + 1, ", ".join("%s→%s" % (k, tight[k]) for k in spill)))
+    # 조여도 안 빠진 성긴 꼬리는 원래 간격으로 되돌린다 — 간격 통일이 반 쪽 빈 것보다 우선
+    ends, _ = _ends(pages2, n2)
+    loose, sparse = loose_pages(bp), sparse_pages(bp)
+    revert = [k for k, lvl in tight.items()
+              if lvl.startswith("tight") and k not in must and ends.get(k) in sparse and ends.get(k) not in loose]
+    if revert:
+        for k in revert:
+            del tight[k]
+        *_, html_body2 = build(toc_pages=pages2, tight=tight)
+        open(bh, "w", encoding="utf-8").write(html_body2)
+        render_pdf(bh, bp)
+        pages2, n2 = chapter_pages(bp, entries)
+        print("  카피피팅 되돌림(조여도 안 빠짐): %s" % ", ".join(revert))
+    print("  카피피팅 유지: %s" % (", ".join("%s→%s" % kv for kv in sorted(tight.items())) or "없음"))
     left = sorted(loose_pages(bp))
     print("  카피피팅 후 헐렁한 쪽(본문 기준): %s" % (left or "없음"))
     # ── 외톨이 글자: 마지막 줄이 1~2글자인 문단만 자간 ±0.2pt (행간·글자 크기는 그대로) ──

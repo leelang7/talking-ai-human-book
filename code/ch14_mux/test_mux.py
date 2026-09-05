@@ -106,6 +106,14 @@ def main() -> int:
     codes = [c for _, c, _ in lint(one)]
     ok("no-map" not in codes and "no-shortest" not in codes,
        "입력이 하나면 매핑·길이를 지적하지 않는다")
+    base = ["-i", "a.mp4", "-i", "b.wav", "-map", "0:v", "-map", "1:a", "-c:v", "copy", "-shortest"]
+    codes = {c for _, c, _ in lint(["-r", "30000/1001"] + base + ["out.mp4"])}
+    ok("no-label" in codes, "★ 표시 메타데이터가 없는 mp4 출력은 지적된다 (Ch29 §3)", str(sorted(codes)))
+    codes2 = {c for _, c, _ in lint(["-r", "30000/1001"] + base + ["-metadata", "comment=AI-generated · log 42", "out.mp4"])}
+    ok("no-label" not in codes2, "  -metadata 에 AI 표시가 있으면 통과")
+    codes3 = {c for _, c, _ in lint(["-r", "30000/1001"] + base + ["out.wav"])}
+    ok("no-label" not in codes3, "  영상이 아닌 출력에는 묻지 않는다")
+
 
     print(f"\n  {_n - _f}/{_n} 통과\n")
     return 1 if _f else 0

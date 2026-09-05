@@ -55,6 +55,7 @@ CODE = [
     ("생명감", "test_alive.py", "code/ch19_alive"),
     ("제스처·태그", "test_gesture.py", "code/ch20_gesture"),
     ("기억 3층", "test_memory.py", "code/ch24_memory"),
+    ("도구 호출", "test_tools.py", "code/ch24_memory"),
     ("페르소나", "test_persona.py", "code/ch22_persona"),
     ("청킹·검색", "test_rag.py", "code/ch25_rag"),
 ]
@@ -62,6 +63,7 @@ SMOKE = [
     ("환경 점검", "doctor.py", "code/ch02_setup"),
     ("음량 실측", "measure.py", "code/ch17_volume"),
     ("기억 실험", "experiment.py", "code/ch24_memory"),
+    ("도구 호출 시연", "tools.py", "code/ch24_memory"),
     ("모델 조사", "survey.py", "code/ch18_vrm"),
     ("발언권 분포", "turns.py", "code/ch26_multi"),
     ("생성 로그 규모", "measure.py --quick", "code/ch29_responsibility"),

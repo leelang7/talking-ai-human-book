@@ -1,0 +1,72 @@
+{
+ "measured": "2026-09-05",
+ "summary": {
+  "gemini-3.1-flash-live-preview": {
+   "n": 3,
+   "ttfa_median_s": 0.59,
+   "total_median_s": 4.07
+  }
+ },
+ "rows": [
+  {
+   "model": "gemini-3.5-live-translate-preview",
+   "src": "안녕하세요, 올댓에이아이 안내 창구입니다.",
+   "setup_s": 0.46,
+   "ttfa_s": null,
+   "total_s": 20.07,
+   "audio_s": 0.0,
+   "text": ""
+  },
+  {
+   "model": "gemini-3.5-live-translate-preview",
+   "src": "여권과 신청서를 함께 제출해 주세요.",
+   "setup_s": 0.41,
+   "ttfa_s": null,
+   "total_s": 20.07,
+   "audio_s": 0.0,
+   "text": ""
+  },
+  {
+   "model": "gemini-3.5-live-translate-preview",
+   "src": "처리에는 영업일 기준 3일이 걸리고 수수료는 12,000원입니다.",
+   "setup_s": 0.46,
+   "ttfa_s": null,
+   "total_s": 20.07,
+   "audio_s": 0.0,
+   "text": ""
+  },
+  {
+   "model": "gemini-3.1-flash-live-preview",
+   "src": "안녕하세요, 올댓에이아이 안내 창구입니다.",
+   "setup_s": 0.42,
+   "ttfa_s": 0.58,
+   "total_s": 3.82,
+   "audio_s": 3.15,
+   "text": "Hello, this is the All That AI information counter."
+  },
+  {
+   "model": "gemini-3.1-flash-live-preview",
+   "src": "여권과 신청서를 함께 제출해 주세요.",
+   "setup_s": 0.44,
+   "ttfa_s": 0.59,
+   "total_s": 4.07,
+   "audio_s": 3.41,
+   "text": "Please submit your passport along with the application."
+  },
+  {
+   "model": "gemini-3.1-flash-live-preview",
+   "src": "처리에는 영업일 기준 3일이 걸리고 수수료는 12,000원입니다.",
+   "setup_s": 0.47,
+   "ttfa_s": 0.62,
+   "total_s": 4.95,
+   "audio_s": 4.25,
+   "text": "Processing takes 3 business days, and the fee is 12,000 won."
+  }
+ ],
+ "book_ref": {
+  "sequential_total_median_s": 5.46,
+  "translate_median_s": 4.28,
+  "tts_first_chunk_s": 0.37,
+  "source": "Ch23+ §7"
+ }
+}

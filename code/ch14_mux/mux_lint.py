@@ -19,6 +19,7 @@ Ch14 §4·§6 의 체크리스트를 **명령줄에서 기계적으로** 확인�
   ⑥ -shortest 가 없다         길이 다른 두 입력이 뒤에서 어긋난다
   ⑦ fps 를 소수로 줬다        29.97 은 30000/1001 이다 (부록 F 15번)
 """
+import re
 import sys
 from fractions import Fraction
 
@@ -80,6 +81,15 @@ def lint(argv: list[str]) -> list[tuple[str, str, str]]:
                     "setpts 로 길이를 맞추고 있다 — 증상을 덮는 해법이다. "
                     "프레임 타이밍이 왜곡되고 원인은 남는다 (Ch14 §3)."))
 
+    # ⑧ 표시 메타데이터 — 2026 년부터 합성 영상은 표시가 법이다 (Ch29 §3)
+    #    파일 단계에서 가장 싼 표시는 컨테이너 메타데이터 한 줄이다.
+    out_is_mp4 = bool(argv) and argv[-1].lower().endswith((".mp4", ".mov", ".webm", ".mkv"))
+    meta_vals = [argv[i + 1] for i in _all_idx(argv, "-metadata") if i + 1 < len(argv)]
+    if out_is_mp4 and not any(re.search(r"(?i)ai|synth|generated|생성", v) for v in meta_vals):
+        out.append((WARN, "no-label",
+                    "AI 생성 표시 메타데이터가 없다 — "
+                    "-metadata comment=\"AI-generated · 생성로그 …\" 한 줄이면 된다 (Ch29 §3)."))
+
     # ③ 스트림 매핑
     if n_in >= 2 and not _all_idx(argv, "-map"):
         out.append((ERROR, "no-map",
@@ -111,7 +121,9 @@ def lint(argv: list[str]) -> list[tuple[str, str, str]]:
 
 GOOD = ["ffmpeg", "-y", "-r", "30000/1001", "-i", "lp_output.mp4", "-i", "voice.wav",
         "-map", "0:v:0", "-map", "1:a:0", "-c:v", "libx264", "-pix_fmt", "yuv420p",
-        "-c:a", "aac", "-shortest", "final.mp4"]
+        "-c:a", "aac", "-shortest",
+        "-metadata", "comment=AI-generated · 생성 로그 ID 참조 (Ch29 §3)",   # 표시는 파일에도 남긴다
+        "final.mp4"]
 
 BAD = ["ffmpeg", "-y", "-i", "lp_output.mp4", "-i", "voice.wav",
        "-filter:v", "setpts=1.033*PTS", "-r", "29.97", "final.mp4"]

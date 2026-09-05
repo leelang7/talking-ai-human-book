@@ -1,0 +1,15 @@
+{
+ "measured": "2026-08-01 (D:/atl_face 로그)",
+ "base": "SDXL",
+ "train_steps": 1000,
+ "train_seconds": 1382,
+ "train_minutes": 23,
+ "lora_scale_sweep": [
+  0.45,
+  0.6,
+  0.75
+ ],
+ "gallery_styles": 12,
+ "gpu": "RTX 4070 SUPER 12GB",
+ "note": "강도 0.45 는 정체성 이탈, 0.75 유지. 한복 스타일에서 얼굴 드리프트. 그림은 초상 주인 미확인으로 미게재."
+}

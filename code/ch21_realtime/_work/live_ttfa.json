@@ -1,0 +1,78 @@
+{
+ "measured": "2026-09-05",
+ "summary": {
+  "gemini-2.5-flash-native-audio-latest": {
+   "n": 3,
+   "ttfa_median_s": 3.29,
+   "setup_median_s": 0.46,
+   "total_median_s": 13.66
+  },
+  "gemini-3.1-flash-live-preview": {
+   "n": 3,
+   "ttfa_median_s": 0.67,
+   "setup_median_s": 0.43,
+   "total_median_s": 10.04
+  }
+ },
+ "rows": [
+  {
+   "model": "gemini-2.5-flash-native-audio-latest",
+   "q": "무릎이 아픈데 오늘 스쿼트 해도 될까?",
+   "setup_s": 0.5,
+   "ttfa_s": 2.41,
+   "total_s": 13.33,
+   "audio_s": 10.92,
+   "text": "**Prioritizing Knee Safety**\n\nI've got the user's question about squats and knee"
+  },
+  {
+   "model": "gemini-2.5-flash-native-audio-latest",
+   "q": "어제 몇 세트 했는지 기억나?",
+   "setup_s": 0.42,
+   "ttfa_s": 3.29,
+   "total_s": 13.66,
+   "audio_s": 10.36,
+   "text": "**Recalling Yesterday's Sets**\n\nI'm afraid I don't recall how many sets you did "
+  },
+  {
+   "model": "gemini-2.5-flash-native-audio-latest",
+   "q": "10분만 하고 싶은데 뭐부터 할까?",
+   "setup_s": 0.46,
+   "ttfa_s": 4.27,
+   "total_s": 14.35,
+   "audio_s": 10.08,
+   "text": "**Crafting a Quick Routine**\n\nI'm structuring a 10-minute workout recommendation"
+  },
+  {
+   "model": "gemini-3.1-flash-live-preview",
+   "q": "무릎이 아픈데 오늘 스쿼트 해도 될까?",
+   "setup_s": 0.42,
+   "ttfa_s": 0.67,
+   "total_s": 9.41,
+   "audio_s": 8.67,
+   "text": ""
+  },
+  {
+   "model": "gemini-3.1-flash-live-preview",
+   "q": "어제 몇 세트 했는지 기억나?",
+   "setup_s": 0.43,
+   "ttfa_s": 0.72,
+   "total_s": 10.04,
+   "audio_s": 9.24,
+   "text": ""
+  },
+  {
+   "model": "gemini-3.1-flash-live-preview",
+   "q": "10분만 하고 싶은데 뭐부터 할까?",
+   "setup_s": 0.62,
+   "ttfa_s": 0.62,
+   "total_s": 11.28,
+   "audio_s": 10.57,
+   "text": ""
+  }
+ ],
+ "book_pipeline_ref": {
+  "ttfa_streamed_flash_lite_s": 1.26,
+  "ttfa_server_path_s": 3.77,
+  "source": "Ch21 §5"
+ }
+}

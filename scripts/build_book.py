@@ -30,6 +30,8 @@ APP_ORDER = "ABCDEFGHLN"          # 인쇄 부록 순서 (폴더에 있는 것�
 
 BOOK_CSS = CSS + """
 @page{ size:152mm 225mm; margin:17mm 15mm 16mm 15mm; }
+@page :left{ margin-left:13mm; margin-right:17mm; }   /* 제본 쪽(안쪽) 17 · 바깥 13 — 합계 30 유지 → 쪽수 불변 */
+@page :right{ margin-left:17mm; margin-right:13mm; }
 body{ background:#fff; font-family:"Noto Serif KR","Batang","Malgun Gothic",serif; }
 code, pre{ font-family:"D2Coding","Consolas","Malgun Gothic",monospace; }
 .page{ box-shadow:none; margin:0; width:auto; min-height:auto; padding:0; page-break-after:always; }
@@ -154,7 +156,7 @@ def build(toc_pages=None, tight=None, index_html=None):
     body.append('<section class="page colophon"><table>'
                 '<tr><td>제목</td><td>%s</td></tr><tr><td>시리즈</td><td>%s</td></tr>'
                 '<tr><td>지은이</td><td>%s</td></tr><tr><td>판</td><td>초판 1쇄 · 2026년</td></tr>'
-                '<tr><td>저장소</td><td>%s</td></tr><tr><td>출판사 · ISBN</td><td>(출판사 기입)</td></tr>'
+                '<tr><td>저장소</td><td>%s</td></tr><tr><td>펴낸곳</td><td>부크크</td></tr>'
                 '<tr><td>측정 환경</td><td>RTX 4070 SUPER 12GB · Windows 11 · 본문 수치는 부록 C 의 측정 조건 기준</td></tr>'
                 '</table><p>본문의 코드는 저장소의 라이선스를, 인용된 외부 모델·라이브러리는 각자의 라이선스를 따릅니다. '
                 '이 책의 어떤 부분도 저작권자의 허락 없이 복제·전송할 수 없습니다.</p></section>'

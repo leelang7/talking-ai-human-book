@@ -29,7 +29,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DRAFT, BUILD = os.path.join(ROOT, "draft"), os.path.join(ROOT, "build")
 
 CSS = """
-:root{ --w:152mm; --h:225mm; --fg:#16181d; --muted:#6b7280; --line:#d9dde5; --accent:#3f6fe8; }
+:root{ --w:152mm; --h:225mm; --fg:#16181d; --muted:#6b7280; --line:#d9dde5; --accent:#c2410c; }
 *{ box-sizing:border-box; }
 body{ margin:0; background:#eceef2; color:var(--fg);
       font-family:"Noto Serif KR","Nanum Myeongjo",serif; font-size:10.5pt; line-height:1.72; }

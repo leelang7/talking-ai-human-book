@@ -21,8 +21,8 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "scripts"))
 from build_html import CSS, DRAFT, BUILD, chapters, md_to_html, _inline, _esc   # noqa: E402
 
-TITLE = "말하는 AI 휴먼을 만드는 법"
-SUB = "사진 한 장에서 실시간 대화 아바타까지<br>픽셀이 사람이 되는 여정"
+TITLE = "AI 휴먼 해부학"
+SUB = "얼굴·목소리·두뇌·기억 — 네 층을 조립하고 실측하는 법<br>사진 한 장에서 실시간 대화 아바타까지, 픽셀이 사람이 되는 여정"
 SERIES = "All That AI · Vol.03"
 AUTHOR = "이석창 (Seokchang Lee)"
 REPO = "github.com/leelang7/talking-ai-human-book"          # 공개 컴패니언 저장소 (2026-09-05)

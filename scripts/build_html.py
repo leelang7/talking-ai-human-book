@@ -320,7 +320,7 @@ def main():
         print("  도판 %d개 복사" % len(os.listdir(dst_fig)))
     with open(a.out, "w", encoding="utf-8") as f:
         f.write("<!doctype html><html lang=ko><head><meta charset=utf-8>"
-                "<title>말하는 AI 휴먼을 만드는 법 — 조판 미리보기</title>"
+                "<title>AI 휴먼 해부학 — 조판 미리보기</title>"
                 "<style>%s</style></head><body>\n%s\n</body></html>"
                 % (CSS, "\n".join(pages)))
     print("\n  → %s\n" % a.out)

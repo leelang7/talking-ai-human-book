@@ -1,4 +1,4 @@
-# 말하는 AI 휴먼을 만드는 법 — 컴패니언 코드
+# AI 휴먼 해부학 — 컴패니언 코드
 #
 # 이것만 있으면 `python scripts/gates.py` 가 돕니다(GPU 불필요).
 # 무거운 모델(MuseTalk · LivePortrait · Wav2Lip)은 각자의 저장소·환경을 따로 만듭니다 — 부록 A.

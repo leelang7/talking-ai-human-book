@@ -87,17 +87,17 @@ def main():
     # 좌측 메인 타이포
     d.text((90 * S, 545 * S), "사진 한 장에서", font=f(50, 400), fill=OFF, anchor="ls")
     d.text((90 * S, 620 * S), "실시간 대화 아바타까지", font=f(50, 400), fill=OFF, anchor="ls")
-    d.text((90 * S, 790 * S), "말하는 AI 휴먼을", font=f(96, 900), fill=OFF, anchor="ls")
-    d.text((90 * S, 895 * S), "만드는 법", font=f(74, 800), fill=ACC, anchor="ls")
+    d.text((90 * S, 790 * S), "AI 휴먼", font=f(118, 900), fill=OFF, anchor="ls")
+    d.text((90 * S, 895 * S), "해부학", font=f(96, 800), fill=ACC, anchor="ls")
 
     # 구분선
     d.rectangle((90 * S, 1000 * S, 270 * S, 1003 * S), fill=ACC)
     # 부제
-    d.text((90 * S, 1065 * S), "얼굴·목소리·두뇌·기억, 네 층의 조립.", f(26, 500),
+    d.text((90 * S, 1065 * S), "얼굴·목소리·두뇌·기억 —", f(26, 500),
            fill=(244, 244, 246), anchor="ls") if False else \
-        d.text((90 * S, 1065 * S), "얼굴·목소리·두뇌·기억, 네 층의 조립.",
+        d.text((90 * S, 1065 * S), "얼굴·목소리·두뇌·기억 —",
                font=f(26, 500), fill=(220, 224, 228), anchor="ls")
-    d.text((90 * S, 1105 * S), "픽셀이 사람이 되는 여정.",
+    d.text((90 * S, 1105 * S), "네 층을 조립하고 실측하는 법.",
            font=f(26, 500), fill=(220, 224, 228), anchor="ls")
 
     # 저자·출판사·푸터

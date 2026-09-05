@@ -41,22 +41,26 @@ AMBER_TXT = (251, 191, 36)
 TITLE, TITLE2 = "AI 휴먼", "해부학"
 SUB = "얼굴·목소리·두뇌·기억 — 네 층을 조립하고 실측하는 법"
 AUTHOR = "이석창 지음"
-HOOK = "픽셀이 사람이 되는 여정"
-BLURB = [
-    "AI 휴먼은 하나의 모델이 아닙니다.",
-    "얼굴, 목소리, 두뇌, 기억 — 네 층을 하나씩 조립하고,",
-    "어디서 부서지는지 재어 가며 완성합니다.",
-    "사진 한 장으로 4분 만에 말하는 영상을 만들고,",
-    "브라우저에서 2초 만에 대답하는 아바타를 띄우고,",
-    "그 얼굴에 인격과 기억을 넣습니다.",
+# ── 뒤표지 문구 — Vol.01(테슬라북) 뒤표지 구조 그대로: 헤드라인 → 포지셔닝 → ▶ 팩트 → 저자 → 인용 → 태그 ──
+HEAD = ["사진 한 장으로 시작해", "말하는 사람까지 가는 여정."]
+POSITION = [
+    "AI 휴먼을 \"거대 모델 하나\" 로 파는 사이,",
+    "이 책은 얼굴 · 목소리 · 두뇌 · 기억 네 층을",
+    "소비자 GPU 한 장으로 직접 조립합니다.",
+    "립싱크 · 리타게팅 · 실시간 아바타 · 페르소나 · 기억 · RAG · 통역 · 배포까지",
+    "한 줄기 이야기로 — 4분짜리 영상에서 2초짜리 대화까지, 같은 얼굴, 다른 시간.",
 ]
-FEATURES = [
-    "Track A   사진 한 장 → 말하는 영상",
-    "Track B   GPU 없이 브라우저에서 도는 실시간 아바타",
-    "Track C   인격 · 기억 · 지식, 그리고 실시간 통역",
+FACTS = [
+    "▶ 4부 33장 + 부록 10개 · 실패 카탈로그 50종",
+    "▶ 모든 수치는 RTX 4070 한 장에서 직접 잰 값 — 4분과 2초",
+    "▶ 말하는 영상 · 브라우저 실시간 아바타 · 실시간 통역 실증 포함",
 ]
-FOR = "AI 휴먼을 직접 만들어야 하는 개발자 · 창업자 · 강사에게."
-TRUST = "모든 수치는 저자가 직접 잰 값이며, 실패한 것도 그대로 실었습니다."
+AUTHOR_KO_EN = "이석창 (Seokchang Lee)"
+AUTHOR_TITLE = "Adjunct Professor · AI Specialist Lecturer"
+AUTHOR_AFFIL = "Korea IT Academy · 미래융합교육원 · Elice · EST soft · 한국기술교육대학교 출강"
+QUOTE = ["\"AI 휴먼은 하나의 거대 모델이 아니라", "네 층의 조립입니다.\""]
+QUOTE_SRC = "— 서문에서"
+TAGS = "IT · 컴퓨터 / 인공지능 / 생성형 AI / 컴퓨터 비전 / 음성 합성"
 REPO = "github.com/leelang7/talking-ai-human-book"
 
 
@@ -108,30 +112,45 @@ def main():
         rot = st.rotate(-90, expand=True)      # 위→아래로 읽힘: 제목이 위, 저자가 아래 (한국 관행. Vol.02 는 반대로 나갔다)
         canvas.paste(rot, (sx0, 0), rot)
 
-    # 뒤표지(좌) — 흑연 + 앰버 룰 + 시스템 타이포. 독자에게 파는 자리 — 내부 지표는 쓰지 않는다.
-    bx, by = bl + px(16), bl + px(24)
-    maxw = tw - px(32)
-    d.rectangle((bx, by, bx + px(14), by + px(0.7)), fill=AMBER)
-    d.text((bx + px(18), by - px(1.6)), "FACE · VOICE · BRAIN · MEMORY", font=ImageFont.truetype(MONO, px(3.2)), fill=GREY)
-    d.text((bx, by + px(12)), TITLE, font=font(SANS, 900, px(14)), fill=OFF)
-    d.text((bx, by + px(29)), TITLE2, font=font(SERIF, 900, px(12)), fill=AMBER_TXT)
-    d.text((bx, by + px(46)), SUB, font=font(SERIF, 400, px(4.6)), fill=GREY)
-    yy = by + px(64)
-    d.text((bx, yy), HOOK, font=font(SANS, 700, px(7.2)), fill=OFF); yy += px(13)
-    fb = font(SANS, 400, px(4.6))
-    for line in BLURB:
-        assert d.textlength(line, font=fb) <= maxw, f"소개 줄이 폭을 넘음: {line}"
-        d.text((bx, yy), line, font=fb, fill=OFF); yy += px(7.4)
+    # 뒤표지(좌) — Vol.01 구조. 도발적 헤드라인, 시장을 치는 문단, ▶ 팩트, 저자, 인용, 태그, 바코드 박스.
+    bx, by = bl + px(12), bl + px(18)
+    maxw = tw - px(24)
+    d.rectangle((bx, by, bx + px(9), by + px(0.6)), fill=AMBER)
+    d.text((bx + px(12), by - px(1.5)), "ALL THAT AI · VOL.03", font=ImageFont.truetype(MONO, px(2.8)), fill=GREY)
+    yy = by + px(16)
+    fh = font(SANS, 800, px(7.0))
+    for line in HEAD:
+        d.text((bx, yy), line, font=fh, fill=OFF); yy += px(9.8)
+    yy += px(8)
+    fp = font(SANS, 400, px(3.9))
+    for line in POSITION:
+        assert d.textlength(line, font=fp) <= maxw, f"문단 줄이 폭을 넘음: {line}"
+        d.text((bx, yy), line, font=fp, fill=OFF); yy += px(6.0)
     yy += px(5)
-    d.rectangle((bx, yy, bx + px(40), yy + px(0.5)), fill=AMBER); yy += px(7)
-    ff = font(SANS, 500, px(4.2))
-    for line in FEATURES:
-        assert d.textlength(line, font=ff) <= maxw, f"목록 줄이 폭을 넘음: {line}"
-        d.text((bx, yy), line, font=ff, fill=GREY); yy += px(6.8)
+    d.rectangle((bx, yy, bx + px(28), yy + px(0.6)), fill=AMBER); yy += px(6)
+    fb = font(SANS, 700, px(4.2))
+    for line in FACTS:
+        assert d.textlength(line, font=fb) <= maxw, f"팩트 줄이 폭을 넘음: {line}"
+        d.text((bx, yy), line, font=fb, fill=OFF); yy += px(6.6)
     yy += px(5)
-    d.text((bx, yy), FOR, font=font(SANS, 400, px(4.2)), fill=GREY); yy += px(7)
-    d.text((bx, yy), TRUST, font=font(SERIF, 400, px(4.0)), fill=DIM); yy += px(9)
-    d.text((bx, yy), REPO, font=ImageFont.truetype(MONO, px(3.4)), fill=DIM)
+    d.rectangle((bx, yy, bx + maxw, yy + px(0.25)), fill=(70, 74, 82)); yy += px(6)
+    d.text((bx, yy), AUTHOR_KO_EN, font=font(SANS, 700, px(4.4)), fill=OFF); yy += px(6.6)
+    d.text((bx, yy), AUTHOR_TITLE, font=font(SANS, 400, px(3.0)), fill=GREY); yy += px(5.0)
+    d.text((bx, yy), AUTHOR_AFFIL, font=font(SANS, 400, px(3.0)), fill=GREY); yy += px(8)
+    fq = font(SERIF, 500, px(4.0))
+    for line in QUOTE:
+        d.text((bx, yy), line, font=fq, fill=AMBER_TXT); yy += px(6.2)
+    d.text((bx, yy), QUOTE_SRC, font=font(SANS, 400, px(2.8)), fill=GREY); yy += px(6)
+    # 하단: 분류 태그 · 저장소 (좌) — 바코드 박스 (우). 흐름 끝(yy)과 겹치지 않게 검사한다.
+    tags_y = H - bl - px(22); repo_y = H - bl - px(14)
+    assert yy <= tags_y - px(4), f"뒤표지 본문이 하단 영역과 겹침: 본문 끝 {yy/MM:.1f}mm > 태그 {tags_y/MM:.1f}mm"
+    d.text((bx, tags_y), TAGS, font=font(SANS, 400, px(2.9)), fill=GREY)
+    d.text((bx, repo_y), REPO, font=ImageFont.truetype(MONO, px(2.7)), fill=DIM)
+    bw_, bh_ = px(42), px(24)
+    bx1, by1 = bl + tw - px(12) - bw_, H - bl - px(12) - bh_
+    d.rectangle((bx1, by1, bx1 + bw_, by1 + bh_), fill=(245, 245, 247))
+    d.text((bx1 + bw_ // 2, by1 + bh_ // 2 - px(2)), "ISBN BARCODE", font=font(SANS, 700, px(3.0)), fill=(40, 40, 46), anchor="mm")
+    d.text((bx1 + bw_ // 2, by1 + bh_ // 2 + px(3.5)), "(인쇄 업체 자동 삽입 영역)", font=font(SANS, 400, px(2.2)), fill=(110, 110, 118), anchor="mm")
     # 하단은 비워 둔다 — ISBN 바코드·출판사 마크는 업체가 최종 검수 때 배치한다.
 
     canvas.save(OUT, dpi=(DPI, DPI))

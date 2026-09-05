@@ -1,0 +1,26 @@
+{
+ "테라피스트": {
+  "frames": 193,
+  "fps": 29.0,
+  "mouth_mean": 20.8,
+  "mouth_max": 32.4,
+  "head_mean": 10.6,
+  "eyes_mean": 17.7
+ },
+ "d3": {
+  "frames": 200,
+  "fps": 30.0,
+  "mouth_mean": 31.3,
+  "mouth_max": 42.1,
+  "head_mean": 19.3,
+  "eyes_mean": 22.7
+ },
+ "d19": {
+  "frames": 200,
+  "fps": 30.0,
+  "mouth_mean": 14.4,
+  "mouth_max": 23.3,
+  "head_mean": 7.3,
+  "eyes_mean": 12.4
+ }
+}

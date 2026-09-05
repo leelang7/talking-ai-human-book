@@ -15,6 +15,7 @@
     python scripts/type_qa.py --max-stretch 12   기준 넘으면 종료코드 1
 """
 import argparse
+import re
 import os
 import sys
 from collections import defaultdict
@@ -24,8 +25,8 @@ PDF = os.path.join(ROOT, "build", "book.pdf")
 
 STRETCH_RATIO = 2.2      # 그 줄의 낱말 사이 평균이 본문 중앙값의 몇 배면 '늘어짐' 인가
 BOX_GAP_PT = 16.0        # 상자 위 여백 상한
-LOOSE_FILL = 0.55        # 쪽 높이의 이 비율도 못 채우면 헐렁
-MIN_CHARS = 300          # 그러면서 글자도 이만큼 적으면
+LOOSE_FILL = 0.35        # 쪽 높이의 이 비율도 못 채우면 헐렁
+MIN_CHARS = 150          # 그러면서 글자도 이만큼 적으면 (≈ 3줄)
 
 
 MONO = ("Consolas", "D2Coding", "Courier", "Mono")
@@ -89,6 +90,7 @@ def scan(path):
         per_page[i] = rows
     normal = sorted(allg)[len(allg) // 2] if allg else 0.25
 
+    in_toc = [False]
     for i, p in enumerate(doc, 1):
         d = p.get_text("dict")
         blocks = [b for b in d["blocks"] if b.get("lines")]
@@ -124,8 +126,31 @@ def scan(path):
         rules = [dr["rect"].y0 for dr in p.get_drawings() if dr["rect"].width > 100 and dr["rect"].height < 3]
         top = min(b["bbox"][1] for b in body_blocks)
         cont = len(rules) >= 3 and min(rules) - top < 4   # 앞 쪽에서 이어진 표의 꼬리
-        if i > 2 and not is_part and (len(rules) < 3 or cont) and bot < H * LOOSE_FILL and nchar < MIN_CHARS:
+        if i > 2 and not is_part and bot < H * LOOSE_FILL and ((nchar < MIN_CHARS and len(rules) < 3) or cont):
             out["헐렁"].append((i, nchar, round(bot / H, 2)))
+        # ⑥ 외톨이 글자 — 문단 마지막 줄이 1~2글자 (차례 쪽은 제외 — 줄이 짧은 목록이다)
+        head = p.get_text()[:40]
+        if head.startswith("차례"):
+            in_toc[0] = True
+        if "CHAPTER" in head.replace(" ", "") or re.match(r"Part[0-9]+" + chr(10), head.replace(" ", "")):
+            in_toc[0] = False
+        for b in ([] if in_toc[0] else blocks):
+            ls = b["lines"]
+            if len(ls) < 2 or (b["bbox"][2] - b["bbox"][0]) < W * 0.45 or is_part:
+                continue
+            if any(m in s["font"] for l in ls for s in l["spans"] for m in MONO):
+                continue
+            if any(b["bbox"][1] - 2 < y < b["bbox"][3] + 2 for y in rules):
+                continue                                   # 표 안
+            if abs(ls[-1]["bbox"][0] - ls[0]["bbox"][0]) > 3:
+                continue                                   # 차례 행(쪽 번호가 오른쪽에)
+            sizes = sorted(s["size"] for l in ls for s in l["spans"])
+            if sizes[len(sizes) // 2] > 11.5:
+                continue                                   # 제목은 문단이 아니다
+            last = "".join(s["text"] for s in ls[-1]["spans"]).strip()
+            core = "".join(ch for ch in last if ch not in " .,;:!?)]}\"'”’…·—-")
+            if 0 < len(core) <= 2:
+                out["외톨이"].append((i, last[:6]))
         # ⑤ 넘치는 것
         for b in blocks:
             if b["bbox"][2] > W - 6:
@@ -139,6 +164,7 @@ def main():
     ap.add_argument("--pdf", default=PDF)
     ap.add_argument("--max-stretch", type=int, default=None, help="이 수를 넘으면 종료코드 1")
     ap.add_argument("--max-loose", type=int, default=None, help="헐렁한 쪽이 이 수를 넘으면 종료코드 1")
+    ap.add_argument("--max-orphan", type=int, default=None, help="외톨이 글자 문단이 이 수를 넘으면 종료코드 1")
     a = ap.parse_args()
     if not os.path.exists(a.pdf):
         print("  PDF 가 없다 — scripts/build_book.py 를 먼저 돌려라")
@@ -151,7 +177,11 @@ def main():
     print(f"  ② 상자 위 여백  {len(out['상자여백']):>4}건  {out['상자여백'][:5]}")
     print(f"  ③ 헐렁한 쪽     {len(out['헐렁']):>4}쪽  {[x[0] for x in out['헐렁']][:8]}")
     print(f"  ④ 폭 초과       {len(out['폭초과']):>4}건  {[x[0] for x in out['폭초과']][:6]}")
+    print(f"  ⑥ 외톨이 글자   {len(out['외톨이']):>4}문단  {out['외톨이'][:6]}")
     print()
+    if a.max_orphan is not None and len(out["외톨이"]) > a.max_orphan:
+        print("  ✗ 외톨이 글자 %d > 기준 %d" % (len(out["외톨이"]), a.max_orphan))
+        return 1
     if a.max_loose is not None and len(out["헐렁"]) > a.max_loose:
         print("  ✗ 헐렁한 쪽 %d > 기준 %d\n" % (len(out["헐렁"]), a.max_loose))
         return 1

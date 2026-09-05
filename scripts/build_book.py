@@ -19,7 +19,7 @@ import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "scripts"))
-from build_html import CSS, DRAFT, BUILD, chapters, md_to_html, _inline, _esc   # noqa: E402
+from build_html import CSS, DRAFT, BUILD, chapters, md_to_html, _inline, _esc, disp_label   # noqa: E402
 
 TITLE = "AI 휴먼 해부학"
 SUB = "얼굴·목소리·두뇌·기억 — 네 층을 조립하고 실측하는 법<br>사진 한 장에서 실시간 대화 아바타까지,<br>픽셀이 사람이 되는 여정"
@@ -64,21 +64,15 @@ p, li{ orphans:3; widows:3; }
 .idx .ih{ font-weight:700; margin:8pt 0 3pt; break-after:avoid; color:var(--muted); }
 .idx .ii{ display:flex; gap:4pt; margin:1.5pt 0; break-inside:avoid; }
 .idx .ii .t{ flex:1; } .idx .ii .n{ color:var(--muted); font-variant-numeric:tabular-nums; }
-.tight1 p, .tight1 li{ line-height:1.62; margin:5pt 0; } .tight1 h2{ margin:16pt 0 6pt; }
-.tight2 p, .tight2 li{ line-height:1.55; margin:4pt 0; font-size:10.2pt; } .tight2 h2{ margin:14pt 0 5pt; } .tight2 h3{ margin:11pt 0 4pt; }
-.tight3 p, .tight3 li{ line-height:1.48; margin:3.4pt 0; font-size:10pt; } .tight3 h2{ margin:12pt 0 4pt; } .tight3 h3{ margin:9pt 0 3pt; }
-.tight3 h1.ch{ margin-top:2mm; } .tight3 .tw{ margin:8pt 0; } .tight3 figure{ margin:9pt auto; }
-.tight2 td, .tight2 th{ padding-top:2pt; padding-bottom:2pt; } .tight3 td, .tight3 th{ padding-top:1.5pt; padding-bottom:1.5pt; }
-.loose1 p, .loose1 li{ line-height:1.82; margin:7.5pt 0; } .loose1 h2{ margin:22pt 0 9pt; }
-.loose2 p, .loose2 li{ line-height:1.92; margin:9pt 0; } .loose2 h2{ margin:26pt 0 11pt; }
-.toc.tight1 .s{ line-height:1.35; margin-bottom:2pt; } .toc.tight2 .s{ line-height:1.3; margin-bottom:1pt; } .toc.tight2 .c{ margin:1pt 0 1pt 10pt; }
-.toc.loose1 .s{ line-height:1.6; margin-bottom:5pt; } .toc.loose1 .c{ margin:3.5pt 0 3.5pt 10pt; }
-.toc.loose2 .s{ line-height:1.75; margin-bottom:7pt; } .toc.loose2 .c{ margin:5pt 0 5pt 10pt; }
+/* 카피피팅 사다리 — 행간·글자 크기는 절대 바꾸지 않는다(장마다 줄간격이 달라 보인다는 지적, 2026-09-05).
+   문단·제목·도판·표 사이 간격만 조금씩 조인다/늘린다. 기본: p 6pt · h2 20/7 · h3 14/5 · figure 13 · .tw 11 · blockquote 8 · td 4 */
+.tight1 p, .tight1 li{ margin:4.5pt 0; } .tight1 h2{ margin:16pt 0 6pt; } .tight1 h3{ margin:11pt 0 4pt; } .tight1 figure{ margin:10pt auto; } .tight1 .tw{ margin:9pt 0; } .tight1 blockquote{ margin:6pt 0; }
+.tight2 p, .tight2 li{ margin:3.5pt 0; } .tight2 h2{ margin:13pt 0 5pt; } .tight2 h3{ margin:9pt 0 3pt; } .tight2 figure{ margin:8pt auto; } .tight2 .tw{ margin:7pt 0; } .tight2 blockquote{ margin:5pt 0; } .tight2 td, .tight2 th{ padding-top:3pt; padding-bottom:3pt; } .tight2 h1.ch{ margin-top:3mm; }
+.loose1 p, .loose1 li{ margin:7.5pt 0; } .loose1 h2{ margin:24pt 0 9pt; } .loose1 h3{ margin:17pt 0 6pt; } .loose1 figure{ margin:16pt auto; } .loose1 .tw{ margin:14pt 0; } .loose1 blockquote{ margin:10pt 0; } .loose1 td, .loose1 th{ padding-top:5pt; padding-bottom:5pt; }
+.loose2 p, .loose2 li{ margin:8.5pt 0; } .loose2 h2{ margin:28pt 0 11pt; } .loose2 h3{ margin:20pt 0 7pt; } .loose2 figure{ margin:19pt auto; } .loose2 .tw{ margin:17pt 0; } .loose2 blockquote{ margin:12pt 0; } .loose2 td, .loose2 th{ padding-top:6pt; padding-bottom:6pt; }
+.toc.tight1 .s{ margin-bottom:2pt; } .toc.tight2 .s{ margin-bottom:1pt; } .toc.tight2 .c{ margin:1pt 0 1pt 10pt; }
+.toc.loose1 .s{ margin-bottom:5pt; } .toc.loose1 .c{ margin:3.5pt 0 3.5pt 10pt; } .toc.loose2 .s{ margin-bottom:7pt; } .toc.loose2 .c{ margin:5pt 0 5pt 10pt; }
 h1.ch.cont{ page-break-before:auto; margin-top:16mm; }
-.loose3 p, .loose3 li{ line-height:2.02; margin:10.5pt 0; } .loose3 h2{ margin:30pt 0 13pt; }
-.loose1 td, .loose1 th{ padding-top:5pt; padding-bottom:5pt; } .loose2 td, .loose2 th{ padding-top:6pt; padding-bottom:6pt; }
-.loose3 td, .loose3 th{ padding-top:7.5pt; padding-bottom:7.5pt; }
-.toc.loose3 .s{ line-height:1.9; margin-bottom:9pt; } .toc.loose3 .c{ margin:6.5pt 0 6.5pt 10pt; }
 .keep{ break-inside:avoid; page-break-inside:avoid; }
 """
 
@@ -118,7 +112,7 @@ def chapter_html(label, fn, issues):
     title = m.group(1) if m else fn
     if m:
         html = html.replace(m.group(0), '<h1 class="ch" id="ch%s"><small>CHAPTER %s</small>%s</h1>'
-                            % (label.replace("+", "plus"), label, title), 1)
+                            % (label.replace("+", "plus"), disp_label(label), title), 1)
     secs = re.findall(r"<h2>(.*?)</h2>", html)
     return html, title, secs, nf, nt
 
@@ -167,7 +161,8 @@ def loose_pages(pdf_path):
         rules = [dr["rect"].y0 for dr in pg.get_drawings() if dr["rect"].width > 100 and dr["rect"].height < 3]   # 표 괘선
         top = min(b["bbox"][1] for b in bl)
         cont = len(rules) >= 3 and min(rules) - top < 4   # 쪽이 표 괘선으로 시작 = 앞 쪽에서 이어진 표의 꼬리 → 헐렁
-        if n < 300 and max(b["bbox"][3] for b in bl) < H * 0.55 and (len(rules) < 3 or cont):
+        fill = max(b["bbox"][3] for b in bl) / H
+        if fill < 0.35 and ((n < 150 and len(rules) < 3) or cont):      # 3줄도 안 되는 꼬리, 또는 이어진 표 꼬리
             out.add(i)
     return out
 
@@ -180,6 +175,70 @@ _KEEP = re.compile("((?:<p>(?:(?!</p>).)*</p>" + _WS + "){1,2})((?:<hr>" + _WS +
 def keep_tail(html):
     """장 끝 '실습 코드' 상자는 앞 문단 둘과 한 덩어리로 — 상자만 새 쪽으로 넘어가 혼자 남지 않게."""
     return _KEEP.sub(lambda m: '<div class="keep">' + m.group(1) + m.group(2) + m.group(3) + "</div>", html.rstrip(), count=1)
+
+
+ORPH = {}       # 문단 끝 20자(공백 제거) → "oa"(자간 -0.2pt 당김) | "ob"(+0.3pt 밀어냄)
+_PUNCT = "[]" + ".,;:!?)}\"'”’…·—-" + "]"
+
+
+def _key(text):
+    """문단 식별 키 — 끝 20자. 쪽이 갈린 문단도 꼬리 블록에는 끝이 있다."""
+    return re.sub(r"\s+", "", text)[-20:]
+
+
+def orphan_paras(pdf_path):
+    """마지막 줄이 1~2글자뿐인 문단(외톨이 글자) — 본문 폭 문단만, 코드 상자·표 칸 제외."""
+    import fitz
+    d = fitz.open(pdf_path)
+    W = d[0].rect.width
+    out = []
+    in_toc = False
+    for pg in d:
+        head = pg.get_text()[:40]
+        if head.startswith("차례"):
+            in_toc = True                                  # 차례는 줄이 짧아 외톨이 판정 대상이 아니다
+        if "CHAPTER" in head.replace(" ", "") or re.match(r"Part[0-9]+" + chr(10), head.replace(" ", "")):
+            in_toc = False                                 # 장 머리 또는 파트 표지('Part 1' 뒤 마침표 없음 — 차례의 'Part 1.' 과 다르다)
+        if in_toc:
+            continue
+        rules = [dr["rect"].y0 for dr in pg.get_drawings() if dr["rect"].width > 100 and dr["rect"].height < 3]
+        for blk in pg.get_text("dict")["blocks"]:
+            ls = blk.get("lines", [])
+            if len(ls) < 2 or (blk["bbox"][2] - blk["bbox"][0]) < W * 0.45:
+                continue
+            if any(m in sp["font"] for l in ls for sp in l["spans"] for m in ("Consolas", "D2Coding", "Courier", "Mono")):
+                continue
+            if any(blk["bbox"][1] - 2 < y < blk["bbox"][3] + 2 for y in rules):
+                continue                                   # 표 안(괘선이 지나감) — 칸의 짧은 줄은 외톨이가 아니다
+            if abs(ls[-1]["bbox"][0] - ls[0]["bbox"][0]) > 3:
+                continue                                   # 마지막 줄이 첫 줄과 다른 x 에서 시작 — 차례의 쪽 번호 같은 것
+            sizes = sorted(sp["size"] for l in ls for sp in l["spans"])
+            if sizes[len(sizes) // 2] > 11.5:
+                continue                                   # 제목(13pt+)은 문단이 아니다 — 제목 줄 나눔은 text-wrap:balance 가 맡는다
+            last = "".join(sp["text"] for sp in ls[-1]["spans"]).strip()
+            core = re.sub(_PUNCT, "", re.sub(r"\s+", "", last))
+            if 0 < len(core) <= 2:
+                out.append(_key("".join(sp["text"] for l in ls for sp in l["spans"])))
+    return out
+
+
+def tag_orphans(section_html):
+    """ORPH 에 오른 문단(<p>·<li>)에 .oa/.ob 를 붙인다 — 그 문단의 자간만 ±0.2pt."""
+    if not ORPH:
+        return section_html
+    import html as _html
+
+    def fix(m):
+        tag, attrs, inner = m.group(1), m.group(2) or "", m.group(3)
+        cls = ORPH.get(_key(_html.unescape(re.sub(r"<[^>]+>", "", inner))))
+        if not cls:
+            return m.group(0)
+        if 'class="' in attrs:
+            attrs = attrs.replace('class="', 'class="%s ' % cls, 1)
+        else:
+            attrs += ' class="%s"' % cls
+        return "<%s%s>%s</%s>" % (tag, attrs, inner, tag)
+    return re.sub(r"<(p|li)(\s[^>]*)?>(.*?)</(?:p|li)>", fix, section_html, flags=re.S)
 
 
 def front_html(name, cls=""):
@@ -213,7 +272,7 @@ def build(toc_pages=None, tight=None, index_html=None):
     figs = tbls = 0
     used = set()
     for part in parts:
-        rows = "".join("<tr><td>%s</td><td><strong>%s</strong></td><td>%s</td></tr>" % (c, _inline(t), _inline(b))
+        rows = "".join("<tr><td>%s</td><td><strong>%s</strong></td><td>%s</td></tr>" % (disp_label(c), _inline(t), _inline(b))
                        for c, t, b in part["chapters"])
         body.append('<section class="page part"><div class="label">%s</div><h1>%s</h1><div class="blurb">%s</div>'
                     '<div class="tw"><table><tbody>%s</tbody></table></div></section>'
@@ -264,7 +323,7 @@ def build(toc_pages=None, tight=None, index_html=None):
             lines.append('<div class="p">%s%s</div>' % ("" if key == "부록" else key + ". ", _esc(title)))
             continue
         n = pages.get(kind + key, "")
-        name = ("Ch%s  " % key) if kind == "ch" else ""
+        name = ("Ch%s  " % disp_label(key)) if kind == "ch" else ""
         lines.append('<div class="c"><span class="t">%s%s</span><span class="n">%s</span></div>' % (name, title, n))
         if secs:
             lines.append('<div class="s">%s</div>' % " · ".join(re.sub(r"<[^>]+>", "", s) for s in secs[:8]))
@@ -275,6 +334,7 @@ def build(toc_pages=None, tight=None, index_html=None):
         return ("<!doctype html><html lang=ko><head><meta charset=utf-8><title>%s</title><style>%s</style></head>"
                 "<body>\n%s\n</body></html>" % (TITLE, BOOK_CSS, "\n".join(sections)))
     # 표지·판권(앞 두 섹션)은 머리글·쪽번호 없이 따로 찍는다 — 쪽 번호는 서문부터 1
+    body = [tag_orphans(x) for x in body]
     return wrap(body), issues, figs, tbls, entries, wrap(body[:2]), wrap(body[2:])
 
 
@@ -378,7 +438,7 @@ def chapter_pages(pdf_path, entries):
     # ① 장 — 'CHAPTER n' 은 장 머리에만 있다
     for i, txt in enumerate(texts, 1):
         for kind, key, _, _ in entries:
-            if kind == "ch" and (kind + key) not in pages and ("CHAPTER%s" % key) in txt[:60]:   # 장 머리는 쪽 맨 위
+            if kind == "ch" and (kind + key) not in pages and ("CHAPTER%s" % disp_label(key)) in txt[:60]:   # 장 머리는 쪽 맨 위
                 pages[kind + key] = i
     # ② 부록 — 제목이 차례에도 나오므로 마지막 장이 시작한 쪽 이후에서만 찾는다
     after = max(pages.values()) if pages else 0
@@ -450,7 +510,7 @@ def main():
     pages2, n2 = pages, n
     # ── 카피피팅: 마지막 쪽이 거의 빈 장은 행간을 조금 줄여 다시 짠다 (최대 2단계) ──
     from pypdf import PdfReader as _R
-    LADDER = ["tight1", "tight2", "tight3", "loose1", "loose2", "loose3"]
+    LADDER = ["tight1", "tight2", "loose1", "loose2"]
     NO_FIT = {"apponline", "appindex"}        # 조판 클래스를 받지 않는 구간 — 사다리를 헛돌리지 않는다
     tight = {}
     for _pass in range(len(LADDER)):
@@ -473,6 +533,19 @@ def main():
         print("  카피피팅 %d패스: %s" % (_pass + 1, ", ".join("%s→%s" % (k, tight[k]) for k in spill)))
     left = sorted(loose_pages(bp))
     print("  카피피팅 후 헐렁한 쪽(본문 기준): %s" % (left or "없음"))
+    # ── 외톨이 글자: 마지막 줄이 1~2글자인 문단만 자간 ±0.2pt (행간·글자 크기는 그대로) ──
+    for _op in range(2):
+        orph = orphan_paras(bp)
+        if not orph:
+            break
+        for k in orph:
+            ORPH[k] = "ob" if ORPH.get(k) == "oa" else "oa"
+        *_, html_body2 = build(toc_pages=pages2, tight=tight)
+        open(bh, "w", encoding="utf-8").write(html_body2)
+        render_pdf(bh, bp)
+        pages2, n2 = chapter_pages(bp, entries)
+        print("  외톨이 글자 %d패스: %d문단 조정" % (_op + 1, len(orph)))
+    print("  외톨이 글자 남음: %d · 헐렁한 쪽: %s" % (len(orphan_paras(bp)), sorted(loose_pages(bp)) or "없음"))
     # ── 찾아보기 — 쪽 번호가 굳은 뒤에 채우고, 한 번 더 찍어 차례까지 맞춘다 ──
     first_body = min(pages2.values()) if pages2 else 1
     idx_html, n_terms = build_index_html(bp, 2, first_body)
@@ -503,7 +576,7 @@ def main():
             parent = w.add_outline_item(("%s. %s" % (key, plain)) if key != "부록" else plain,
                                         max(0, (pg or 1) - 2 + front_n))        # 파트 표지 = 첫 장 바로 앞 쪽
         elif (kind + key) in pages2:
-            label = ("Ch%s  %s" % (key, plain)) if kind == "ch" else plain
+            label = ("Ch%s  %s" % (disp_label(key), plain)) if kind == "ch" else plain
             w.add_outline_item(label, pages2[kind + key] - 1 + front_n, parent=parent)
     w.add_metadata({"/Title": TITLE, "/Author": AUTHOR, "/Subject": SERIES, "/Creator": "build_book.py (Chromium)"})
     w.write(pdf)

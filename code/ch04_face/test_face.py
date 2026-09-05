@@ -104,8 +104,10 @@ def main() -> int:
     # ── §3 드라이버 기준표 ─────────────────────────────────────────
     gd = {"face_ratio": 0.6, "motion": 0.1, "duration_ratio": 1.4}
     ok(verdict(grade(gd, DRIVER)) == OK, "좋은 드라이버는 통과한다")
-    ok(verdict(grade(dict(gd, face_ratio=0.25), DRIVER)) == FAIL,
-       "미디엄샷 드라이버를 실패로 잡는다 (§3 ★)")
+    ok(verdict(grade(dict(gd, face_ratio=0.12), DRIVER)) == FAIL,
+       "얼굴이 너무 작은 드라이버를 실패로 잡는다 (§3)")
+    ok(verdict(grade(dict(gd, face_ratio=0.235), DRIVER)) != FAIL,
+       "미디엄샷(0.235) 은 실패가 아니라 경고 — 리타게팅 결과가 좋았다 (§5 실측, 2026-09-05)")
     ok(verdict(grade(dict(gd, motion=0.6), DRIVER)) == FAIL,
        "고개를 크게 흔드는 영상을 잡는다")
     ok(verdict(grade(dict(gd, duration_ratio=0.7), DRIVER)) == FAIL,

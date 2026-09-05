@@ -42,10 +42,15 @@ h3{ font-size:11pt; margin:14pt 0 5pt; }
 /* 본문 정렬 — 왼쪽. 양끝맞춤은 한국어에서 낱말 사이를 벌린다.
    한글은 하이픈이 없고 인라인 코드(`cfg_weight`)는 통째로 다음 줄로 넘어가므로,
    남은 자리를 낱말 사이로만 메우게 된다. 조판 검수에서 139줄 → 왼쪽 정렬로 0줄. */
-p{ margin:6pt 0; text-align:left; }
-p, li, h1, h2, h3, h4, blockquote, figcaption, .cap, .sub{ word-break:keep-all; overflow-wrap:break-word; }
-/* keep-all: 한글 낱말 중간('여|정')에서 끊지 않는다. 예전엔 양끝맞춤과 겹쳐 낱말 사이가 벌어져 뺐지만
-   지금은 왼쪽맞춤이라 벌어질 것이 없다. 낱말보다 긴 토큰(URL·경로)만 overflow-wrap 으로 넘칠 때 끊는다. */
+p{ margin:6pt 0; }
+h1, h2, h3, h4, figcaption, .cap, .sub{ word-break:keep-all; overflow-wrap:break-word; }
+h1, h2, h3{ text-wrap:balance; }   /* 두 줄 제목의 둘째 줄에 낱말 하나만 남지 않게 */
+.hy{ hyphens:auto; -webkit-hyphens:auto; }   /* 긴 라틴 낱말(backchannel) — 앞 줄이 벌어지지 않게 음절 하이픈 */
+p, li{ text-align:justify; text-align-last:left; word-break:normal; overflow-wrap:break-word; }
+.oa{ letter-spacing:-0.2pt; } .ob{ letter-spacing:0.3pt; }   /* 외톨이 글자 보정 — 조판기가 해당 문단에만 붙인다 */
+/* 본문은 양끝맞춤 + 음절 단위 줄바꿈(한국어 책 관행). keep-all 로 낱말을 지키면 오른쪽이 들쭉날쭉하거나(왼쪽맞춤)
+   낱말 사이가 벌어진다(양끝맞춤, 실측 최대 10pt). 음절 줄바꿈이면 최대 5pt 로 가지런하다(2026-09-05 실측).
+   남는 문제는 문단 마지막 줄에 1~2글자만 남는 외톨이 — build_book 이 PDF 를 읽어 그 문단에만 .oa/.ob 를 붙여 없앤다. */
 blockquote{ margin:8pt 0; padding:5pt 10pt; border-left:3px solid var(--accent);
             background:#f6f8fc; text-align:left; page-break-inside:auto; }
 blockquote p{ margin:3pt 0; }
@@ -163,15 +168,68 @@ def _render_table(rows, chno, n, cap, issues):
     head, body = cells[0], cells[1:]
     h = "".join("<th>%s</th>" % _inline(x) for x in head)
     b = "".join("<tr>%s</tr>" % "".join("<td>%s</td>" % _inline(x) for x in r) for r in body)
-    capdiv = ('<div class="cap"><span class="num">표 %s-%d</span> %s</div>'
+    capdiv = ('<div class="cap"><span class="num">표 %s.%d</span> %s</div>'
               % (chno, n, _esc(cap))) if cap else ""
     return ('<div class="tw%s">%s<div class="scroll">'
             '<table class="%s"><thead><tr>%s</tr></thead><tbody>%s</tbody></table>'
             "</div></div>" % (" small" if len(body) <= 8 else "", capdiv, cls, h, b))
 
 
+# ── 보강 장(3+ · 23+ · 28+) 표기 ──────────────────────────────────────────────
+# 파일·코드 폴더는 'ch03plus' 를 유지하되, 책에는 "3A" 로 찍는다.
+# "3+.6" "그림 3+-1" "Ch23+" 는 읽히지 않는다(2026-09-05 독자 검수). "3A.6" "그림 3A.1" "Ch23A" 로.
+_PLUS_REF = re.compile(r"(Ch0?(?:3|23|28))\+")                    # Ch03+ · Ch3+ · Ch23+ · Ch28+
+_PLUS_SEC = re.compile(r"(?<![0-9A-Za-z])(3|23|28)\+(?=\.[0-9])")  # 3+.6 · §23+.6
+
+
+def disp_label(s):
+    """장 라벨('3+' · 'Ch03+')의 표시형 — '3A' · 'Ch03A'."""
+    return s.replace("+", "A")
+
+
+def disp_refs(md):
+    """본문 속 보강 장 참조와 절 번호를 표시형으로."""
+    return _PLUS_SEC.sub(lambda m: m.group(1) + "A", _PLUS_REF.sub(lambda m: m.group(1) + "A", md))
+
+
+_SEG = re.compile(r"(<pre>.*?</pre>|<code>.*?</code>|<[^>]+>)", re.S)
+_LATIN = re.compile(r"(?<![A-Za-z/._-])([A-Za-z][a-z]{7,}[A-Za-z]*)(?![A-Za-z/._-])")
+
+
+_CAMEL = re.compile(r"([a-z]{2,})([A-Z][a-z]{2,})")                 # LangChain → Lang<wbr>Chain
+_CODE_BREAK = re.compile(r"([/_.\-:=])(?=[A-Za-z0-9_])")                # 코드 안 경로·식별자 경계
+_SHY = {                                                                  # 소프트 하이픈 — 책에 자주 나오는 긴 라틴 낱말
+    "Chatterbox": "Chatter\u00adbox", "backchannel": "back\u00adchannel", "retargeting": "re\u00adtarget\u00ading",
+    "conversion": "conver\u00adsion", "Holistic": "Holis\u00adtic", "expression": "expres\u00adsion",
+    "transformers": "trans\u00adformers", "diffusers": "dif\u00adfusers", "accelerate": "accel\u00aderate",
+    "inference": "infer\u00adence", "streaming": "stream\u00ading", "landmarks": "land\u00admarks",
+    "benchmark": "bench\u00admark", "framework": "frame\u00adwork", "container": "con\u00adtainer",
+    "websocket": "web\u00adsocket", "WebSocket": "Web\u00adSocket", "Playwright": "Play\u00adwright",
+    "multiplier": "multi\u00adplier", "animation": "ani\u00admation", "checkpoint": "check\u00adpoint",
+}
+
+
+def hyphenate_latin(html):
+    """긴 라틴 낱말(backchannel · retargeting)을 lang=en 스팬으로 감싸 음절 하이픈을 허용한다.
+
+    양끝맞춤에서 이런 낱말이 줄 끝에 걸리면 통째로 다음 줄로 넘어가고 앞 줄이 3배로 벌어진다(p199 실측 3.4배).
+    코드·태그 안은 건드리지 않는다. 8글자 이상, 첫 글자 뒤가 전부 소문자인 낱말만 — 약어(WebRTC)·경로는 제외."""
+    parts = _SEG.split(html)
+    for i in range(0, len(parts), 2):                 # 짝수 칸이 태그 밖 텍스트
+        t = _LATIN.sub(lambda m: '<span class="hy" lang="en">' + m.group(1) + "</span>", parts[i])
+        t = _CAMEL.sub(lambda m: m.group(1) + "<wbr>" + m.group(2), t)
+        for w, hy in _SHY.items():
+            t = t.replace(w, hy)
+        parts[i] = t
+    for i in range(1, len(parts), 2):                 # 홀수 칸이 태그·코드
+        if parts[i].startswith("<code>"):
+            parts[i] = "<code>" + _CODE_BREAK.sub(lambda m: m.group(1) + "<wbr>", parts[i][6:-7]) + "</code>"
+    return "".join(parts)
+
+
 def md_to_html(md, chno, issues):
     """마크다운을 조판 HTML 로. 도판·표 번호를 장 단위로 매긴다."""
+    md, chno = disp_refs(md), disp_label(chno)
     fig_n = tbl_n = 0
     out, lines, i = [], md.split("\n"), 0
 
@@ -204,7 +262,7 @@ def md_to_html(md, chno, issues):
                 issues.append("Ch%s 그림 %d: 캡션 없음 (%s)" % (chno, fig_n, src))
             cls = "narrow" if "narrow" in src else _shape_class(src)
             out.append('<figure class="%s"><img src="%s" alt="%s">'
-                       '<figcaption><span class="num">그림 %s-%d</span> %s</figcaption></figure>'
+                       '<figcaption><span class="num">그림 %s.%d</span> %s</figcaption></figure>'
                        % (cls, _esc(src), _esc(cap), chno, fig_n, _esc(cap)))
             i += 1
             continue
@@ -268,7 +326,7 @@ def md_to_html(md, chno, issues):
         out.append(_inline_block(ln))
         i += 1
 
-    return "\n".join(x for x in out if x), fig_n, tbl_n
+    return hyphenate_latin("\n".join(x for x in out if x)), fig_n, tbl_n
 
 
 def chapters():

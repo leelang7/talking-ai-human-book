@@ -124,6 +124,22 @@ def main():
     tracked(d, 90 * S, 1680 * S, "github.com/leelang7 · youtube.com/@aidoer",
             fm(14), (170, 174, 180), 2)
 
+    # ── 아트 합성 (--art 두상.png) ───────────────────────────────────────
+    # Flow/Gemini 로 뽑은 '검정 배경 위 두상만' 이미지를 스크린 블렌드로 얹는다.
+    # 검정은 투명처럼 사라지고 유리·빛만 남아 컬럼 위에 비친다. 글자·컬럼·03 은 이 코드가 그린다.
+    # 우하단 워터마크는 아트 파일의 아래·오른쪽 여백(--trim, 기본 8%)을 잘라 버린다 — 픽셀은 만지지 않는다.
+    import sys as _sys
+    if "--art" in _sys.argv:
+        from PIL import ImageChops
+        art = Image.open(_sys.argv[_sys.argv.index("--art") + 1]).convert("RGB")
+        trim = float(_sys.argv[_sys.argv.index("--trim") + 1]) if "--trim" in _sys.argv else 0.08
+        aw, ah = art.size
+        art = art.crop((0, 0, int(aw * (1 - trim)), int(ah * (1 - trim))))     # 별이 있는 우하단 여백 제거
+        target_h = int(H * 0.72); s = target_h / art.size[1]
+        art = art.resize((int(art.size[0] * s), target_h), Image.LANCZOS)
+        x, y = int(W * 0.44), int(H * 0.13)                                    # 두상이 컬럼 경계에 걸친다
+        region = img.crop((x, y, x + art.size[0], y + art.size[1]))
+        img.paste(ImageChops.screen(region, art), (x, y))
     out = img.resize((OUT_W, OUT_H), Image.LANCZOS)
     OUT.parent.mkdir(parents=True, exist_ok=True)
     out.save(OUT, quality=95)

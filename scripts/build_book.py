@@ -68,6 +68,18 @@ p, li{ orphans:3; widows:3; }
 .tight2 p, .tight2 li{ line-height:1.55; margin:4pt 0; font-size:10.2pt; } .tight2 h2{ margin:14pt 0 5pt; } .tight2 h3{ margin:11pt 0 4pt; }
 .tight3 p, .tight3 li{ line-height:1.48; margin:3.4pt 0; font-size:10pt; } .tight3 h2{ margin:12pt 0 4pt; } .tight3 h3{ margin:9pt 0 3pt; }
 .tight3 h1.ch{ margin-top:2mm; } .tight3 .tw{ margin:8pt 0; } .tight3 figure{ margin:9pt auto; }
+.tight2 td, .tight2 th{ padding-top:2pt; padding-bottom:2pt; } .tight3 td, .tight3 th{ padding-top:1.5pt; padding-bottom:1.5pt; }
+.loose1 p, .loose1 li{ line-height:1.82; margin:7.5pt 0; } .loose1 h2{ margin:22pt 0 9pt; }
+.loose2 p, .loose2 li{ line-height:1.92; margin:9pt 0; } .loose2 h2{ margin:26pt 0 11pt; }
+.toc.tight1 .s{ line-height:1.35; margin-bottom:2pt; } .toc.tight2 .s{ line-height:1.3; margin-bottom:1pt; } .toc.tight2 .c{ margin:1pt 0 1pt 10pt; }
+.toc.loose1 .s{ line-height:1.6; margin-bottom:5pt; } .toc.loose1 .c{ margin:3.5pt 0 3.5pt 10pt; }
+.toc.loose2 .s{ line-height:1.75; margin-bottom:7pt; } .toc.loose2 .c{ margin:5pt 0 5pt 10pt; }
+h1.ch.cont{ page-break-before:auto; margin-top:16mm; }
+.loose3 p, .loose3 li{ line-height:2.02; margin:10.5pt 0; } .loose3 h2{ margin:30pt 0 13pt; }
+.loose1 td, .loose1 th{ padding-top:5pt; padding-bottom:5pt; } .loose2 td, .loose2 th{ padding-top:6pt; padding-bottom:6pt; }
+.loose3 td, .loose3 th{ padding-top:7.5pt; padding-bottom:7.5pt; }
+.toc.loose3 .s{ line-height:1.9; margin-bottom:9pt; } .toc.loose3 .c{ margin:6.5pt 0 6.5pt 10pt; }
+.keep{ break-inside:avoid; page-break-inside:avoid; }
 """
 
 
@@ -139,9 +151,40 @@ def online_titles():
     return out
 
 
-def front_html(name):
+def loose_pages(pdf_path):
+    """검수기(type_qa)와 같은 기준 — 머리·꼬리 뺀 본문 블록이 300자 미만이고 쪽의 55%도 못 채우면 헐렁."""
+    import fitz
+    d = fitz.open(pdf_path)
+    H = d[0].rect.height
+    out = set()
+    for i, pg in enumerate(d, 1):
+        # 머리글(y<36)·꼬리글(y>H-36)만 뺀다 — 본문 첫 줄이 y=48 에서 시작하므로 60 으로 자르면 한 줄짜리 쪽을 놓친다(p295 '관련 —' 한 줄)
+        bl = [b for b in pg.get_text("dict")["blocks"] if b.get("lines") and b["bbox"][3] > 36 and b["bbox"][1] < H - 36]
+        if not bl:
+            out.add(i)                                    # 본문이 아예 없는 쪽
+            continue
+        n = sum(len(sp["text"]) for b in bl for l in b["lines"] for sp in l["spans"])
+        rules = [dr["rect"].y0 for dr in pg.get_drawings() if dr["rect"].width > 100 and dr["rect"].height < 3]   # 표 괘선
+        top = min(b["bbox"][1] for b in bl)
+        cont = len(rules) >= 3 and min(rules) - top < 4   # 쪽이 표 괘선으로 시작 = 앞 쪽에서 이어진 표의 꼬리 → 헐렁
+        if n < 300 and max(b["bbox"][3] for b in bl) < H * 0.55 and (len(rules) < 3 or cont):
+            out.add(i)
+    return out
+
+
+_WS = "[" + chr(9) + chr(10) + chr(13) + " ]*"
+_KEEP = re.compile("((?:<p>(?:(?!</p>).)*</p>" + _WS + "){1,2})((?:<hr>" + _WS + ")?)"
+                   "(<blockquote[^>]*>(?:(?!</blockquote>).)*</blockquote>)" + _WS + "$", re.S)
+
+
+def keep_tail(html):
+    """장 끝 '실습 코드' 상자는 앞 문단 둘과 한 덩어리로 — 상자만 새 쪽으로 넘어가 혼자 남지 않게."""
+    return _KEEP.sub(lambda m: '<div class="keep">' + m.group(1) + m.group(2) + m.group(3) + "</div>", html.rstrip(), count=1)
+
+
+def front_html(name, cls=""):
     html, _, _ = md_to_html(read(name), "0", [])
-    return '<section class="page">%s</section>' % html
+    return '<section class="page front%s">%s</section>' % ((" " + cls) if cls else "", html)
 
 
 def build(toc_pages=None, tight=None, index_html=None):
@@ -161,8 +204,8 @@ def build(toc_pages=None, tight=None, index_html=None):
                 '</table><p>본문의 코드는 저장소의 라이선스를, 인용된 외부 모델·라이브러리는 각자의 라이선스를 따릅니다. '
                 '이 책의 어떤 부분도 저작권자의 허락 없이 복제·전송할 수 없습니다.</p></section>'
                 % (TITLE, SERIES, AUTHOR, REPO))
-    for name in ("00_서문.md", "00_이책의_사용법.md", "00_등장인물.md"):
-        body.append(front_html(name))
+    for fi, name in enumerate(("00_서문.md", "00_이책의_사용법.md", "00_등장인물.md")):
+        body.append(front_html(name, tight.get("front%d" % fi, "")))
 
     toc_idx = len(body)
     body.append("TOC_PLACEHOLDER")
@@ -184,6 +227,7 @@ def build(toc_pages=None, tight=None, index_html=None):
                 continue
             used.add(label)
             html, title, secs, nf, nt = chapter_html(label, fn, issues)
+            html = keep_tail(html)
             figs += nf
             tbls += nt
             body.append('<section class="page%s">%s</section>' % (" " + tight["ch" + label] if ("ch" + label) in tight else "", html))
@@ -197,12 +241,14 @@ def build(toc_pages=None, tight=None, index_html=None):
     for letter in APP_ORDER:
         if letter in apps:
             html, title = appendix_html(letter, apps[letter], issues)
+            html = keep_tail(html)
             body.append('<section class="page%s">%s</section>' % (" " + tight["app" + letter] if ("app" + letter) in tight else "", html))
             entries.append(("app", letter, title, []))
     ol = "".join("<li>%s</li>" % _esc(t) for t in online_titles())
-    body.append('<section class="page online"><h1 class="ch" id="online">온라인 부록</h1>'
+    online = ('<div class="online"><h1 class="ch cont" id="online">온라인 부록</h1>'
                 '<p>아래 셋은 기준일이 있거나 시리즈 독자용이라 종이에 굳히지 않고 저장소에서 갱신합니다. '
-                '<code>%s</code> 의 <code>draft/online/</code> 에서 읽을 수 있습니다.</p><ul>%s</ul></section>' % (REPO, ol))
+                '<code>%s</code> 의 <code>draft/online/</code> 에서 읽을 수 있습니다.</p><ul>%s</ul></div>' % (REPO, ol))
+    body[-1] = body[-1][:-len("</section>")] + online + "</section>"   # 마지막 부록에 이어 붙인다
     entries.append(("app", "online", "온라인 부록", []))
 
     # 찾아보기 — 쪽 번호는 조판이 끝나야 알 수 있다. 자리만 잡아 두고 마지막 패스에서 채운다.
@@ -212,7 +258,7 @@ def build(toc_pages=None, tight=None, index_html=None):
     entries.append(("app", "index", "찾아보기", []))
 
     pages = toc_pages or {}
-    lines = ['<section class="page toc"><h1>차례</h1>']
+    lines = ['<section class="page toc%s"><h1>차례</h1>' % ((" " + tight["toc"]) if "toc" in tight else "")]
     for kind, key, title, secs in entries:
         if kind == "part":
             lines.append('<div class="p">%s%s</div>' % ("" if key == "부록" else key + ". ", _esc(title)))
@@ -344,6 +390,29 @@ def chapter_pages(pdf_path, entries):
                 needle = re.sub(r"<[^>]+>", "", title)[:10].replace(" ", "")
                 if needle and txt.startswith(needle):          # 부록 제목도 쪽 맨 위 — 본문 속 언급은 제외
                     pages[kind + key] = i
+    # ②' 파트 표지 — 이게 없으면 Ch5 의 구간이 Part 1 표지까지 이어져, 장 꼬리가 아니라 파트 표지로
+    #    헐렁 여부를 판정한다(2026-09-05: Ch5·15·21·27 과 차례가 전부 이 때문에 안 잡혔다).
+    for i, txt in enumerate(texts, 1):
+        flat = txt.replace(chr(10), "")
+        for kind, key, title, _ in entries:
+            if kind == "part" and (kind + key) not in pages:
+                needle = (key + re.sub(r"<[^>]+>", "", title)[:4]).replace(" ", "")
+                if flat.startswith(needle):
+                    pages[kind + key] = i
+    # ③ 앞부분(서문·사용법·등장인물·차례) — 첫 장 이전 쪽에서 제목으로 찾는다 (카피피팅 대상)
+    first_ch = min(pages.values()) if pages else len(texts) + 1
+    for i, txt in enumerate(texts, 1):
+        if i >= first_ch:
+            break
+        for k, nd in (("front0", "서문"), ("front1", "이책의사용법"), ("front2", "등장인물"), ("toc", "차례")):
+            if k not in pages and txt.startswith(nd):
+                pages[k] = i
+    # ④ 온라인 부록 — 마지막 부록에 이어 붙어 있어 쪽 맨 위가 아니다. 제목+첫 문장으로 찾는다
+    if "apponline" not in pages:
+        for i, txt in enumerate(texts, 1):
+            if i > after and "온라인부록아래셋은" in txt.replace(chr(10), ""):
+                pages["apponline"] = i
+                break
     return pages, len(r.pages)
 
 
@@ -381,24 +450,29 @@ def main():
     pages2, n2 = pages, n
     # ── 카피피팅: 마지막 쪽이 거의 빈 장은 행간을 조금 줄여 다시 짠다 (최대 2단계) ──
     from pypdf import PdfReader as _R
+    LADDER = ["tight1", "tight2", "tight3", "loose1", "loose2", "loose3"]
+    NO_FIT = {"apponline", "appindex"}        # 조판 클래스를 받지 않는 구간 — 사다리를 헛돌리지 않는다
     tight = {}
-    for level in ("tight1", "tight2", "tight3"):
-        r = _R(bp); texts = [(pg.extract_text() or "").strip() for pg in r.pages]
+    for _pass in range(len(LADDER)):
+        loose = loose_pages(bp)
         keys = [(k, v) for k, v in sorted(pages2.items(), key=lambda kv: kv[1])]
         spill = []
         for idx, (k, start) in enumerate(keys):
-            end = keys[idx + 1][1] - 1 if idx + 1 < len(keys) else len(texts)
-            if end > start and len(texts[end - 1]) < 350 and tight.get(k) != "tight3":
+            end = keys[idx + 1][1] - 1 if idx + 1 < len(keys) else n2
+            cur = LADDER.index(tight[k]) if k in tight else -1
+            if k not in NO_FIT and end > start and end in loose and cur < len(LADDER) - 1:
                 spill.append(k)
         if not spill:
             break
         for k in spill:
-            tight[k] = level
+            tight[k] = LADDER[(LADDER.index(tight[k]) if k in tight else -1) + 1]
         *_, html_body2 = build(toc_pages=pages2, tight=tight)
         open(bh, "w", encoding="utf-8").write(html_body2)
         render_pdf(bh, bp)
         pages2, n2 = chapter_pages(bp, entries)
-        print("  카피피팅 %s: %d개 장/부록 조정" % (level, len(spill)))
+        print("  카피피팅 %d패스: %s" % (_pass + 1, ", ".join("%s→%s" % (k, tight[k]) for k in spill)))
+    left = sorted(loose_pages(bp))
+    print("  카피피팅 후 헐렁한 쪽(본문 기준): %s" % (left or "없음"))
     # ── 찾아보기 — 쪽 번호가 굳은 뒤에 채우고, 한 번 더 찍어 차례까지 맞춘다 ──
     first_body = min(pages2.values()) if pages2 else 1
     idx_html, n_terms = build_index_html(bp, 2, first_body)

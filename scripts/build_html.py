@@ -29,7 +29,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DRAFT, BUILD = os.path.join(ROOT, "draft"), os.path.join(ROOT, "build")
 
 CSS = """
-:root{ --w:152mm; --h:225mm; --fg:#16181d; --muted:#6b7280; --line:#d9dde5; --accent:#c2410c; }
+:root{ --w:152mm; --h:225mm; --fg:#16181d; --muted:#6b7280; --line:#d9dde5; --accent:#F59E0B;   /* 시리즈 색 = 표지 앰버. Vol.01 빨강·Vol.02 청록과 섞이지 않게 */ }
 *{ box-sizing:border-box; }
 body{ margin:0; background:#eceef2; color:var(--fg);
       font-family:"Noto Serif KR","Nanum Myeongjo",serif; font-size:10.5pt; line-height:1.72; }
@@ -70,7 +70,7 @@ figure.narrow img{ max-width:70%; }
 figure.tall img{ max-width:58%; }
 
 /* 표 */
-.tw{ margin:11pt 0; }
+.tw{ margin:11pt 0; } .tw.small{ break-inside:avoid; page-break-inside:avoid; }   /* 8행 이하 표는 쪼개지 않는다 — 두 줄만 다음 쪽에 남는 것보다 통째로 넘기는 게 낫다 */
 table tr{ page-break-inside:avoid; } thead{ display:table-header-group; }
 .tw > .cap{ font-size:8.8pt; color:var(--muted); text-align:center; margin-bottom:4pt; }
 .tw > .cap .num{ color:var(--fg); font-weight:600; }
@@ -165,9 +165,9 @@ def _render_table(rows, chno, n, cap, issues):
     b = "".join("<tr>%s</tr>" % "".join("<td>%s</td>" % _inline(x) for x in r) for r in body)
     capdiv = ('<div class="cap"><span class="num">표 %s-%d</span> %s</div>'
               % (chno, n, _esc(cap))) if cap else ""
-    return ('<div class="tw">%s<div class="scroll">'
+    return ('<div class="tw%s">%s<div class="scroll">'
             '<table class="%s"><thead><tr>%s</tr></thead><tbody>%s</tbody></table>'
-            "</div></div>" % (capdiv, cls, h, b))
+            "</div></div>" % (" small" if len(body) <= 8 else "", capdiv, cls, h, b))
 
 
 def md_to_html(md, chno, issues):

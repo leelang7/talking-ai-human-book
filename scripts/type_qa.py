@@ -111,11 +111,20 @@ def scan(path):
                     out["상자여백"].append((i, round(gap, 1)))
         if not blocks:
             continue
-        top = min(b["bbox"][1] for b in blocks)
-        bot = max(b["bbox"][3] for b in blocks)
-        nchar = len(p.get_text().strip())
-        # ③ 헐렁한 쪽
-        if i > 2 and bot < H * LOOSE_FILL and nchar < MIN_CHARS:
+        # 머리글(제목)·꼬리글(쪽 번호)은 본문이 아니다 — 이걸 세면 꼬리글이 늘 쪽 맨 아래에 있어
+        # '채움' 이 항상 가득으로 나오고, 서명 한 줄만 남은 쪽도 통과한다(2026-09-05 실제로 놓쳤다).
+        body_blocks = [b for b in blocks if b["bbox"][3] > 36 and b["bbox"][1] < H - 36]   # 본문 첫 줄 y=48
+        if not body_blocks:
+            if i > 2:
+                out["헐렁"].append((i, 0, 0.0))
+            continue
+        bot = max(b["bbox"][3] for b in body_blocks)
+        nchar = sum(len(s["text"]) for b in body_blocks for l in b["lines"] for s in l["spans"])
+        # ③ 헐렁한 쪽 (파트 표지는 일부러 비운 쪽, 표가 있는 쪽은 내용이 있는 쪽 — 둘 다 제외)
+        rules = [dr["rect"].y0 for dr in p.get_drawings() if dr["rect"].width > 100 and dr["rect"].height < 3]
+        top = min(b["bbox"][1] for b in body_blocks)
+        cont = len(rules) >= 3 and min(rules) - top < 4   # 앞 쪽에서 이어진 표의 꼬리
+        if i > 2 and not is_part and (len(rules) < 3 or cont) and bot < H * LOOSE_FILL and nchar < MIN_CHARS:
             out["헐렁"].append((i, nchar, round(bot / H, 2)))
         # ⑤ 넘치는 것
         for b in blocks:
@@ -129,6 +138,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--pdf", default=PDF)
     ap.add_argument("--max-stretch", type=int, default=None, help="이 수를 넘으면 종료코드 1")
+    ap.add_argument("--max-loose", type=int, default=None, help="헐렁한 쪽이 이 수를 넘으면 종료코드 1")
     a = ap.parse_args()
     if not os.path.exists(a.pdf):
         print("  PDF 가 없다 — scripts/build_book.py 를 먼저 돌려라")
@@ -142,6 +152,9 @@ def main():
     print(f"  ③ 헐렁한 쪽     {len(out['헐렁']):>4}쪽  {[x[0] for x in out['헐렁']][:8]}")
     print(f"  ④ 폭 초과       {len(out['폭초과']):>4}건  {[x[0] for x in out['폭초과']][:6]}")
     print()
+    if a.max_loose is not None and len(out["헐렁"]) > a.max_loose:
+        print("  ✗ 헐렁한 쪽 %d > 기준 %d\n" % (len(out["헐렁"]), a.max_loose))
+        return 1
     if a.max_stretch is not None and len(out["자간"]) > a.max_stretch:
         print("  ✗ 자간 늘어짐 %d > 기준 %d\n" % (len(out["자간"]), a.max_stretch))
         return 1

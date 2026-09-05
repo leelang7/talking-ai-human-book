@@ -24,7 +24,7 @@ NOTO = "C:/Windows/Fonts/NotoSansKR-VF.ttf"
 
 S = 3                       # 슈퍼샘플(고해상 출력용)
 W, H = 1200 * S, 1800 * S   # Vol.01 SVG 좌표계 그대로(2:3)
-OUT_W, OUT_H = 2400, 3600   # 출력 해상도(≈330dpi @ B5 패널) — 부크크 300dpi 대응
+OUT_W, OUT_H = 2400, 3600   # 출력 해상도 — 인쇄 300dpi 대응 (출판사·유통사 표기는 업체가 넣는다 — 표지에 쓰지 않는다)
 
 # 팔레트 — Vol.01=레드, Vol.02=틸, Vol.03=앰버(목소리·온기)
 BLK_TOP, BLK_BOT = (11, 12, 16), (5, 5, 7)
@@ -121,9 +121,7 @@ def main():
 
     # 저자·출판사·푸터
     d.text((90 * S, 1620 * S), "이석창 지음", font=f(36, 700), fill=OFF, anchor="ls")
-    d.text((90 * S, 1670 * S), "펴낸곳 · 부크크", font=f(22, 500),
-           fill=(210, 214, 218), anchor="ls")
-    tracked(d, 90 * S, 1718 * S, "github.com/leelang7 · youtube.com/@aidoer",
+    tracked(d, 90 * S, 1680 * S, "github.com/leelang7 · youtube.com/@aidoer",
             fm(14), (170, 174, 180), 2)
 
     out = img.resize((OUT_W, OUT_H), Image.LANCZOS)

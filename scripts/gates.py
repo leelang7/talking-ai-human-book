@@ -25,6 +25,7 @@ MANUSCRIPT = [
     ("조판 배치", "scripts/build_html.py --check", ROOT),
     ("도판 검사", "scripts/check_figures.py", ROOT),
     ("조판 검수", "scripts/type_qa.py --max-stretch 3 --max-loose 0 --max-orphan 0", ROOT),
+    ("HTML 스타일", "scripts/html_style_check.py", ROOT),
     ("잉여 감사", "scripts/prune_audit.py", ROOT),
     ("체계성·중복", "scripts/structure_audit.py --strict", ROOT),
     ("강의 자산 대조", "scripts/lecture_audit.py", ROOT),

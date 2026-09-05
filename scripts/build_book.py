@@ -350,6 +350,13 @@ def build(toc_pages=None, tight=None, index_html=None):
                 "<body>\n%s\n</body></html>" % (TITLE, BOOK_CSS, "\n".join(sections)))
     # 표지·판권(앞 두 섹션)은 머리글·쪽번호 없이 따로 찍는다 — 쪽 번호는 서문부터 1
     body = [tag_orphans(x) for x in body]
+    # 태그 균형 — <em>/<strong>/<code> 가 한 구역 안에서 닫히지 않으면 그 뒤 책 전체가 기울거나 굵어진다
+    for x in body:
+        for tag in ("em", "strong", "code"):
+            o, c = x.count("<%s>" % tag), x.count("</%s>" % tag)
+            if o != c:
+                t = re.search(r"<h1[^>]*>(.*?)</h1>", x, re.S)
+                issues.append("태그 불균형 <%s> %d/%d — %s" % (tag, o, c, re.sub(r"<[^>]+>", "", t.group(1))[:30] if t else "?"))
     return wrap(body), issues, figs, tbls, entries, wrap(body[:2]), wrap(body[2:])
 
 
@@ -508,6 +515,10 @@ def main():
                                                    sum(1 for e in entries if e[0] == "app") - 1, figs, tbls))
     for x in issues[:10]:
         print("   · " + x)
+    if any(x.startswith("태그 불균형") for x in issues):
+        print("  ✗ 태그 불균형 — 조판을 멈춥니다 (원고의 코드 스팬 밖 '*' 나 닫히지 않은 강조를 찾으세요)")
+        close_browser()
+        return 1
     print("  → %s" % out)
     if a.html:
         close_browser()

@@ -113,10 +113,18 @@ def _strip_tags(s):
 
 
 def _inline(s):
-    s = _esc(s)
-    s = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", s)
-    s = re.sub(r"(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)", r"<em>\1</em>", s)
-    s = re.sub(r"`([^`]+)`", r"<code>\1</code>", s)
+    """굵게·기울임·코드·링크. 코드 스팬 안의 '*' 는 강조가 아니다 — `sin(p*π)` 의 '*' 가 <em> 을 열어
+    Ch20 부터 책 끝까지 이탤릭이 된 사고(2026-09-05)가 이 함수에서 났다. 코드 스팬을 먼저 떼어 둔다."""
+    parts = re.split(r"(`[^`]+`)", s)
+    for i, part in enumerate(parts):
+        if i % 2:                                              # 코드 스팬 — 그대로, 이스케이프만
+            parts[i] = "<code>" + _esc(part[1:-1]) + "</code>"
+            continue
+        t = _esc(part)
+        t = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", t)
+        t = re.sub(r"(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)", r"<em>\1</em>", t)
+        parts[i] = t
+    s = "".join(parts)
     s = _LINK.sub(lambda m: '<a href="%s">%s</a>' % (m.group(2), m.group(1)), s)
     return s
 
@@ -168,8 +176,8 @@ def _render_table(rows, chno, n, cap, issues):
     head, body = cells[0], cells[1:]
     h = "".join("<th>%s</th>" % _inline(x) for x in head)
     b = "".join("<tr>%s</tr>" % "".join("<td>%s</td>" % _inline(x) for x in r) for r in body)
-    capdiv = ('<div class="cap"><span class="num">표 %s.%d</span> %s</div>'
-              % (chno, n, _esc(cap))) if cap else ""
+    capdiv = ('<div class="cap"><span class="num">%s</span> %s</div>'
+              % (_fignum("표", chno, n), _esc(cap))) if cap else ""
     return ('<div class="tw%s">%s<div class="scroll">'
             '<table class="%s"><thead><tr>%s</tr></thead><tbody>%s</tbody></table>'
             "</div></div>" % (" small" if len(body) <= 6 else "", capdiv, cls, h, b))
@@ -180,6 +188,11 @@ def _render_table(rows, chno, n, cap, issues):
 # "3+.6" "그림 3+-1" "Ch23+" 는 읽히지 않는다(2026-09-05 독자 검수). "3A.6" "그림 3A.1" "Ch23A" 로.
 _PLUS_REF = re.compile(r"(Ch0?(?:3|23|28))\+")                    # Ch03+ · Ch3+ · Ch23+ · Ch28+
 _PLUS_SEC = re.compile(r"(?<![0-9A-Za-z])(3|23|28)\+(?=\.[0-9])")  # 3+.6 · §23+.6
+
+
+def _fignum(kind, chno, n):
+    """도판·표 번호 — 앞부분(서문·사용법·등장인물, chno '0')은 장 번호가 없으니 '그림 · 표' 로만 단다."""
+    return kind if str(chno) in ("0", "") else "%s %s.%d" % (kind, chno, n)
 
 
 def disp_label(s):
@@ -262,8 +275,8 @@ def md_to_html(md, chno, issues):
                 issues.append("Ch%s 그림 %d: 캡션 없음 (%s)" % (chno, fig_n, src))
             cls = "narrow" if "narrow" in src else _shape_class(src)
             out.append('<figure class="%s"><img src="%s" alt="%s">'
-                       '<figcaption><span class="num">그림 %s.%d</span> %s</figcaption></figure>'
-                       % (cls, _esc(src), _esc(cap), chno, fig_n, _esc(cap)))
+                       '<figcaption><span class="num">%s</span> %s</figcaption></figure>'
+                       % (cls, _esc(src), _esc(cap), _fignum("그림", chno, fig_n), _esc(cap)))
             i += 1
             continue
 

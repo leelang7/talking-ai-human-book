@@ -26,10 +26,10 @@ S = 3                       # 슈퍼샘플(고해상 출력용)
 W, H = 1200 * S, 1800 * S   # Vol.01 SVG 좌표계 그대로(2:3)
 OUT_W, OUT_H = 2400, 3600   # 출력 해상도 — 인쇄 300dpi 대응 (출판사·유통사 표기는 업체가 넣는다 — 표지에 쓰지 않는다)
 
-# 팔레트 — Vol.01=레드, Vol.02=틸, Vol.03=앰버(목소리·온기)
+# 팔레트 — Vol.01=레드, Vol.02=틸, Vol.03=블루 — 원고 본문 강조색(--accent #3F6FE8)과 동일
 BLK_TOP, BLK_BOT = (11, 12, 16), (5, 5, 7)
-ACC_TOP, ACC_BOT = (245, 158, 11), (180, 83, 9)     # 컬럼 그라디언트
-ACC = (251, 191, 36)                                # 강조 텍스트(밝은 틸)
+ACC_TOP, ACC_BOT = (63, 111, 232), (30, 58, 138)     # 컬럼 그라디언트
+ACC = (147, 197, 253)                                # 강조 텍스트(밝은 틸)
 OFF = (244, 244, 246)
 
 _cache = {}
@@ -127,7 +127,7 @@ def main():
     out = img.resize((OUT_W, OUT_H), Image.LANCZOS)
     OUT.parent.mkdir(parents=True, exist_ok=True)
     out.save(OUT, quality=95)
-    print(f"[Vol.03 표지] {OUT.name}  {OUT_W}×{OUT_H} (시리즈 시스템 계승·앰버 강조·고해상)")
+    print(f"[Vol.03 표지] {OUT.name}  {OUT_W}×{OUT_H} (시리즈 시스템 계승·블루(본문 강조색) 통일·고해상)")
 
 
 if __name__ == "__main__":

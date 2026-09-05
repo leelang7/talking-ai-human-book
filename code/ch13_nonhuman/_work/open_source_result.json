@@ -1,0 +1,24 @@
+{
+ "s39": {
+  "frames": 320,
+  "fps": 30.0,
+  "first": 0.005,
+  "min": 0.002,
+  "max": 0.075,
+  "mean": 0.007,
+  "closed_frames": 299,
+  "t_min": 6.93,
+  "t_max": 4.87
+ },
+ "cat_open2": {
+  "frames": 320,
+  "fps": 30.0,
+  "first": 0.204,
+  "min": 0.165,
+  "max": 0.226,
+  "mean": 0.199,
+  "closed_frames": 0,
+  "t_min": 9.03,
+  "t_max": 6.9
+ }
+}

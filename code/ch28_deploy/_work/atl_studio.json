@@ -1,0 +1,41 @@
+{
+ "source": "https://link.allthatai.kr/studio (2026-09-05 캡처, 페이지 문구 그대로)",
+ "steps": 3,
+ "gpu_options": {
+  "Colab": "A100 — 빠름",
+  "Kaggle": "T4 — 무료·주 30h",
+  "gesture_clip": "A100/L4"
+ },
+ "kaggle_max_hours_unattended": 9,
+ "t4_seconds_per_sentence_approx": 9,
+ "drive_cache_gb": 40,
+ "face_swap": [
+  "영상 직링크(.mp4)",
+  "사진 1장(.jpg/.png) → 영상 자동생성",
+  "비우면 기본 아나운서"
+ ],
+ "multi_person": "면접관 2명 등 · 세션 1개 · 영상 하나를 좌/우 인물로 자동 분할",
+ "embed": "&human=휴먼ID",
+ "llm_key": [
+  "공용키",
+  "내 키(GPT/Gemini)"
+ ],
+ "session_idle_release_s": 300,
+ "billing_tick_s": 3,
+ "perf": {
+  "source": "D:/AllThatLink/docs/RT_COLAB_POSTMORTEM.md · docs/DISTRIBUTED_PERF.md · coordinator/static/demo_t4.json",
+  "local_4070_ms_per_frame": 31,
+  "colab_a100_ms_per_frame_before_gpu_compose": 70,
+  "colab_cpu_blend_ms_per_frame": 250,
+  "local_cpu_blend_ms_per_frame": 49,
+  "gpu_compose_threshold_ms": 120,
+  "t4_seconds_per_sentence_approx": 9,
+  "t4x4_chunks": 7,
+  "t4x4_chunk_render_s_min": 12.2,
+  "t4x4_chunk_render_s_max": 22.5,
+  "t4x4_sequential_s": 123.2,
+  "t4x4_wall_s": 37.1,
+  "t4x4_speedup": 3.32,
+  "t4x4_overhead_pct": 17
+ }
+}

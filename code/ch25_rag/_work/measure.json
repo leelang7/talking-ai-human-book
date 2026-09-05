@@ -1,5 +1,5 @@
 {
- "measured": "2026-09-03",
+ "measured": "2026-09-05",
  "defaults": {
   "MAX_CHARS": 600,
   "MIN_CHARS": 300,
@@ -7,32 +7,31 @@
  },
  "docs": {
   "ch25_rag.md": {
-   "chunks": 10,
-   "chars": 4001,
+   "chunks": 11,
+   "chars": 4905,
    "mean": 425,
-   "min": 29,
-   "max": 579,
-   "in_300_600": 0.9,
+   "min": 212,
+   "max": 590,
+   "in_300_600": 0.82,
    "with_heading": null
   },
   "ch07_latency_budget.md": {
-   "chunks": 39,
-   "chars": 12027,
-   "mean": 347,
-   "min": 20,
-   "max": 641,
-   "in_300_600": 0.59,
+   "chunks": 38,
+   "chars": 12408,
+   "mean": 312,
+   "min": 84,
+   "max": 573,
+   "in_300_600": 0.39,
    "with_heading": null
   },
   "ch22_persona.md": {
-   "chunks": 20,
-   "chars": 7369,
-   "mean": 417,
-   "min": 33,
-   "max": 648,
-   "in_300_600": 0.8,
+   "chunks": 19,
+   "chars": 7635,
+   "mean": 382,
+   "min": 202,
+   "max": 596,
+   "in_300_600": 0.68,
    "with_heading": null
   }
- },
- "heading_context": "모든 조각 텍스트가 '[장 > 절]' 접두로 시작한다 (검색 결과에서 확인)"
+ }
 }

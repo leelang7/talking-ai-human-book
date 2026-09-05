@@ -40,7 +40,7 @@ def chunk(md, max_chars=MAX_CHARS, min_chars=MIN_CHARS, overlap=OVERLAP):
         if not buf:
             return
         text = "\n".join(buf).strip()
-        if text:
+        if text and not re.fullmatch(r"[-*_]{3,}", text):     # 제목 바로 뒤 구분선만 남은 블록은 조각이 아니다
             blocks.append({"path": list(path), "text": text,
                            "kind": "table" if in_table else "prose"})
         buf = []
@@ -80,7 +80,8 @@ def chunk(md, max_chars=MAX_CHARS, min_chars=MIN_CHARS, overlap=OVERLAP):
 
 def _split_prose(text, max_chars, min_chars, overlap):
     """문단 → 문장 순으로 의미 경계를 지키며 자른다."""
-    paras = [p.strip() for p in re.split(r"\n\s*\n", text) if p.strip()]
+    paras = [p.strip() for p in re.split(r"\n\s*\n", text)
+             if p.strip() and not re.fullmatch(r"[-*_]{3,}", p.strip())]   # 구분선(---)은 조각이 아니다 — 3자짜리 조각이 생겼었다
     units = []
     for p in paras:
         if len(p) <= max_chars:

@@ -91,6 +91,7 @@ def scan(path):
     normal = sorted(allg)[len(allg) // 2] if allg else 0.25
 
     in_toc = [False]
+    in_index = [False]
     for i, p in enumerate(doc, 1):
         d = p.get_text("dict")
         blocks = [b for b in d["blocks"] if b.get("lines")]
@@ -122,6 +123,11 @@ def scan(path):
             continue
         bot = max(b["bbox"][3] for b in body_blocks)
         nchar = sum(len(s["text"]) for b in body_blocks for l in b["lines"] for s in l["spans"])
+        # 찾아보기(마지막 절)는 항목 수만큼만 차므로 꼬리 쪽이 짧아도 헐렁이 아니다 — 장 끝과 같다
+        if p.get_text().strip().startswith("찾아보기"):
+            in_index[0] = True
+        if in_index[0]:
+            continue
         # ③ 헐렁한 쪽 (파트 표지는 일부러 비운 쪽, 표가 있는 쪽은 내용이 있는 쪽 — 둘 다 제외)
         rules = [dr["rect"].y0 for dr in p.get_drawings() if dr["rect"].width > 100 and dr["rect"].height < 3]
         top = min(b["bbox"][1] for b in body_blocks)

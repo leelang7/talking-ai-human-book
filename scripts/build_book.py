@@ -274,7 +274,7 @@ def build(toc_pages=None, tight=None, index_html=None):
                 '<tr><td>제목</td><td>%s</td></tr><tr><td>시리즈</td><td>%s</td></tr>'
                 '<tr><td>지은이</td><td>%s</td></tr><tr><td>판</td><td>초판 1쇄 · 2026년</td></tr>'
                 '<tr><td>저장소</td><td>%s</td></tr><tr><td>펴낸곳</td><td>부크크</td></tr>'
-                '<tr><td>측정 환경</td><td>RTX 4070 SUPER 12GB · Windows 11 · 본문 수치는 부록 C 의 측정 조건 기준</td></tr>'
+                '<tr><td>측정 환경</td><td>RTX 4070 SUPER 12GB · Windows 11 · 본문 수치는 부록 C의 측정 조건 기준</td></tr>'
                 '</table><p>본문의 코드는 저장소의 라이선스를, 인용된 외부 모델·라이브러리는 각자의 라이선스를 따릅니다. '
                 '이 책의 어떤 부분도 저작권자의 허락 없이 복제·전송할 수 없습니다.</p></section>'
                 % (TITLE, SERIES, AUTHOR, REPO))
@@ -319,9 +319,9 @@ def build(toc_pages=None, tight=None, index_html=None):
             body.append('<section class="page%s">%s</section>' % (" " + tight["app" + letter] if ("app" + letter) in tight else "", html))
             entries.append(("app", letter, title, []))
     ol = "".join("<li>%s</li>" % _esc(t) for t in online_titles())
-    online = ('<div class="online"><h1 class="ch cont" id="online">온라인 부록</h1>'
+    online = ('<div class="online keep"><h1 class="ch cont" id="online">온라인 부록</h1>'
                 '<p>아래 셋은 기준일이 있거나 시리즈 독자용이라 종이에 굳히지 않고 저장소에서 갱신합니다. '
-                '<code>%s</code> 의 <code>draft/online/</code> 에서 읽을 수 있습니다.</p><ul>%s</ul></div>' % (REPO, ol))
+                '<code>%s</code>의 <code>draft/online/</code>에서 읽을 수 있습니다.</p><ul>%s</ul></div>' % (REPO, ol))
     body[-1] = body[-1][:-len("</section>")] + online + "</section>"   # 마지막 부록에 이어 붙인다
     entries.append(("app", "online", "온라인 부록", []))
 

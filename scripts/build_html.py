@@ -42,10 +42,10 @@ h3{ font-size:11pt; margin:14pt 0 5pt; }
 /* 본문 정렬 — 왼쪽. 양끝맞춤은 한국어에서 낱말 사이를 벌린다.
    한글은 하이픈이 없고 인라인 코드(`cfg_weight`)는 통째로 다음 줄로 넘어가므로,
    남은 자리를 낱말 사이로만 메우게 된다. 조판 검수에서 139줄 → 왼쪽 정렬로 0줄. */
-p{ margin:6pt 0; text-align:left; word-break:normal; }
-/* 양끝맞춤 + keep-all 은 한국어에서 낱말 사이를 벌린다 — 줄바꿈 지점이 공백뿐이라
-   긴 라틴 토큰(LivePortrait·LangChain) 하나가 그 줄 전체를 늘린다. 한글은 음절 단위
-   줄바꿈이 정상이므로 word-break:normal 로 되돌린다(조판 검수에서 139줄 → 확인). */
+p{ margin:6pt 0; text-align:left; }
+p, li, h1, h2, h3, h4, blockquote, figcaption, .cap, .sub{ word-break:keep-all; overflow-wrap:break-word; }
+/* keep-all: 한글 낱말 중간('여|정')에서 끊지 않는다. 예전엔 양끝맞춤과 겹쳐 낱말 사이가 벌어져 뺐지만
+   지금은 왼쪽맞춤이라 벌어질 것이 없다. 낱말보다 긴 토큰(URL·경로)만 overflow-wrap 으로 넘칠 때 끊는다. */
 blockquote{ margin:8pt 0; padding:5pt 10pt; border-left:3px solid var(--accent);
             background:#f6f8fc; text-align:left; page-break-inside:auto; }
 blockquote p{ margin:3pt 0; }

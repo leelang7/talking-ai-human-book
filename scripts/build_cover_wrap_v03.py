@@ -52,12 +52,9 @@ POSITION = [
 ]
 FACTS = [
     "▶ 4부 33장 + 부록 10개 · 실패 카탈로그 50종",
-    "▶ 모든 수치는 RTX 4070 한 장에서 직접 잰 값 — 4분과 2초",
+    "▶ 모든 수치는 GPU 한 장에서 직접 잰 값 — 4분과 2초",
     "▶ 말하는 영상 · 브라우저 실시간 아바타 · 실시간 통역 실증 포함",
 ]
-AUTHOR_KO_EN = "이석창 (Seokchang Lee)"
-AUTHOR_TITLE = "Adjunct Professor · AI Specialist Lecturer"
-AUTHOR_AFFIL = "Korea IT Academy · 미래융합교육원 · Elice · EST soft · 한국기술교육대학교 출강"
 QUOTE = ["\"AI 휴먼은 하나의 거대 모델이 아니라", "네 층의 조립입니다.\""]
 QUOTE_SRC = "— 서문에서"
 TAGS = "IT · 컴퓨터 / 인공지능 / 생성형 AI / 컴퓨터 비전 / 음성 합성"
@@ -134,9 +131,7 @@ def main():
         d.text((bx, yy), line, font=fb, fill=OFF); yy += px(6.6)
     yy += px(5)
     d.rectangle((bx, yy, bx + maxw, yy + px(0.25)), fill=(70, 74, 82)); yy += px(6)
-    d.text((bx, yy), AUTHOR_KO_EN, font=font(SANS, 700, px(4.4)), fill=OFF); yy += px(6.6)
-    d.text((bx, yy), AUTHOR_TITLE, font=font(SANS, 400, px(3.0)), fill=GREY); yy += px(5.0)
-    d.text((bx, yy), AUTHOR_AFFIL, font=font(SANS, 400, px(3.0)), fill=GREY); yy += px(8)
+    yy += px(4)
     fq = font(SERIF, 500, px(4.0))
     for line in QUOTE:
         d.text((bx, yy), line, font=fq, fill=AMBER_TXT); yy += px(6.2)

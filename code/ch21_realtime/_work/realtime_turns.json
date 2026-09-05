@@ -9,7 +9,9 @@
    "size": "512x512",
    "fps": "25/1",
    "audio_s": 6.22,
-   "bytes": 91825
+   "bytes": 91825,
+   "expected_frames": 156,
+   "shortfall": -91
   },
   {
    "turn": 2,
@@ -18,7 +20,9 @@
    "size": "512x512",
    "fps": "25/1",
    "audio_s": 6.22,
-   "bytes": 137564
+   "bytes": 137564,
+   "expected_frames": 156,
+   "shortfall": -2
   },
   {
    "turn": 3,
@@ -27,7 +31,9 @@
    "size": "512x512",
    "fps": "25/1",
    "audio_s": 3.07,
-   "bytes": 80926
+   "bytes": 80926,
+   "expected_frames": 77,
+   "shortfall": -2
   },
   {
    "turn": 4,
@@ -36,7 +42,9 @@
    "size": "512x512",
    "fps": "25/1",
    "audio_s": 3.07,
-   "bytes": 80926
+   "bytes": 80926,
+   "expected_frames": 77,
+   "shortfall": -2
   },
   {
    "turn": 5,
@@ -45,7 +53,9 @@
    "size": "512x512",
    "fps": "25/1",
    "audio_s": 4.8,
-   "bytes": 122654
+   "bytes": 122654,
+   "expected_frames": 120,
+   "shortfall": -1
   },
   {
    "turn": 6,
@@ -54,7 +64,9 @@
    "size": "512x512",
    "fps": "25/1",
    "audio_s": 3.6,
-   "bytes": 91445
+   "bytes": 91445,
+   "expected_frames": 90,
+   "shortfall": -1
   }
  ],
  "total_s": 27.0,

@@ -67,6 +67,7 @@ figure figcaption{ margin-top:5pt; font-size:8.8pt; color:var(--muted);
                    text-align:center; line-height:1.5; }
 figure figcaption .num{ color:var(--fg); font-weight:600; }
 figure.narrow img{ max-width:70%; }
+figure.tall img{ max-width:58%; }
 
 /* 표 */
 .tw{ margin:11pt 0; }
@@ -133,6 +134,23 @@ def _inline_block(ln):
     return "<p>%s</p>" % _inline(t)
 
 
+
+def _shape_class(src):
+    """세로로 긴 그림은 폭을 줄인다 — 전폭으로 앉히면 한 쪽의 80% 를 먹는다(출간 검수에서 잡힘).
+    가로 그림은 wide(전폭), 정사각은 narrow(70%), 세로는 tall(58%)."""
+    try:
+        from PIL import Image
+        for base in (DRAFT, os.path.join(DRAFT, "..")):
+            path = os.path.join(base, src)
+            if os.path.exists(path):
+                w, h = Image.open(path).size
+                r = h / w
+                return "tall" if r > 1.1 else ("narrow" if r > 0.85 else "wide")
+    except Exception:
+        pass
+    return "wide"
+
+
 def _render_table(rows, chno, n, cap, issues):
     cells = [[c.strip() for c in r.strip().strip("|").split("|")] for r in rows]
     cells = [c for c in cells if not all(re.fullmatch(r":?-{2,}:?", x or "-") for x in c)]
@@ -184,7 +202,7 @@ def md_to_html(md, chno, issues):
                     i += 1
             if not cap:
                 issues.append("Ch%s 그림 %d: 캡션 없음 (%s)" % (chno, fig_n, src))
-            cls = "narrow" if "narrow" in src else "wide"
+            cls = "narrow" if "narrow" in src else _shape_class(src)
             out.append('<figure class="%s"><img src="%s" alt="%s">'
                        '<figcaption><span class="num">그림 %s-%d</span> %s</figcaption></figure>'
                        % (cls, _esc(src), _esc(cap), chno, fig_n, _esc(cap)))

@@ -137,8 +137,10 @@ def main():
         aw, ah = art.size
         art = art.crop((0, 0, aw, int(ah * (1 - tb))))                         # 별이 있는 아래 띠 제거
         # 피사체 자동 크롭 — 검정보다 밝은 화소의 상자 + 여유 5%
-        lum = _np.asarray(art.convert("L"))
-        ys, xs = _np.where(lum > 22)
+        lum = _np.array(art.convert("L"))            # 복사본(asarray 는 읽기 전용)
+        # 업스케일 JPEG 는 가장자리에 옅은 밝기 띠가 생겨 상자가 화면 끝까지 늘어난다 — 문턱을 올리고 테두리 2% 는 뺀다
+        eh, ew = lum.shape; lum[:, :int(ew * 0.02)] = 0; lum[:, -int(ew * 0.02):] = 0; lum[:int(eh * 0.02), :] = 0
+        ys, xs = _np.where(lum > 40)
         pad = int(max(art.size) * 0.05)
         box = (max(0, xs.min() - pad), max(0, ys.min() - pad), min(art.size[0], xs.max() + pad), min(art.size[1], ys.max() + pad))
         art = art.crop(box)

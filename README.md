@@ -24,8 +24,8 @@
 ## 빠르게 시작하기
 
 ```
-git clone https://github.com/leelang7/<이 저장소>.git
-cd <이 저장소>
+git clone https://github.com/leelang7/talking-ai-human-book.git
+cd talking-ai-human-book
 pip install -r requirements.txt
 python scripts/gates.py          # 회귀 테스트 663건 + 스모크 19종
 ```

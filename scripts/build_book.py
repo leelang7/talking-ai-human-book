@@ -25,7 +25,7 @@ TITLE = "말하는 AI 휴먼을 만드는 법"
 SUB = "사진 한 장에서 실시간 대화 아바타까지<br>픽셀이 얼굴이 되고, 그 얼굴이 말을 한다"
 SERIES = "All That AI · Vol.03"
 AUTHOR = "이석창 (Seokchang Lee)"
-REPO = "github.com/leelang7"
+REPO = "github.com/leelang7/talking-ai-human-book"          # 공개 컴패니언 저장소 (2026-09-05)
 APP_ORDER = "ABCDEFGHLN"          # 인쇄 부록 순서 (폴더에 있는 것만)
 
 BOOK_CSS = CSS + """

@@ -1,0 +1,18 @@
+{
+ "measured": "2026-09-03",
+ "vocab": 20,
+ "coverage_counter_sentences_4": 0.542,
+ "coverage_pct": 54,
+ "sign_lang_mvp": {
+  "source": "github.com/leelang7/Sign-lang README (2026-04-30)",
+  "keypoints": 75,
+  "model": "Conv1d → BiLSTM(192×2) → Attention Pool",
+  "classes": 21,
+  "words": 20,
+  "videos": 100,
+  "angles": 5,
+  "holdout_accuracy": "85% (17/20)",
+  "latency_ms_per_window": 4.8,
+  "verify_items": 36
+ }
+}

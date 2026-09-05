@@ -1,0 +1,23 @@
+{
+ "measured": "2026-09-03",
+ "split_demo": {
+  "source": "demo_character.png 260×320",
+  "wall_s": 0.2,
+  "parts": {
+   "eyeL": "52×44",
+   "eyeR": "52×44",
+   "mouth": "102×57",
+   "body": "260×320 (구멍 메움)"
+  },
+  "origins": {
+   "eye": "center center",
+   "mouth": "center top",
+   "body": "center bottom"
+  }
+ },
+ "params_layer": {
+  "clamp_apply_us_per_call": 2.5,
+  "share_of_30fps_frame_pct": 0.007,
+  "n_calls": 20000
+ }
+}

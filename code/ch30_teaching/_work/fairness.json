@@ -1,0 +1,28 @@
+{
+ "measured": "2026-09-03",
+ "students": 20,
+ "first_student_jobs": 10,
+ "job_s": 210.0,
+ "results": {
+  "fifo": {
+   "first_student_first_start_s": 0.0,
+   "others_median_wait_s": 3990.0,
+   "others_max_wait_s": 5880.0,
+   "others_min_wait_s": 2100.0,
+   "total_s": 6090.0,
+   "others_median_wait_min": 66.5,
+   "others_max_wait_min": 98.0,
+   "total_min": 102
+  },
+  "fair": {
+   "first_student_first_start_s": 0.0,
+   "others_median_wait_s": 2100.0,
+   "others_max_wait_s": 3990.0,
+   "others_min_wait_s": 210.0,
+   "total_s": 6090.0,
+   "others_median_wait_min": 35.0,
+   "others_max_wait_min": 66.5,
+   "total_min": 102
+  }
+ }
+}

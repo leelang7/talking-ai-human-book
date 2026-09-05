@@ -1,0 +1,6 @@
+start 08:55:46
+exit=0 end 08:56:14
+-rw-r--r-- 1 leesc 197609     727 Sep  3 08:56 palette.png
+-rw-r--r-- 1 leesc 197609 7061612 Sep  3 08:56 s39--driver_therapist__script.gif
+-rw-r--r-- 1 leesc 197609  844708 Sep  3 08:56 s39--driver_therapist__script.mp4
+-rw-r--r-- 1 leesc 197609 1229583 Sep  3 08:56 s39--driver_therapist__script_concat.mp4

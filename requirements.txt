@@ -1,0 +1,24 @@
+# 말하는 AI 휴먼을 만드는 법 — 컴패니언 코드
+#
+# 이것만 있으면 `python scripts/gates.py` 가 돕니다(GPU 불필요).
+# 무거운 모델(MuseTalk · LivePortrait · Wav2Lip)은 각자의 저장소·환경을 따로 만듭니다 — 부록 A.
+
+numpy>=1.24
+opencv-python>=4.8
+requests>=2.31
+
+# 실시간 트랙(Ch21·Ch28+) 서버
+fastapi>=0.110
+uvicorn>=0.29
+
+# 음성 (Ch03 · Ch21 · Ch23+)
+edge-tts>=6.1
+
+# 브라우저 계측 (Ch08) · 조판 검수 (scripts/) — 선택
+# playwright>=1.44      설치 후:  playwright install chromium
+# pymupdf>=1.24         scripts/type_qa.py
+# pypdf>=4.2            scripts/build_book.py
+
+# 한국어 발음 (Ch03, 선택 — 없으면 정규화만 동작)
+# g2pkk>=0.1.2
+# nltk>=3.8

@@ -1,0 +1,89 @@
+{
+ "measured": "2026-09-03",
+ "sentences": 5,
+ "chars_per_sentence": "19~28",
+ "edge_tts": {
+  "measured": "2026-09-03",
+  "engine": "edge-tts ko-KR-InJoonNeural",
+  "rows": [
+   {
+    "chars": 21,
+    "total_s": 0.66,
+    "first_chunk_s": 0.54,
+    "bytes": 25920
+   },
+   {
+    "chars": 20,
+    "total_s": 0.68,
+    "first_chunk_s": 0.53,
+    "bytes": 24192
+   },
+   {
+    "chars": 19,
+    "total_s": 0.73,
+    "first_chunk_s": 0.35,
+    "bytes": 21600
+   },
+   {
+    "chars": 28,
+    "total_s": 0.6,
+    "first_chunk_s": 0.46,
+    "bytes": 28080
+   },
+   {
+    "chars": 19,
+    "total_s": 1.02,
+    "first_chunk_s": 0.88,
+    "bytes": 26928
+   }
+  ],
+  "median_total_s": 0.68,
+  "median_first_chunk_s": 0.53
+ },
+ "chatterbox": {
+  "measured": "2026-09-03",
+  "engine": "Chatterbox multilingual (ko) · RTX 4070 SUPER",
+  "load_s": 39,
+  "rows": [
+   {
+    "chars": 21,
+    "gen_s": 1.38,
+    "audio_s": 2.24,
+    "rtf": 0.62
+   },
+   {
+    "chars": 20,
+    "gen_s": 1.47,
+    "audio_s": 2.52,
+    "rtf": 0.58
+   },
+   {
+    "chars": 19,
+    "gen_s": 1.21,
+    "audio_s": 1.96,
+    "rtf": 0.62
+   },
+   {
+    "chars": 28,
+    "gen_s": 1.7,
+    "audio_s": 2.96,
+    "rtf": 0.57
+   },
+   {
+    "chars": 19,
+    "gen_s": 1.42,
+    "audio_s": 2.28,
+    "rtf": 0.62
+   }
+  ],
+  "median_gen_s": 1.42,
+  "median_rtf": 0.62
+ },
+ "summary": {
+  "edge_total_s": 0.7,
+  "edge_first_chunk_s": 0.5,
+  "chatterbox_gen_s": 1.4,
+  "chatterbox_rtf": 0.62,
+  "chatterbox_load_s": 39
+ }
+}

@@ -1,0 +1,62 @@
+{
+ "measured": "2026-09-03",
+ "where": "D:/atl_aihub/adapters_keep · D:/atl_aihub/71517_val_gyeongsang",
+ "adapters_kept": {
+  "gyeongsang": {
+   "zip_MB": 20.9,
+   "adapter_model_safetensors_MB": 22.52,
+   "saved": "2026-07-30 00:20"
+  },
+  "jeolla": {
+   "zip_MB": 20.9,
+   "adapter_model_safetensors_MB": 22.52,
+   "saved": "2026-07-30 11:47"
+  },
+  "gangwon": {
+   "zip_MB": 20.9,
+   "adapter_model_safetensors_MB": 22.52,
+   "saved": "2026-07-30 13:45"
+  },
+  "chungcheong": {
+   "zip_MB": 20.9,
+   "adapter_model_safetensors_MB": 22.52,
+   "saved": "2026-07-30 15:36"
+  },
+  "jeju": {
+   "zip_MB": 20.9,
+   "adapter_model_safetensors_MB": 22.52,
+   "saved": "2026-07-30 17:04"
+  }
+ },
+ "aihub_gyeongsang_validation_source_GiB": 3.16,
+ "note": "Ch03+ 표의 7/29 행(7.5MB, r=16, q_proj·v_proj)은 저자의 당시 기록 — 그 산출물은 디스크에 남아 있지 않다. 남아 있는 것은 7/30 최종 어댑터(22.5MB)뿐.",
+ "final_adapter_config": {
+  "r": 32,
+  "lora_alpha": 64,
+  "target_modules": [
+   "q_proj",
+   "v_proj",
+   "o_proj"
+  ],
+  "from": "adapter_config.json inside cbx_gyeongsang_0730_0020.zip"
+ },
+ "reconstruction_0729": {
+  "r": 16,
+  "lora_alpha": 32,
+  "target_modules": [
+   "q_proj",
+   "v_proj"
+  ],
+  "size_MB": 7.5,
+  "check": "7.5MB × (32/16) × (3/2) = 22.5MB — 남아 있는 22.52MB 와 일치"
+ },
+ "aihub_dir_sizes_GiB": {
+  "71517_val_gyeongsang": 3.16,
+  "71558_val_jeolla": 2.52,
+  "work_chungcheong": 2.79,
+  "work_gangwon": 2.8,
+  "work_jeolla": 3.53,
+  "work": 4.42,
+  "measured": "2026-09-03 du -sm (일부 디렉터리만)"
+ }
+}

@@ -1,0 +1,35 @@
+{
+  "env": {
+    "os": "Windows 11",
+    "python": "3.12.10",
+    "gpu": "NVIDIA GeForce RTX 4070 SUPER",
+    "vram_gb": 12.0,
+    "torch": "2.6.0+cu124"
+  },
+  "audio_sec": 0.1067,
+  "stages": [
+    {
+      "name": "TTS",
+      "sec": 0.05,
+      "rc": 0
+    },
+    {
+      "name": "신경망 립싱크",
+      "sec": 1.96,
+      "rc": 0
+    },
+    {
+      "name": "표정 리타게팅",
+      "sec": 0.32,
+      "rc": 0
+    },
+    {
+      "name": "ffmpeg mux",
+      "sec": 0.02,
+      "rc": 0
+    }
+  ],
+  "total_sec": 2.35,
+  "rt_factor": 22.02,
+  "note": "데모(가짜 부하 · 1/100 축약)"
+}

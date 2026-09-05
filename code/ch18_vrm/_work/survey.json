@@ -1,0 +1,150 @@
+{
+ "measured": "2026-09-03",
+ "bones": 15,
+ "models": [
+  {
+   "file": "images/AvatarSample_T.vrm",
+   "size_MB": 16.2,
+   "nodes": 151,
+   "hits": {
+    "vrm": 0,
+    "blender": 0,
+    "mixamo": 0,
+    "vrm_humanoid": 15
+   },
+   "best_family": "vrm_humanoid",
+   "vrm": "VRM1",
+   "humanoid_bones": 54,
+   "height_m": 1.782,
+   "scale": 1.0
+  },
+  {
+   "file": "images/gm_model.glb",
+   "size_MB": 32.4,
+   "nodes": 43,
+   "hits": {
+    "vrm": 0,
+    "blender": 0,
+    "mixamo": 15,
+    "vrm_humanoid": 0
+   },
+   "best_family": "mixamo",
+   "vrm": null,
+   "humanoid_bones": 0,
+   "height_m": 0.012,
+   "scale": 133.33333333333334
+  },
+  {
+   "file": "images/hanhwa.vrm",
+   "size_MB": 21.3,
+   "nodes": 55,
+   "hits": {
+    "vrm": 5,
+    "blender": 15,
+    "mixamo": 0,
+    "vrm_humanoid": 15
+   },
+   "best_family": "blender",
+   "vrm": "VRM0",
+   "humanoid_bones": 53,
+   "height_m": 0.95,
+   "scale": 1.0
+  },
+  {
+   "file": "rigged/avatar.vrm",
+   "size_MB": 10.3,
+   "nodes": 171,
+   "hits": {
+    "vrm": 0,
+    "blender": 0,
+    "mixamo": 0,
+    "vrm_humanoid": 15
+   },
+   "best_family": "vrm_humanoid",
+   "vrm": "VRM1",
+   "humanoid_bones": 54,
+   "height_m": 1.639,
+   "scale": 1.0
+  },
+  {
+   "file": "rigged/avatar_f.vrm",
+   "size_MB": 11.5,
+   "nodes": 62,
+   "hits": {
+    "vrm": 0,
+    "blender": 0,
+    "mixamo": 0,
+    "vrm_humanoid": 15
+   },
+   "best_family": "vrm_humanoid",
+   "vrm": "VRM0",
+   "humanoid_bones": 54,
+   "height_m": 1.607,
+   "scale": 1.0
+  },
+  {
+   "file": "rigged/avatar_g.glb",
+   "size_MB": 35.8,
+   "nodes": 43,
+   "hits": {
+    "vrm": 0,
+    "blender": 0,
+    "mixamo": 15,
+    "vrm_humanoid": 0
+   },
+   "best_family": "mixamo",
+   "vrm": null,
+   "humanoid_bones": 0,
+   "height_m": 0.012,
+   "scale": 133.33333333333334
+  },
+  {
+   "file": "rigged/avatar_hface.glb",
+   "size_MB": 20.3,
+   "nodes": 59,
+   "hits": {
+    "vrm": 5,
+    "blender": 15,
+    "mixamo": 0,
+    "vrm_humanoid": 0
+   },
+   "best_family": "blender",
+   "vrm": null,
+   "humanoid_bones": 0,
+   "height_m": 0.95,
+   "scale": 1.0
+  },
+  {
+   "file": "rigged/avatar_m.vrm",
+   "size_MB": 11.3,
+   "nodes": 62,
+   "hits": {
+    "vrm": 0,
+    "blender": 0,
+    "mixamo": 0,
+    "vrm_humanoid": 15
+   },
+   "best_family": "vrm_humanoid",
+   "vrm": "VRM0",
+   "humanoid_bones": 54,
+   "height_m": 1.768,
+   "scale": 1.0
+  },
+  {
+   "file": "rigged/avatar_t.vrm",
+   "size_MB": 16.2,
+   "nodes": 151,
+   "hits": {
+    "vrm": 0,
+    "blender": 0,
+    "mixamo": 0,
+    "vrm_humanoid": 15
+   },
+   "best_family": "vrm_humanoid",
+   "vrm": "VRM1",
+   "humanoid_bones": 54,
+   "height_m": 1.782,
+   "scale": 1.0
+  }
+ ]
+}

@@ -1,0 +1,64 @@
+{
+ "measured": "2026-06-05 (산출 파일 기록)",
+ "source": "bartender_rt/vid_output",
+ "turns": [
+  {
+   "turn": 1,
+   "video_s": 6.22,
+   "frames": 65,
+   "size": "512x512",
+   "fps": "25/1",
+   "audio_s": 6.22,
+   "bytes": 91825
+  },
+  {
+   "turn": 2,
+   "video_s": 6.22,
+   "frames": 154,
+   "size": "512x512",
+   "fps": "25/1",
+   "audio_s": 6.22,
+   "bytes": 137564
+  },
+  {
+   "turn": 3,
+   "video_s": 3.07,
+   "frames": 75,
+   "size": "512x512",
+   "fps": "25/1",
+   "audio_s": 3.07,
+   "bytes": 80926
+  },
+  {
+   "turn": 4,
+   "video_s": 3.07,
+   "frames": 75,
+   "size": "512x512",
+   "fps": "25/1",
+   "audio_s": 3.07,
+   "bytes": 80926
+  },
+  {
+   "turn": 5,
+   "video_s": 4.8,
+   "frames": 119,
+   "size": "512x512",
+   "fps": "25/1",
+   "audio_s": 4.8,
+   "bytes": 122654
+  },
+  {
+   "turn": 6,
+   "video_s": 3.6,
+   "frames": 89,
+   "size": "512x512",
+   "fps": "25/1",
+   "audio_s": 3.6,
+   "bytes": 91445
+  }
+ ],
+ "total_s": 27.0,
+ "mean_s": 4.5,
+ "warmup_s": 4.0,
+ "idle_loop_s": 7.9
+}

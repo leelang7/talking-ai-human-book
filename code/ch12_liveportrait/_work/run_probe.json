@@ -1,0 +1,30 @@
+{
+ "measured": "2026-09-03",
+ "source": "_work/timing.txt · run.log",
+ "wall_s": 28,
+ "warmup": {
+  "face_analysis_s": 1.587,
+  "landmark_s": 1.0,
+  "xpose_s": 1.336,
+  "total_s": 3.9
+ },
+ "output": {
+  "size": "512x512",
+  "fps": 29,
+  "frames": 176,
+  "duration_s": 6.07
+ },
+ "input_driver": {
+  "fps": 25,
+  "frames": 176,
+  "audio_s": 6.072
+ },
+ "realtime_factor": 4.6,
+ "combined_with_musetalk": {
+  "musetalk_wall_s": 108,
+  "liveportrait_wall_s": 28,
+  "total_s": 136,
+  "audio_s": 6.07,
+  "realtime_factor": 22.4
+ }
+}

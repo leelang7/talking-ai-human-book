@@ -1,0 +1,61 @@
+{
+ "measured": "2026-09-03",
+ "env_python": "C:/lsc/p/w2l_test/venv/Scripts/python.exe",
+ "repo": "C:/lsc/p/w2l_test/Wav2Lip",
+ "runs": [
+  {
+   "input": "driver_therapist.mp4 1280×720 176f (resize_factor 1 · face_det_batch 16)",
+   "result": "385초 타임아웃 — 얼굴 검출 0/12 에서 진행 없음",
+   "wall_s": 384.8,
+   "returncode": 143
+  },
+  {
+   "input": "face.jpg 정지 사진 1024×1024 + _script.wav 6.07초",
+   "output": {
+    "size": "1024x1024",
+    "fps": 25,
+    "frames": 149
+   },
+   "wall_s": null,
+   "ch09": {
+    "top": 15,
+    "hit_rate": 0.8,
+    "chance_baseline": 0.47,
+    "lift": 1.68,
+    "quiet_activity_ratio": 0.22,
+    "pass": true,
+    "roi_mode": "face"
+   },
+   "note": "정지 사진은 조용한 구간에 움직임이 없다 — ③ 기준을 공짜로 통과한다"
+  },
+  {
+   "input": "driver_therapist.mp4 (resize_factor 2 → 640×360 · face_det_batch 8) + _script.wav 6.07초",
+   "wall_s": 37,
+   "breakdown": {
+    "face_detect_s": 22,
+    "face_detect_batches": 23,
+    "wav2lip_batches": 2,
+    "driver_frames_available": 452
+   },
+   "output": {
+    "size": "640x360",
+    "fps": "30000/1001",
+    "frames": 178,
+    "duration_s": 5.94,
+    "expected_frames": 182,
+    "shortfall_frames": 4,
+    "shortfall_s": 0.13
+   },
+   "ch09": {
+    "top": 15,
+    "hit_rate": 0.73,
+    "chance_baseline": 0.48,
+    "lift": 1.54,
+    "quiet_activity_ratio": 0.52,
+    "pass": false,
+    "roi_mode": "face"
+   },
+   "note": "같은 드라이버·음성의 MuseTalk 원 출력(53% · 1.11 · 73%)보다 낫지만 조용한 구간 52% 로 실패 — 드라이버(미디엄샷)가 상류 원인"
+  }
+ ]
+}

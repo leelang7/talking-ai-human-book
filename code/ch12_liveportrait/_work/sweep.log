@@ -1,0 +1,13 @@
+[lp] 완료 26s · 배율 1.5 · 512x512 · 176프레임 @ 29/1
+[lp] ⚠ 결과가 정수 fps 다 — 드라이버가 29.97 이었다면 Ch14 §2 의 드리프트다
+[lp] 완료 25s · 배율 2.0 · 512x512 · 176프레임 @ 29/1
+[lp] ⚠ 결과가 정수 fps 다 — 드라이버가 29.97 이었다면 Ch14 §2 의 드리프트다
+[lp] 완료 25s · 배율 3.0 · 512x512 · 176프레임 @ 29/1
+[lp] ⚠ 결과가 정수 fps 다 — 드라이버가 29.97 이었다면 Ch14 §2 의 드리프트다
+[lp] 완료 25s · 배율 4.0 · 512x512 · 176프레임 @ 29/1
+[lp] ⚠ 결과가 정수 fps 다 — 드라이버가 29.97 이었다면 Ch14 §2 의 드리프트다
+  배율 1.5: OK 26s C:\lsc\Human-book\code\ch12_liveportrait\_work\sweep\m1.5\s39--driver_therapist__script.mp4
+  배율 2.0: OK 25s C:\lsc\Human-book\code\ch12_liveportrait\_work\sweep\m2.0\s39--driver_therapist__script.mp4
+  배율 3.0: OK 25s C:\lsc\Human-book\code\ch12_liveportrait\_work\sweep\m3.0\s39--driver_therapist__script.mp4
+  배율 4.0: OK 25s C:\lsc\Human-book\code\ch12_liveportrait\_work\sweep\m4.0\s39--driver_therapist__script.mp4
+exit=0

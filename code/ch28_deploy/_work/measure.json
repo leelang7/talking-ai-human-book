@@ -1,0 +1,22 @@
+{
+ "measured": "2026-09-03",
+ "torch_hub_cache_MB": 216,
+ "dockerfile": "C:/lsc/Avatar/Dockerfile.atl",
+ "dockerfile_lines": 37,
+ "copy_line": "COPY torch_hub_cache /root/.cache/torch/hub/checkpoints",
+ "avatar_job_py_lines": 60,
+ "jobqueue_demo": {
+  "stale_reclaim_s": 300
+ },
+ "local_docker": "29.5.2",
+ "preflight_on_avatar_repo": {
+  "fatal": 10,
+  "fatal_kinds": {
+   "from_pretrained(": 9,
+   "pip install": 1
+  },
+  "warn": 1,
+  "ok": 2,
+  "note": "실행 중 내려받기 — 캐시를 굽고 오프라인 선언 전엔 인터넷 없이 못 돈다"
+ }
+}

@@ -1,0 +1,11 @@
+{
+  "_": "이 파일을 book.config.json 으로 복사하고 여러분의 경로로 고치세요. 환경변수 BOOK_<키> 가 이 파일보다 우선합니다.",
+  "avatar": "C:/작업폴더",
+  "liveportrait": "C:/작업폴더/LivePortrait",
+  "musetalk": "C:/작업폴더/MuseTalk",
+  "wav2lip": "C:/작업폴더/Wav2Lip",
+  "gemini_key": "C:/작업폴더/gemini_key.txt",
+  "py_liveportrait": "C:/Users/<계정>/miniconda3/envs/LivePortrait/python.exe",
+  "py_musetalk": "C:/Users/<계정>/miniconda3/envs/MuseTalk/python.exe",
+  "py_wav2lip": "C:/작업폴더/w2l_venv/Scripts/python.exe"
+}

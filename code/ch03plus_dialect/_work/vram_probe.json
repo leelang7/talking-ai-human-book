@@ -1,0 +1,31 @@
+{
+ "measured": "2026-09-03",
+ "gpu": "RTX 4070 SUPER 12GB",
+ "venv": "D:/atl_cbx_venv",
+ "model": "ResembleAI/chatterbox (ChatterboxMultilingualTTS, t3_mtl23ls_v2)",
+ "disk_GB": {
+  "t3": 2.0,
+  "s3gen": 0.98,
+  "ve": 0.01,
+  "total": 2.99
+ },
+ "param_bytes_GB": 2.99,
+ "vram_GB": {
+  "after_load_allocated": 3.0,
+  "after_load_reserved": 3.02,
+  "gen_peak_allocated": 3.1,
+  "gen_peak_reserved": 3.2
+ },
+ "load_s": 22,
+ "adapter_MB": 22.5,
+ "derived": {
+  "separate_5x_GB": 15.0,
+  "hotswap_weights_GB": 3.11,
+  "adapter_pct_of_base": 0.73,
+  "five_adapters_pct": 3.66,
+  "ratio_separate_vs_peak": 4.7,
+  "five_adapters_pct_rounded": 3.7,
+  "adapter_pct_rounded": 0.7
+ },
+ "note": "책의 이전 값 4.5GB 는 출처 없는 가정이었다. 모든 파생값(22.5GB·4.6/4.7GB·0.5%·2.5%·5배)을 실측으로 교체."
+}

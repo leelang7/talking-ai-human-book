@@ -1,0 +1,40 @@
+{
+ "short_term_long3x": {
+  "long_message_chars": 2016,
+  "window_8_turns_max": 2176,
+  "token_budget_1200_max": 1200
+ },
+ "window_spike_ratio": 8.7,
+ "short_term": {
+  "turns": 600,
+  "window_8_turns": {
+   "max": 832,
+   "mean": 250
+  },
+  "token_budget_1200": {
+   "max": 1200,
+   "mean": 1013
+  },
+  "long_message_chars": 672
+ },
+ "summary": {
+  "dropped_chars": 17672,
+  "summary_chars": 400,
+  "budget": 400,
+  "compression": 44.2
+ },
+ "decay": {
+  "half_life_days": 30,
+  "score_by_day": {
+   "0": 1.0,
+   "30": 0.5,
+   "60": 0.25,
+   "90": 0.125,
+   "120": 0.062,
+   "150": 0.031
+  },
+  "forgotten_after_days_once": 130,
+  "forgotten_after_days_said_3x": 160,
+  "threshold": 0.05
+ }
+}

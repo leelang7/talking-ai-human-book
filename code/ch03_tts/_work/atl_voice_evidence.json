@@ -1,0 +1,187 @@
+{
+ "measured": "2026-09-03 (D:/AllThatLink 및 D:/atl_aihub 실물 조사)",
+ "xtts_vs_openvoice_2026-06-29": {
+  "emotions": 4,
+  "configs": [
+   "XTTS zeroshot",
+   "XTTS finetune",
+   "OpenVoice"
+  ],
+  "same_line_durations_s": {
+   "joy": {
+    "XTTS_FT": 14.49,
+    "OpenVoice_KSS": 14.48
+   },
+   "anger": {
+    "XTTS_FT": 13.23,
+    "OpenVoice_KSS": 13.22
+   },
+   "sadness": {
+    "XTTS_FT": 14.15,
+    "OpenVoice_KSS": 14.15
+   }
+  },
+  "formats": {
+   "XTTS_FT": "pcm_f32le 24000Hz mono",
+   "OpenVoice_KSS": "pcm_s16le 22050Hz mono"
+  },
+  "correction": "파일 크기 2.2배는 길이가 아니라 형식(4바이트 vs 2바이트) 차이. 길이는 사실상 동일. 최초 서술은 크기에서 길이를 추정한 오류.",
+  "verdict": "한국어 품질은 청취로 판정 — 끝음절 늘어짐(파이프라인_요약.md 2026-06-17)",
+  "sample_rates_hz": {
+   "XTTS_FT": 24000,
+   "OpenVoice_KSS": 22050
+  },
+  "sample_rate_khz": {
+   "XTTS_FT": 24.0,
+   "OpenVoice_KSS": 22.05
+  }
+ },
+ "chatterbox_ops": {
+  "pin": "git commit 5de7a54a (t3_model=v3)",
+  "runaway_guard": "max(6.0s, chars*0.45s)",
+  "style_presets": {
+   "news": [
+    0.25,
+    0.6
+   ],
+   "talk": [
+    0.55,
+    0.4
+   ],
+   "ad": [
+    0.95,
+    0.3
+   ],
+   "drama": [
+    1.4,
+    0.25
+   ]
+  },
+  "pcm": "16-bit",
+  "consent_required": true,
+  "watermark": "perth (no-op fallback when package broken)",
+  "voice_leak_guard": "no ref → base conds",
+  "blind_test": "저자 블라인드 테스트에서 ElevenLabs 상회 (2026-07-17, 로컬 4070)",
+  "price_pt": 20
+ },
+ "dialect_lora": {
+  "v4": {
+   "utterances": 15296,
+   "speakers": 181,
+   "steps": 45000,
+   "loss": [
+    5.1618,
+    3.9499
+   ]
+  },
+  "gangwon": {
+   "loss": [
+    5.0263,
+    3.5689
+   ]
+  },
+  "chungcheong": {
+   "loss": [
+    4.8064,
+    3.1758
+   ]
+  },
+  "jeju": {
+   "loss": [
+    5.3141,
+    2.9061
+   ]
+  },
+  "jeolla": {
+   "utterances": 12025
+  },
+  "v3_pairs": 8000,
+  "shakedown": "100 steps ≈ 9s on 4070",
+  "loss_weight_text": 0.2,
+  "aihub_overseas_ip_blocked": true
+ },
+ "order_experiment_2026-07-12": {
+  "rt_avatar": [
+   196,
+   43
+  ],
+  "rt_human": [
+   175
+  ],
+  "rt_woman": [
+   95,
+   "error save_dir_full"
+  ],
+  "rt_natural": [
+   189,
+   48
+  ],
+  "rt_v2": [
+   55,
+   196
+  ],
+  "rt_v3": [
+   48,
+   169
+  ],
+  "winner": "rt_v3 (LivePortrait eyes → MuseTalk)"
+ },
+ "colab_postmortem_2026-07-15": {
+  "local_4070_ms_per_frame": 31,
+  "colab_a100_ms_per_frame": 70,
+  "rt_max_base_frames": [
+   500,
+   120
+  ],
+  "minutes": [
+   17,
+   2
+  ],
+  "cpu_blend_threshold_ms": 120,
+  "causes": 5
+ },
+ "distributed_2026-07-16": {
+  "nodes": "T4 × 4",
+  "chunks": 7,
+  "sequential_s": 123.2,
+  "wall_s": 37.1,
+  "speedup": 3.32,
+  "overhead_pct": 17
+ },
+ "realtime_session_billing": {
+  "bill_interval_s": 3,
+  "scale_to_zero_s": 300,
+  "provider_share_pct": 20,
+  "fair_serving_probe_2026-07-16": {
+   "inferences": 5,
+   "provider_pt": 5,
+   "ledger_net": 0
+  },
+  "pricing_incident": {
+   "table_won_per_h": 260,
+   "actual_pt_per_s": 5,
+   "actual_won_per_h": 18000,
+   "ratio": 70
+  },
+  "pt_per_won": 1,
+  "ref_audio_s": "5~15",
+  "sdk_lines": 3
+ },
+ "course_env_D_AIHuman_docker": {
+  "services": [
+   "qdrant",
+   "app(FastAPI, HF Transformers direct load)",
+   "jupyter"
+  ],
+  "cpu_compose": true,
+  "heavy_data_drive": "D",
+  "cohorts": 8
+ },
+ "platform_db_2026-09-03": {
+  "jobs": 171,
+  "deployments": 180,
+  "sessions": 140,
+  "ledger_rows": 4843,
+  "owners": 8
+ }
+}

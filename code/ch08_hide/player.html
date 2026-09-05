@@ -1,0 +1,85 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Ch08 — 더블 버퍼 플레이어</title>
+<!--
+  Ch08 §4·§5 를 브라우저에서 실제로 하는 최소 구현.
+
+  요점은 두 줄이다.
+    · <video> 를 **두 개** 겹쳐 두고 번갈아 쓴다
+    · 새 것은 `canplay` 가 뜬 **뒤에** 앞으로 올린다
+
+  hide.py 의 DoubleBuffer 와 같은 규칙이고, 그쪽은 이 규칙을 프레임 수로 검증한다.
+-->
+<style>
+  :root { --fade: 150ms; }            /* §4 — 100~200ms */
+  body { margin:0; background:#111; display:grid; place-items:center; height:100vh;
+         font-family:system-ui, sans-serif; color:#ddd; }
+  #stage { position:relative; width:512px; height:512px; background:#000; }
+  #stage video { position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+                 transition:opacity var(--fade) linear; }
+  .back  { opacity:0; }
+  .front { opacity:1; }
+  #bar { margin-top:12px; display:flex; gap:8px; align-items:center; font-size:13px; }
+  button { padding:6px 12px; }
+</style>
+
+<div id="stage">
+  <video id="v0" class="front" muted playsinline loop></video>
+  <video id="v1" class="back"  muted playsinline loop></video>
+</div>
+<div id="bar">
+  <button id="say">응답 재생</button>
+  <button id="idle">아이들로</button>
+  <span id="log">준비</span>
+</div>
+
+<script>
+const els  = [document.getElementById('v0'), document.getElementById('v1')];
+const log  = document.getElementById('log');
+let front  = 0;
+
+const IDLE = 'idle_loop.mp4';
+
+/**
+ * 새 소스를 뒤 요소에 로드하고, **재생 가능해진 뒤에만** 앞으로 올린다.
+ * 이 순서를 뒤집으면 요소가 둘이어도 똑같이 깜빡인다.
+ */
+function show(src, { loop = false } = {}) {
+  const back = 1 - front;
+  const b = els[back];
+  return new Promise(resolve => {
+    b.loop = loop;
+    b.onended = null;
+    b.src = src;
+
+    // canplay 가 뜨기 전에는 아무것도 하지 않는다. 앞 요소는 계속 보인다.
+    b.addEventListener('canplay', function onReady() {
+      b.removeEventListener('canplay', onReady);
+      b.play().catch(() => {});
+      els[back].className  = 'front';        // 두 transition 이 동시에 돈다
+      els[front].className = 'back';         // → 합이 1 로 유지된다
+      front = back;
+      log.textContent = src;
+      resolve(b);
+    }, { once: false });
+
+    b.addEventListener('error', () => {
+      // 실패해도 화면을 건드리지 않는다. 앞 요소가 계속 돈다 (§7).
+      console.warn('로드 실패:', src);
+      resolve(null);
+    }, { once: true });
+  });
+}
+
+/** 응답을 재생하고, 끝나면 아이들로 되돌아온다. */
+async function speak(src) {
+  const v = await show(src, { loop: false });
+  if (!v) return;
+  v.onended = () => show(IDLE, { loop: true });
+}
+
+document.getElementById('say').onclick  = () => speak('reply.mp4');
+document.getElementById('idle').onclick = () => show(IDLE, { loop: true });
+
+show(IDLE, { loop: true });     // 서버가 뜨면 아이들이 먼저 돈다 (§2)
+</script>

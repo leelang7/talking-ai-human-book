@@ -1,0 +1,10 @@
+  en 번역 1.79s  TTS첫청크 0.26s  = 2.85s     Hello, this is the AllThatAI information desk.
+  en 번역 4.30s  TTS첫청크 0.37s  = 5.46s     Please submit your passport together with the ap
+  en 번역 4.28s  TTS첫청크 0.41s  = 5.48s     It will take 3 business days to process, and the
+  en 번역 실패(빈 응답) — 건너뜀: 3층 305호에서 접수하시면 됩니다.
+  ja 번역 실패(빈 응답) — 건너뜀: 안녕하세요, 올댓에이아이 안내 창구입니다.
+  ja 번역 실패(빈 응답) — 건너뜀: 여권과 신청서를 함께 제출해 주세요.
+  ja 번역 실패(빈 응답) — 건너뜀: 처리에는 영업일 기준 3일이 걸리고 수수료는 12,00
+  ja 번역 실패(빈 응답) — 건너뜀: 3층 305호에서 접수하시면 됩니다.
+  중앙값 번역 4.28s · TTS 첫청크 0.37s · 발화 끝→첫 소리 5.46s (최대 5.48) · 누락 0/3
+  → _work/measure.json

@@ -1,0 +1,38 @@
+{
+ "measured": "2026-09-03",
+ "sim_minutes": 60,
+ "blink": {
+  "rest": {
+   "per_min": 18.1,
+   "gap_mean_s": 3.31,
+   "gap_sd_s": 1.3,
+   "double_share": 0.115
+  },
+  "speaking": {
+   "per_min": 27.1,
+   "gap_mean_s": 2.21,
+   "gap_sd_s": 0.83,
+   "double_share": 0.123
+  },
+  "literature": {
+   "rest_per_min": 17,
+   "conversation_per_min": 26,
+   "general_range": "15~20",
+   "source": "Bentivoglio 1997 등 — 웹 대조 2026-09-03"
+  }
+ },
+ "blink_before_fix": {
+  "rest": {
+   "per_min": 16.2,
+   "gap_mean_s": 3.7,
+   "gap_sd_s": 0.87,
+   "gaps_under_1s": 0.0
+  },
+  "speaking": {
+   "per_min": 20.1,
+   "gap_mean_s": 2.98,
+   "gap_sd_s": 0.69,
+   "gaps_under_1s": 0.0
+  }
+ }
+}

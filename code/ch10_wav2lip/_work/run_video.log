@@ -1,0 +1,95 @@
+Using cuda for inference.
+Reading video frames...
+Number of frames available for inference: 452
+(80, 486)
+Length of mel chunks: 178
+  0%|          | 0/2 [00:00<?, ?it/s]
+  0%|          | 0/23 [00:00<?, ?it/s][A
+  4%|4         | 1/23 [00:13<04:47, 13.09s/it][A
+  9%|8         | 2/23 [00:13<01:56,  5.54s/it][A
+ 13%|#3        | 3/23 [00:13<01:02,  3.12s/it][A
+ 17%|#7        | 4/23 [00:13<00:37,  1.98s/it][A
+ 22%|##1       | 5/23 [00:14<00:24,  1.35s/it][A
+ 26%|##6       | 6/23 [00:14<00:16,  1.03it/s][A
+ 30%|###       | 7/23 [00:14<00:11,  1.37it/s][A
+ 35%|###4      | 8/23 [00:14<00:08,  1.74it/s][A
+ 39%|###9      | 9/23 [00:15<00:06,  2.13it/s][A
+ 43%|####3     | 10/23 [00:15<00:05,  2.51it/s][A
+ 48%|####7     | 11/23 [00:15<00:04,  2.87it/s][A
+ 52%|#####2    | 12/23 [00:15<00:03,  3.18it/s][A
+ 57%|#####6    | 13/23 [00:15<00:02,  3.41it/s][A
+ 61%|######    | 14/23 [00:16<00:02,  3.61it/s][A
+ 65%|######5   | 15/23 [00:16<00:02,  3.77it/s][A
+ 70%|######9   | 16/23 [00:16<00:01,  3.89it/s][A
+ 74%|#######3  | 17/23 [00:16<00:01,  3.97it/s][A
+ 78%|#######8  | 18/23 [00:17<00:01,  4.04it/s][A
+ 83%|########2 | 19/23 [00:17<00:00,  4.07it/s][A
+ 87%|########6 | 20/23 [00:17<00:00,  4.12it/s][A
+ 91%|#########1| 21/23 [00:17<00:00,  4.15it/s][A
+ 96%|#########5| 22/23 [00:18<00:00,  4.17it/s][A
+100%|##########| 23/23 [00:22<00:00,  1.53s/it][A100%|##########| 23/23 [00:22<00:00,  1.02it/s]
+Load checkpoint from: checkpoints/wav2lip_gan.pth
+Model loaded
+ 50%|#####     | 1/2 [00:29<00:29, 29.70s/it]100%|##########| 2/2 [00:31<00:00, 13.42s/it]100%|##########| 2/2 [00:31<00:00, 15.86s/it]
+ffmpeg version 8.1.1-full_build-www.gyan.dev Copyright (c) 2000-2026 the FFmpeg developers
+  built with gcc 15.2.0 (Rev13, Built by MSYS2 project)
+  configuration: --enable-gpl --enable-version3 --enable-static --disable-w32threads --disable-autodetect --enable-cairo --enable-fontconfig --enable-iconv --enable-gnutls --enable-lcms2 --enable-libxml2 --enable-gmp --enable-bzlib --enable-lzma --enable-libsnappy --enable-zlib --enable-librist --enable-libsrt --enable-libssh --enable-libzmq --enable-avisynth --enable-libbluray --enable-libcaca --enable-libdvdnav --enable-libdvdread --enable-sdl2 --enable-libaribb24 --enable-libaribcaption --enable-libdav1d --enable-libdavs2 --enable-libopenjpeg --enable-libquirc --enable-libuavs3d --enable-libxevd --enable-libzvbi --enable-liboapv --enable-libqrencode --enable-librav1e --enable-libsvtav1 --enable-libvvenc --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxavs2 --enable-libxeve --enable-libxvid --enable-libaom --enable-libjxl --enable-libsvtjpegxs --enable-libvpx --enable-mediafoundation --enable-libass --enable-frei0r --enable-libfreetype --enable-libfribidi --enable-libharfbuzz --enable-liblensfun --enable-libvidstab --enable-libvmaf --enable-libzimg --enable-amf --enable-cuda-llvm --enable-cuvid --enable-dxva2 --enable-d3d11va --enable-d3d12va --enable-ffnvcodec --enable-libvpl --enable-nvdec --enable-nvenc --enable-vaapi --enable-libshaderc --enable-vulkan --enable-libplacebo --enable-opencl --enable-libcdio --enable-openal --enable-libgme --enable-libmodplug --enable-libopenmpt --enable-libopencore-amrwb --enable-libmp3lame --enable-libshine --enable-libtheora --enable-libtwolame --enable-libvo-amrwbenc --enable-libcodec2 --enable-libilbc --enable-libgsm --enable-liblc3 --enable-libopencore-amrnb --enable-libopus --enable-libspeex --enable-libvorbis --enable-ladspa --enable-libbs2b --enable-libflite --enable-libmysofa --enable-librubberband --enable-libsoxr --enable-chromaprint --enable-whisper
+  libavutil      60. 26.101 / 60. 26.101
+  libavcodec     62. 28.101 / 62. 28.101
+  libavformat    62. 12.101 / 62. 12.101
+  libavdevice    62.  3.101 / 62.  3.101
+  libavfilter    11. 14.101 / 11. 14.101
+  libswscale      9.  5.101 /  9.  5.101
+  libswresample   6.  3.101 /  6.  3.101
+[aist#0:0/pcm_s16le @ 00000229901b57c0] Guessed Channel Layout: mono
+Input #0, wav, from 'C:/lsc/Avatar/MuseTalk/data/audio/_script.wav':
+  Metadata:
+    encoder         : Lavf62.12.101
+  Duration: 00:00:06.07, bitrate: 256 kb/s
+  Stream #0:0: Audio: pcm_s16le ([1][0][0][0] / 0x0001), 16000 Hz, mono, s16, 256 kb/s
+Input #1, avi, from 'temp/result.avi':
+  Metadata:
+    software        : Lavf58.76.100
+  Duration: 00:00:05.94, start: 0.000000, bitrate: 723 kb/s
+  Stream #1:0: Video: mpeg4 (Simple Profile) (DIVX / 0x58564944), yuv420p, 640x360 [SAR 1:1 DAR 16:9], 713 kb/s, 29.97 fps, 29.97 tbr, 29.97 tbn
+Stream mapping:
+  Stream #1:0 -> #0:0 (mpeg4 (native) -> h264 (libx264))
+  Stream #0:0 -> #0:1 (pcm_s16le (native) -> aac (native))
+Press [q] to stop, [?] for help
+[libx264 @ 00000229901c3080] -qscale is ignored, -crf is recommended.
+[libx264 @ 00000229901c3080] using SAR=1/1
+[libx264 @ 00000229901c3080] using cpu capabilities: MMX2 SSE2Fast SSSE3 SSE4.2 AVX FMA3 BMI2 AVX2
+[libx264 @ 00000229901c3080] profile High, level 3.0, 4:2:0, 8-bit
+[libx264 @ 00000229901c3080] 264 - core 165 r3223 0480cb0 - H.264/MPEG-4 AVC codec - Copyleft 2003-2025 - http://www.videolan.org/x264.html - options: cabac=1 ref=3 deblock=1:0:0 analyse=0x3:0x113 me=hex subme=7 psy=1 psy_rd=1.00:0.00 mixed_ref=1 me_range=16 chroma_me=1 trellis=1 8x8dct=1 cqm=0 deadzone=21,11 fast_pskip=1 chroma_qp_offset=-2 threads=11 lookahead_threads=1 sliced_threads=0 nr=0 decimate=1 interlaced=0 bluray_compat=0 constrained_intra=0 bframes=3 b_pyramid=2 b_adapt=1 b_bias=0 direct=1 weightb=1 open_gop=0 weightp=2 keyint=250 keyint_min=25 scenecut=40 intra_refresh=0 rc_lookahead=40 rc=crf mbtree=1 crf=23.0 qcomp=0.60 qpmin=0 qpmax=69 qpstep=4 ip_ratio=1.40 aq=1:1.00
+Output #0, mp4, to 'C:/lsc/Human-book/code/ch10_wav2lip/_work/out_video_rf2.mp4':
+  Metadata:
+    encoder         : Lavf62.12.101
+  Stream #0:0: Video: h264 (avc1 / 0x31637661), yuv420p(tv, progressive), 640x360 [SAR 1:1 DAR 16:9], q=2-31, 29.97 fps, 30k tbn
+    Metadata:
+      encoder         : Lavc62.28.101 libx264
+    Side data:
+      CPB properties: bitrate max/min/avg: 0/0/0 buffer size: 0 vbv_delay: N/A
+  Stream #0:1: Audio: aac (LC) (mp4a / 0x6134706D), 16000 Hz, mono, fltp, 69 kb/s
+    Metadata:
+      encoder         : Lavc62.28.101 aac
+[out#0/mp4 @ 00000229901c8600] video:136KiB audio:41KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: 2.451519%
+frame=  178 fps=0.0 q=-1.0 Lsize=     181KiB time=00:00:05.87 bitrate= 252.8kbits/s speed=34.3x elapsed=0:00:00.17    
+[libx264 @ 00000229901c3080] frame I:1     Avg QP:20.80  size: 17880
+[libx264 @ 00000229901c3080] frame P:107   Avg QP:21.40  size:  1026
+[libx264 @ 00000229901c3080] frame B:70    Avg QP:23.74  size:   154
+[libx264 @ 00000229901c3080] consecutive B-frames: 39.9% 16.9% 18.5% 24.7%
+[libx264 @ 00000229901c3080] mb I  I16..4: 20.9% 72.8%  6.3%
+[libx264 @ 00000229901c3080] mb P  I16..4:  0.4%  1.3%  0.0%  P16..4: 14.0%  2.9%  2.6%  0.0%  0.0%    skip:78.8%
+[libx264 @ 00000229901c3080] mb B  I16..4:  0.1%  0.3%  0.0%  B16..8: 13.9%  0.2%  0.0%  direct: 0.1%  skip:85.4%  L0:36.8% L1:62.7% BI: 0.5%
+[libx264 @ 00000229901c3080] 8x8 transform intra:72.5% inter:80.5%
+[libx264 @ 00000229901c3080] coded y,uvDC,uvAC intra: 45.4% 68.6% 23.3% inter: 3.0% 5.7% 0.9%
+[libx264 @ 00000229901c3080] i16 v,h,dc,p: 39% 32% 21%  8%
+[libx264 @ 00000229901c3080] i8 v,h,dc,ddl,ddr,vr,hd,vl,hu: 33% 20% 39%  2%  1%  2%  1%  1%  2%
+[libx264 @ 00000229901c3080] i4 v,h,dc,ddl,ddr,vr,hd,vl,hu: 50% 31%  9%  1%  2%  2%  2%  2%  2%
+[libx264 @ 00000229901c3080] i8c dc,h,v,p: 39% 22% 35%  4%
+[libx264 @ 00000229901c3080] Weighted P-Frames: Y:0.0% UV:0.0%
+[libx264 @ 00000229901c3080] ref P L0: 79.5%  7.6%  9.5%  3.4%
+[libx264 @ 00000229901c3080] ref B L0: 89.8%  8.5%  1.7%
+[libx264 @ 00000229901c3080] ref B L1: 98.3%  1.7%
+[libx264 @ 00000229901c3080] kb/s:186.51
+[aac @ 00000229921b68c0] Qavg: 49501.066

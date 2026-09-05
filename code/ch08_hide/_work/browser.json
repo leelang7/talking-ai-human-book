@@ -1,0 +1,17 @@
+{
+ "measured": "2026-09-03",
+ "browser": "chromium (playwright, headless)",
+ "cycles": 3,
+ "double_buffer": {
+  "frames": 323,
+  "blank": 0,
+  "swaps": 6,
+  "blank_ratio": 0.0
+ },
+ "single_buffer": {
+  "frames": 326,
+  "blank": 2,
+  "swaps": 6,
+  "blank_ratio": 0.006
+ }
+}

@@ -1,0 +1,76 @@
+{
+ "_silent.wav": {
+  "sr": 16000,
+  "frames": 120,
+  "rms_max": 0.0,
+  "rms_median": 0.0,
+  "open_ratio_raw": 0.0,
+  "open_ratio_driven": 0.0,
+  "open_ratio_no_gate": 0.0
+ },
+ "_script.wav": {
+  "sr": 16000,
+  "frames": 182,
+  "rms_max": 0.3983,
+  "rms_median": 0.0011,
+  "open_ratio_raw": 0.462,
+  "open_ratio_driven": 0.516,
+  "open_ratio_no_gate": 0.516,
+  "last_voiced_frame": 141,
+  "frames_to_close_after_speech": 6,
+  "ms_to_close_after_speech": 200,
+  "max_open_during_speech": 0.971
+ },
+ "_chat.wav": {
+  "sr": 16000,
+  "frames": 126,
+  "rms_max": 0.2623,
+  "rms_median": 0.0437,
+  "open_ratio_raw": 0.627,
+  "open_ratio_driven": 0.667,
+  "open_ratio_no_gate": 0.683,
+  "last_voiced_frame": 91,
+  "frames_to_close_after_speech": 5,
+  "ms_to_close_after_speech": 167,
+  "max_open_during_speech": 0.998
+ },
+ "_stt.wav": {
+  "sr": 16000,
+  "frames": 144,
+  "rms_max": 0.3303,
+  "rms_median": 0.0229,
+  "open_ratio_raw": 0.528,
+  "open_ratio_driven": 0.625,
+  "open_ratio_no_gate": 0.625,
+  "last_voiced_frame": 116,
+  "frames_to_close_after_speech": 5,
+  "ms_to_close_after_speech": 167,
+  "max_open_during_speech": 0.997
+ },
+ "_live.wav": {
+  "sr": 16000,
+  "frames": 92,
+  "rms_max": 0.2205,
+  "rms_median": 0.0009,
+  "open_ratio_raw": 0.467,
+  "open_ratio_driven": 0.522,
+  "open_ratio_no_gate": 0.522,
+  "last_voiced_frame": 53,
+  "frames_to_close_after_speech": 6,
+  "ms_to_close_after_speech": 200,
+  "max_open_during_speech": 0.97
+ },
+ "params": {
+  "fps": 30,
+  "open_threshold": 0.05,
+  "driver_defaults": {
+   "attack": 0.6,
+   "release": 0.35,
+   "floor": 0.06,
+   "noise_gate": 0.02,
+   "ceil_decay": 0.995,
+   "ceil_min": 0.05,
+   "curve": 0.5
+  }
+ }
+}

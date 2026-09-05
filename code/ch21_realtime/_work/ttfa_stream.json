@@ -1,0 +1,82 @@
+{
+ "by_model": {
+  "gemini-2.5-flash-lite": {
+   "summary": {
+    "n": 2,
+    "ttft_median_s": 0.99,
+    "first_sentence_median_s": 1.0,
+    "tts_first_chunk_median_s": 0.46,
+    "ttfa_median_s": 1.48,
+    "ttfa_min_s": 1.26,
+    "ttfa_max_s": 1.7,
+    "in_budget": 2,
+    "budget_s": 2.0,
+    "model": "gemini-2.5-flash-lite",
+    "voice": "ko-KR-InJoonNeural",
+    "measured": "2026-09-03",
+    "server_path_ttfa_median_s": 3.77,
+    "ratio_vs_server_path": 2.5,
+    "note": "두 실행 합산 — 무료 등급 429 로 각 실행에서 1건씩만 성공(14건 429)"
+   },
+   "rows": [
+    {
+     "q": "안녕하세요",
+     "first_sentence": "안녕하세요!",
+     "ttft_s": 1.01,
+     "first_sentence_s": 1.01,
+     "tts_first_chunk_s": 0.24,
+     "ttfa_s": 1.26,
+     "in_budget": true
+    },
+    {
+     "q": "저 오늘 너무 피곤해요",
+     "first_sentence": "에고, 오늘 많이 힘드시군요!",
+     "ttft_s": 0.98,
+     "first_sentence_s": 1.0,
+     "tts_first_chunk_s": 0.69,
+     "ttfa_s": 1.7,
+     "in_budget": true,
+     "run": "10:38 (첫 실행 — 나머지 7건 429)"
+    }
+   ]
+  },
+  "gemini-flash-latest": {
+   "summary": {
+    "n": 2,
+    "ttft_median_s": 1.42,
+    "first_sentence_median_s": 1.81,
+    "tts_first_chunk_median_s": 0.53,
+    "ttfa_median_s": 2.35,
+    "ttfa_max_s": 2.36,
+    "in_budget": 0,
+    "budget_s": 2.0,
+    "model": "gemini-flash-latest",
+    "voice": "ko-KR-InJoonNeural",
+    "measured": "2026-09-03"
+   },
+   "rows": [
+    {
+     "q": "팔 운동 추천해줘",
+     "first_sentence": "맨몸으로 탄탄한 팔을 만들 수 있는 푸시업과 의자를",
+     "ttft_s": 1.67,
+     "first_sentence_s": 1.87,
+     "tts_first_chunk_s": 0.47,
+     "ttfa_s": 2.34,
+     "in_budget": false,
+     "model": "gemini-flash-latest"
+    },
+    {
+     "q": "고마워요 내일 봐요",
+     "first_sentence": "오늘 운동하느라 정말 고생 많았어요, 내일도 저랑 신나게 땀 흘려봐요!푹 쉬고 내일 만나요",
+     "ttft_s": 1.17,
+     "first_sentence_s": 1.76,
+     "tts_first_chunk_s": 0.6,
+     "ttfa_s": 2.36,
+     "in_budget": false,
+     "model": "gemini-flash-latest"
+    }
+   ]
+  }
+ },
+ "measured": "2026-09-03"
+}

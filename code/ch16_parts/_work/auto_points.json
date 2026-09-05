@@ -1,0 +1,41 @@
+{
+ "measured": "2026-09-03",
+ "image": "demo_character.png 260×320 (그림)",
+ "haar_face_detected": false,
+ "fallback": "비율 추정",
+ "manual": {
+  "eyeL": [
+   98,
+   130
+  ],
+  "eyeR": [
+   162,
+   130
+  ],
+  "mouth": [
+   130,
+   200
+  ]
+ },
+ "auto": {
+  "eyeL": [
+   98,
+   121
+  ],
+  "eyeR": [
+   161,
+   121
+  ],
+  "mouth": [
+   130,
+   185
+  ]
+ },
+ "error_px": {
+  "eyeL": 9.0,
+  "eyeR": 9.1,
+  "mouth": 15.0
+ },
+ "eye_box_h": 44,
+ "mouth_box_h": 57
+}

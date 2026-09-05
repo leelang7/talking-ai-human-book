@@ -1,0 +1,10 @@
+{
+ "measured": "2026-09-03",
+ "driver": "MuseTalk/data/video/driver_therapist.mp4",
+ "resolution": "1280x720",
+ "face_ratio": 0.235,
+ "gate_min": 0.4,
+ "verdict": "FAIL",
+ "note": "Ch04 §3 — 미디엄샷. 클로즈업(d13)이었을 때 Ch09 상위15 적중 15/15, 이 드라이버는 10/15",
+ "face_pct": 23.5
+}

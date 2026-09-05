@@ -1,0 +1,20 @@
+{
+ "ITU-R BT.1359-1": {
+  "title": "Relative timing of sound and vision for broadcasting",
+  "detectability_ms": {
+   "audio_leads": 45,
+   "audio_lags": 125
+  },
+  "acceptability_ms": {
+   "audio_leads": 90,
+   "audio_lags": 190
+  },
+  "checked": "2026-09-03 웹 대조 — 권고 원문 값. 본문 Ch14 §2 의 330ms 는 두 한계 모두 밖"
+ },
+ "derived_example": {
+  "fps_pair": "29 vs 30",
+  "drift_pct": 3.3,
+  "drift_over_10s_ms": 330,
+  "note": "Ch14 §2 예시 — 3.3% × 10초 = 0.33초. 산술값"
+ }
+}

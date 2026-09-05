@@ -1,0 +1,47 @@
+{
+ "summary": {
+  "n": 3,
+  "translate_median_s": 4.28,
+  "tts_first_chunk_median_s": 0.37,
+  "total_median_s": 5.46,
+  "total_max_s": 5.48,
+  "missing_count": 0,
+  "budget": {
+   "end_of_speech": 0.8,
+   "translate": 1.0,
+   "tts_first_chunk": 0.5,
+   "total": 2.3
+  },
+  "model": "gemini-flash-latest",
+  "measured": "2026-09-03"
+ },
+ "rows": [
+  {
+   "dst": "en",
+   "src": "안녕하세요, 올댓에이아이 안내 창구입니다.",
+   "out": "Hello, this is the AllThatAI information desk.",
+   "translate_s": 1.79,
+   "tts_first_chunk_s": 0.26,
+   "total_from_end_of_speech_s": 2.85,
+   "missing": []
+  },
+  {
+   "dst": "en",
+   "src": "여권과 신청서를 함께 제출해 주세요.",
+   "out": "Please submit your passport together with the application form.",
+   "translate_s": 4.3,
+   "tts_first_chunk_s": 0.37,
+   "total_from_end_of_speech_s": 5.46,
+   "missing": []
+  },
+  {
+   "dst": "en",
+   "src": "처리에는 영업일 기준 3일이 걸리고 수수료는 12,000원입니다.",
+   "out": "It will take 3 business days to process, and the fee is 12,000 won.",
+   "translate_s": 4.28,
+   "tts_first_chunk_s": 0.41,
+   "total_from_end_of_speech_s": 5.48,
+   "missing": []
+  }
+ ]
+}

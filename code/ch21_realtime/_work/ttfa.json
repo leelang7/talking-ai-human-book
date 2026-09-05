@@ -1,0 +1,89 @@
+{
+ "summary": {
+  "n": 8,
+  "llm_median_s": 2.18,
+  "tts_median_s": 1.32,
+  "ttfa_median_s": 3.77,
+  "ttfa_max_s": 7.08,
+  "ttfa_p95_s": 5.98,
+  "in_budget": 0,
+  "budget_s": 2.0,
+  "model": "gemini-2.5-flash-lite (사다리 폴백 포함)",
+  "voice": "ko-KR-InJoonNeural",
+  "measured": "2026-09-03"
+ },
+ "rows": [
+  {
+   "q": "안녕하세요",
+   "reply": "[greet][wave] 안녕하세요! 오늘도 활기찬 하루 보내고 계신가요?",
+   "llm_s": 2.26,
+   "tts_s": 1.56,
+   "ttfa_s": 3.82,
+   "tts_ok": true,
+   "in_budget": false
+  },
+  {
+   "q": "오늘 기분 어때요?",
+   "reply": "[happy][none] 안녕하세요! 저는 오늘도 활기차게 운동을 가르칠 준비가 되어 있습니다!",
+   "llm_s": 1.8,
+   "tts_s": 1.38,
+   "ttfa_s": 3.18,
+   "tts_ok": true,
+   "in_budget": false
+  },
+  {
+   "q": "스쿼트 몇 개가 좋아요?",
+   "reply": "[think][squat] 스쿼트 개수는 개인의 체력 수준에 따라 달라져요.",
+   "llm_s": 2.11,
+   "tts_s": 1.26,
+   "ttfa_s": 3.37,
+   "tts_ok": true,
+   "in_budget": false
+  },
+  {
+   "q": "무릎이 아픈데 어떻게 하죠?",
+   "reply": "[sad][think] 무릎이 아프시면 운동을 중단하시고 병원에 방문하여 진료를 받아보시는 것이 가장 좋습니",
+   "llm_s": 1.9,
+   "tts_s": 1.82,
+   "ttfa_s": 3.72,
+   "tts_ok": true,
+   "in_budget": false
+  },
+  {
+   "q": "내일 비 온대요",
+   "reply": "[excited]",
+   "llm_s": 3.82,
+   "tts_s": 1.13,
+   "ttfa_s": 4.95,
+   "tts_ok": true,
+   "in_budget": false
+  },
+  {
+   "q": "팔 운동 추천해줘",
+   "reply": "[excited][armcircle] 팔 운동이요! 팔 운동으로는 암서클이 최고죠!",
+   "llm_s": 2.07,
+   "tts_s": 1.39,
+   "ttfa_s": 3.47,
+   "tts_ok": true,
+   "in_budget": false
+  },
+  {
+   "q": "저 오늘 너무 피곤해요",
+   "reply": "",
+   "llm_s": 4.96,
+   "tts_s": 1.02,
+   "ttfa_s": 5.98,
+   "tts_ok": true,
+   "in_budget": false
+  },
+  {
+   "q": "고마워요 내일 봐요",
+   "reply": "",
+   "llm_s": 5.97,
+   "tts_s": 1.11,
+   "ttfa_s": 7.08,
+   "tts_ok": true,
+   "in_budget": false
+  }
+ ]
+}

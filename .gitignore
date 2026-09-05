@@ -1,0 +1,41 @@
+# ── 이 저장소는 컴패니언 코드입니다. 책 본문은 포함하지 않습니다. ──
+# (git 은 줄 끝 주석을 지원하지 않는다 — 주석은 반드시 제 줄에)
+
+# 원고 — 저작권. 배포 대상이 아니다.
+draft/
+# 조판 산출물 — PDF·HTML·검수 렌더
+build/
+# 저자 기계의 프로파일 결과. 정본은 부록 C.
+/profile.json
+
+# 파이썬
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# 실측 근거(_work/*.json·txt·log·yaml)는 남기고, 무거운 산출 미디어는 뺀다.
+# 재현하면 다시 생기는 것들이고, 저장소를 45MB 불린다.
+*.gif
+*.mp4
+*.mov
+*.wav
+*.raw
+*.pkl
+*.glb
+*.vrm
+*.onnx
+*.safetensors
+
+# 비밀 — 이 저장소에 키를 두지 마세요(Ch28 §2)
+*key*.txt
+*token*.txt
+.env
+.env.*
+
+# 집필 환경 전용 (원고가 있을 때만 의미가 있다)
+/AUTHORING.md
+
+# 각자의 기계 경로 — 예시는 book.config.example.json
+/book.config.json

@@ -1,0 +1,50 @@
+{
+ "files": [
+  "_script.wav",
+  "_chat.wav",
+  "_stt.wav",
+  "_live.wav"
+ ],
+ "quiet_threshold_rms": 0.06,
+ "open_threshold": 0.05,
+ "sweep": {
+  "0.15": {
+   "quiet_open_ratio": 0.5,
+   "frames_to_close": 17.2,
+   "jitter": 0.049,
+   "ms_to_close": 573
+  },
+  "0.25": {
+   "quiet_open_ratio": 0.376,
+   "frames_to_close": 10.2,
+   "jitter": 0.063,
+   "ms_to_close": 340
+  },
+  "0.35": {
+   "quiet_open_ratio": 0.325,
+   "frames_to_close": 7.5,
+   "jitter": 0.075,
+   "ms_to_close": 250
+  },
+  "0.5": {
+   "quiet_open_ratio": 0.286,
+   "frames_to_close": 5.5,
+   "jitter": 0.088,
+   "ms_to_close": 183
+  },
+  "0.7": {
+   "quiet_open_ratio": 0.249,
+   "frames_to_close": 4.0,
+   "jitter": 0.101,
+   "ms_to_close": 133
+  },
+  "1.0": {
+   "quiet_open_ratio": 0.191,
+   "frames_to_close": 3.0,
+   "jitter": 0.114,
+   "ms_to_close": 100
+  }
+ },
+ "ch09_quiet_max": 0.35,
+ "chosen_release": 0.35
+}

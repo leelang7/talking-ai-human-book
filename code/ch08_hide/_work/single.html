@@ -1,0 +1,7 @@
+
+<video id="v" muted playsinline autoplay style="width:320px;height:320px"></video>
+<script>
+const v = document.getElementById('v');
+window.__front = () => v;
+window.show = (src, o={}) => new Promise(r => { v.loop = !!o.loop; v.src = src; v.play().catch(()=>{}); r(v); });
+</script><script>show('idle_loop.mp4',{loop:true})</script>

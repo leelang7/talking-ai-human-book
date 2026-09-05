@@ -1,0 +1,30 @@
+{
+ "measured": "2026-09-03",
+ "musetalk": {
+  "version": "v15",
+  "audio_s": 6.072,
+  "fps": 25,
+  "frames": 176,
+  "expected_frames": 182,
+  "shortfall_frames": 6,
+  "wall_s": 108,
+  "video_stream_s": 5.87,
+  "audio_stream_s": 6.07
+ },
+ "liveportrait": {
+  "wall_s": 28,
+  "size": "512x512",
+  "fps": "29/1",
+  "note": "정수 29fps — Ch14 NTSC 스냅 대상 아님, check_output 이 플래그"
+ },
+ "ch09_verdict_raw_output": {
+  "top": 15,
+  "hits": 8,
+  "hit_rate": 0.53,
+  "lift": 1.11,
+  "chance_baseline": 0.48,
+  "quiet_activity_ratio": 0.73,
+  "pass": false,
+  "note": "MuseTalk 원 출력(리타게팅 전) · 얼굴 기준 ROI · 같은 _script.wav"
+ }
+}

@@ -1,0 +1,92 @@
+[09:02:14] Load appearance_feature_extractor from  live_portrait_wrapper.py:361
+           C:\lsc\Avatar\LivePortrait\pretrained_w                             
+           eights\liveportrait_animals\base_models                             
+           _v1.1\appearance_feature_extractor.pth                              
+           done.                                                               
+           Load motion_extractor from              live_portrait_wrapper.py:364
+           C:\lsc\Avatar\LivePortrait\pretrained_w                             
+           eights\liveportrait_animals\base_models                             
+           _v1.1\motion_extractor.pth done.                                    
+           Load warping_module from                live_portrait_wrapper.py:367
+           C:\lsc\Avatar\LivePortrait\pretrained_w                             
+           eights\liveportrait_animals\base_models                             
+           _v1.1\warping_module.pth done.                                      
+           Load spade_generator from               live_portrait_wrapper.py:370
+           C:\lsc\Avatar\LivePortrait\pretrained_w                             
+           eights\liveportrait_animals\base_models                             
+           _v1.1\spade_generator.pth done.                                     
+           Load stitching_retargeting_module from  live_portrait_wrapper.py:374
+           C:\lsc\Avatar\LivePortrait\pretrained_w                             
+           eights\liveportrait\retargeting_models\                             
+           stitching_retargeting_module.pth done.                              
+[09:02:16] FaceAnalysisDIY warmup time: 1.342s          face_analysis_diy.py:79
+[09:02:17] LandmarkRunner warmup time: 0.972s       human_landmark_runner.py:95
+Loaded cached embeddings from file.
+[09:02:20] XPoseRunner warmup time: 0.923s        animal_landmark_runner.py:138
+           Load source image from           live_portrait_pipeline_animal.py:79
+           C:/lsc/Avatar/LivePortrait/asset                                    
+           s/examples/source/s39.jpg                                           
+           Load driving video from:        live_portrait_pipeline_animal.py:104
+           C:/lsc/Human-book/code/ch11_mus                                     
+           etalk/_work/out/v15/driver_ther                                     
+           apist__script.mp4, FPS is 29                                        
+           Start making driving motion     live_portrait_pipeline_animal.py:110
+           template...                                                         
+[09:02:22] Driving video is cropped, 176   live_portrait_pipeline_animal.py:113
+           frames are processed.                                               
+Making driving motion templates... ------------------------------- 100% 0:00:01
+[09:02:24] Dump motion template to         live_portrait_pipeline_animal.py:128
+           C:/lsc/Human-book/code/ch11_mus                                     
+           etalk/_work/out/v15\driver_ther                                     
+           apist__script.pkl                                                   
+🚀Animating... ---------------------------------------- 100% 0:00:08
+Concatenating result... ---------------------------------------- 100% 0:00:00
+
+[09:02:34] Video with audio generated successfully:                video.py:204
+           C:\lsc\Human-book\code\ch12_liveportrait\_work\sweep\m3             
+           .0\s39--driver_therapist__script_concat_with_audio.mp4              
+           Replace                         live_portrait_pipeline_animal.py:209
+           C:\lsc\Human-book\code\ch12_liv                                     
+           eportrait\_work\sweep\m3.0\s39-                                     
+           -driver_therapist__script_conca                                     
+           t_with_audio.mp4 with                                               
+           C:\lsc\Human-book\code\ch12_liv                                     
+           eportrait\_work\sweep\m3.0\s39-                                     
+           -driver_therapist__script_conca                                     
+           t.mp4                                                               
+
+[09:02:35] Video with audio generated successfully:                video.py:204
+           C:\lsc\Human-book\code\ch12_liveportrait\_work\sweep\m3             
+           .0\s39--driver_therapist__script_with_audio.mp4                     
+           Replace                         live_portrait_pipeline_animal.py:224
+           C:\lsc\Human-book\code\ch12_liv                                     
+           eportrait\_work\sweep\m3.0\s39-                                     
+           -driver_therapist__script_with_                                     
+           audio.mp4 with                                                      
+           C:\lsc\Human-book\code\ch12_liv                                     
+           eportrait\_work\sweep\m3.0\s39-                                     
+           -driver_therapist__script.mp4                                       
+           Animated template:              live_portrait_pipeline_animal.py:228
+           C:/lsc/Human-book/code/ch11_mus                                     
+           etalk/_work/out/v15\driver_ther                                     
+           apist__script.pkl, you can                                          
+           specify `-d` argument with this                                     
+           template path next time to                                          
+           avoid cropping video, motion                                        
+           making and protecting privacy.                                      
+           Animated video:                 live_portrait_pipeline_animal.py:229
+           C:\lsc\Human-book\code\ch12_liv                                     
+           eportrait\_work\sweep\m3.0\s39-                                     
+           -driver_therapist__script.mp4                                       
+           Animated video with concat:     live_portrait_pipeline_animal.py:230
+           C:\lsc\Human-book\code\ch12_liv                                     
+           eportrait\_work\sweep\m3.0\s39-                                     
+           -driver_therapist__script_conca                                     
+           t.mp4                                                               
+[09:02:36] Animated gif:                   live_portrait_pipeline_animal.py:234
+           C:\lsc\Human-book\code\ch12_liv                                     
+           eportrait\_work\sweep\m3.0\s39-                                     
+           -driver_therapist__script.gif                                       
+
+C:\Users\leesc\miniconda3\envs\LivePortrait\lib\site-packages\torch\utils\checkpoint.py:464: UserWarning: torch.utils.checkpoint: the use_reentrant parameter should be passed explicitly. In version 2.4 we will raise an exception if use_reentrant is not passed. use_reentrant=False is recommended, but if you need to preserve the current default behavior, you can pass use_reentrant=True. Refer to docs for more details on the differences between the two variants.
+  warnings.warn(

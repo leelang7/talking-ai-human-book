@@ -1,0 +1,107 @@
+{
+ "measured": "2026-09-03",
+ "frame_ms": 20,
+ "files": {
+  "_script.wav": {
+   "threshold": 0.01,
+   "frames": 303,
+   "last_loud_ms": 4700,
+   "by_silence_ms": {
+    "300": {
+     "segments": 2,
+     "end_delay_ms": 300
+    },
+    "500": {
+     "segments": 2,
+     "end_delay_ms": 500
+    },
+    "800": {
+     "segments": 2,
+     "end_delay_ms": 800
+    },
+    "1000": {
+     "segments": 2,
+     "end_delay_ms": 1000
+    }
+   }
+  },
+  "_chat.wav": {
+   "threshold": 0.01,
+   "frames": 211,
+   "last_loud_ms": 3040,
+   "by_silence_ms": {
+    "300": {
+     "segments": 1,
+     "end_delay_ms": 320
+    },
+    "500": {
+     "segments": 1,
+     "end_delay_ms": 520
+    },
+    "800": {
+     "segments": 1,
+     "end_delay_ms": 820
+    },
+    "1000": {
+     "segments": 1,
+     "end_delay_ms": 1020
+    }
+   }
+  },
+  "_stt.wav": {
+   "threshold": 0.0285,
+   "frames": 240,
+   "last_loud_ms": 3880,
+   "by_silence_ms": {
+    "300": {
+     "segments": 2,
+     "end_delay_ms": 280
+    },
+    "500": {
+     "segments": 2,
+     "end_delay_ms": 480
+    },
+    "800": {
+     "segments": 2,
+     "end_delay_ms": 780
+    },
+    "1000": {
+     "segments": 2,
+     "end_delay_ms": 920
+    }
+   },
+   "flushed_at_eof": [
+    1000
+   ]
+  },
+  "_live.wav": {
+   "threshold": 0.01,
+   "frames": 153,
+   "last_loud_ms": 1780,
+   "by_silence_ms": {
+    "300": {
+     "segments": 1,
+     "end_delay_ms": 340
+    },
+    "500": {
+     "segments": 1,
+     "end_delay_ms": 540
+    },
+    "800": {
+     "segments": 1,
+     "end_delay_ms": 840
+    },
+    "1000": {
+     "segments": 1,
+     "end_delay_ms": 1040
+    }
+   }
+  }
+ },
+ "durations_s": {
+  "_script.wav": 6.1,
+  "_chat.wav": 4.2,
+  "_stt.wav": 4.8,
+  "_live.wav": 3.1
+ }
+}

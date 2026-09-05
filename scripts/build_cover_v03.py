@@ -19,7 +19,7 @@ for _s in (sys.stdout, sys.stderr):
         pass
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "ebook" / "cover" / "cover_final.png"
+OUT = ROOT / "ebook" / "cover" / ("cover_art_final.png" if "--art" in __import__("sys").argv else "cover_final.png")
 NOTO = "C:/Windows/Fonts/NotoSansKR-VF.ttf"
 
 S = 3                       # 슈퍼샘플(고해상 출력용)
@@ -127,19 +127,46 @@ def main():
     # ── 아트 합성 (--art 두상.png) ───────────────────────────────────────
     # Flow/Gemini 로 뽑은 '검정 배경 위 두상만' 이미지를 스크린 블렌드로 얹는다.
     # 검정은 투명처럼 사라지고 유리·빛만 남아 컬럼 위에 비친다. 글자·컬럼·03 은 이 코드가 그린다.
-    # 우하단 워터마크는 아트 파일의 아래·오른쪽 여백(--trim, 기본 8%)을 잘라 버린다 — 픽셀은 만지지 않는다.
+    # 우하단 워터마크는 아트의 아래 띠(--trim-bottom, 기본 13%)를 잘라 버린다 — 픽셀은 만지지 않는다.
     import sys as _sys
     if "--art" in _sys.argv:
         from PIL import ImageChops
+        import numpy as _np
         art = Image.open(_sys.argv[_sys.argv.index("--art") + 1]).convert("RGB")
-        trim = float(_sys.argv[_sys.argv.index("--trim") + 1]) if "--trim" in _sys.argv else 0.08
+        tb = float(_sys.argv[_sys.argv.index("--trim-bottom") + 1]) if "--trim-bottom" in _sys.argv else 0.13
         aw, ah = art.size
-        art = art.crop((0, 0, int(aw * (1 - trim)), int(ah * (1 - trim))))     # 별이 있는 우하단 여백 제거
-        target_h = int(H * 0.72); s = target_h / art.size[1]
+        art = art.crop((0, 0, aw, int(ah * (1 - tb))))                         # 별이 있는 아래 띠 제거
+        # 피사체 자동 크롭 — 검정보다 밝은 화소의 상자 + 여유 5%
+        lum = _np.asarray(art.convert("L"))
+        ys, xs = _np.where(lum > 22)
+        pad = int(max(art.size) * 0.05)
+        box = (max(0, xs.min() - pad), max(0, ys.min() - pad), min(art.size[0], xs.max() + pad), min(art.size[1], ys.max() + pad))
+        art = art.crop(box)
+        # 검정점 보정 — 렌더의 '검정' 은 (12,12,14) 쯤이라 그대로 스크린하면 두상 둘레에 옅은 사각 얼룩이 남는다.
+        # 바닥값을 0 으로 내리고 나머지를 늘린다 (레벨 보정 = 픽셀 편집이 아니라 합성 전처리).
+        a = _np.asarray(art).astype(_np.float32)
+        floor = float(_np.percentile(a.reshape(-1, 3).max(axis=1), 2))       # 배경 밝기(하위 2%)
+        a = _np.clip((a - floor) / (255.0 - floor), 0, 1) * 255.0
+        art = Image.fromarray(a.astype(_np.uint8))
+        target_h = int(H * 0.64); s = target_h / art.size[1]
         art = art.resize((int(art.size[0] * s), target_h), Image.LANCZOS)
-        x, y = int(W * 0.44), int(H * 0.13)                                    # 두상이 컬럼 경계에 걸친다
+        cx, top = int(W * 0.60), int(H * 0.16)                                # 컬럼 경계(0.65W) 에 걸치되 세로 시리즈 글자는 비켜 간다
+        x = min(max(0, cx - art.size[0] // 2), W - art.size[0]); y = top
         region = img.crop((x, y, x + art.size[0], y + art.size[1]))
-        img.paste(ImageChops.screen(region, art), (x, y))
+        # 매트 — 검정 둘레는 완전 투명, 피사체만 스크린. 밝기로 만든 알파에 가장자리 페더를 곱한다.
+        L = _np.asarray(art.convert("L")).astype(_np.float32)
+        matte = _np.clip((L - 8.0) / 36.0, 0, 1)
+        from PIL import ImageFilter as _IF
+        matte = _np.asarray(Image.fromarray((matte * 255).astype(_np.uint8)).filter(_IF.GaussianBlur(1.5))).astype(_np.float32) / 255.0
+        aw2, ah2 = art.size; fx = int(aw2 * 0.06); fy = int(ah2 * 0.06)
+        ramp = _np.ones((ah2, aw2), _np.float32)
+        ramp[:, :fx] *= _np.linspace(0, 1, fx)[None, :]; ramp[:, -fx:] *= _np.linspace(1, 0, fx)[None, :]
+        ramp[:fy, :] *= _np.linspace(0, 1, fy)[:, None]; ramp[-fy:, :] *= _np.linspace(1, 0, fy)[:, None]
+        matte = matte * ramp
+        scr = _np.asarray(ImageChops.screen(region, art)).astype(_np.float32); bg = _np.asarray(region).astype(_np.float32)
+        outp = bg + (scr - bg) * matte[..., None]
+        img.paste(Image.fromarray(_np.clip(outp, 0, 255).astype(_np.uint8)), (x, y))
+        print(f"[아트 합성] 피사체 상자 {box} → {art.size} @ ({x // S},{y // S})")
     out = img.resize((OUT_W, OUT_H), Image.LANCZOS)
     OUT.parent.mkdir(parents=True, exist_ok=True)
     out.save(OUT, quality=95)

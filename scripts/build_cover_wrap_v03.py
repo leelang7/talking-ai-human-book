@@ -21,7 +21,7 @@ for _s in (sys.stdout, sys.stderr):
         pass
 
 ROOT = Path(__file__).resolve().parents[1]
-FRONT = ROOT / "ebook" / "cover" / "cover_art_final.png"
+FRONT = ROOT / "ebook" / "cover" / "cover_final_2k.png"     # 확정 앞표지 = Flow 2K 원본에서 별만 제거
 OUT = ROOT / "ebook" / "cover" / "cover_wrap.png"
 SANS = "C:/Windows/Fonts/NotoSansKR-VF.ttf"
 SERIF = "C:/Windows/Fonts/NotoSerifKR-VF.ttf"
@@ -126,7 +126,7 @@ def main():
     canvas.save(OUT.with_suffix(".pdf"), "PDF", resolution=DPI)
     canvas.save(OUT.with_suffix(".jpg"), "JPEG", quality=95, dpi=(DPI, DPI))
     print(f"[전개도] {OUT.with_suffix('.pdf').name} / .jpg / .png  {W}×{H}px @ {DPI}dpi")
-    print(f"  책등 {a.spine}mm · 전체 {W/MM:.1f}×{H/MM:.1f}mm (재단 {BLEED}mm 포함) · 앞표지 = cover_art_final.png")
+    print(f"  책등 {a.spine}mm · 전체 {W/MM:.1f}×{H/MM:.1f}mm (재단 {BLEED}mm 포함) · 앞표지 = cover_final_2k.png")
 
 
 if __name__ == "__main__":

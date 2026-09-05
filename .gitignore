@@ -22,6 +22,8 @@ venv/
 *.mov
 *.wav
 *.raw
+*.mp3
+*.pcm
 *.pkl
 *.glb
 *.vrm

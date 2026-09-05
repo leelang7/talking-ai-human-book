@@ -41,18 +41,22 @@ AMBER_TXT = (251, 191, 36)
 TITLE, TITLE2 = "AI 휴먼", "해부학"
 SUB = "얼굴·목소리·두뇌·기억 — 네 층을 조립하고 실측하는 법"
 AUTHOR = "이석창 지음"
+HOOK = "픽셀이 사람이 되는 여정"
 BLURB = [
-    "AI 휴먼은 하나의 거대 모델이 아니라",
-    "얼굴 · 목소리 · 두뇌 · 기억, 네 층의 조립입니다.",
-    "사진 한 장이 4분 만에 말하는 영상이 되고,",
-    "브라우저의 아바타가 2초 안에 대답합니다.",
+    "AI 휴먼은 하나의 모델이 아닙니다.",
+    "얼굴, 목소리, 두뇌, 기억 — 네 층을 하나씩 조립하고,",
+    "어디서 부서지는지 재어 가며 완성합니다.",
+    "사진 한 장으로 4분 만에 말하는 영상을 만들고,",
+    "브라우저에서 2초 만에 대답하는 아바타를 띄우고,",
+    "그 얼굴에 인격과 기억을 넣습니다.",
 ]
 FEATURES = [
-    "Track A  사진 한 장 → 말하는 영상 (립싱크 · 리타게팅 · 동물 얼굴)",
-    "Track B  GPU 없이 브라우저에서 도는 실시간 아바타 (2D 파츠 · 3D VRM)",
-    "Track C  인격 · 기억 · 지식 · 평가 하네스 — 그리고 실시간 통역",
-    "모든 숫자는 저자의 기계에서 실측 · 실패 카탈로그 50종 · 컴패니언 코드 회귀 675건",
+    "Track A   사진 한 장 → 말하는 영상",
+    "Track B   GPU 없이 브라우저에서 도는 실시간 아바타",
+    "Track C   인격 · 기억 · 지식, 그리고 실시간 통역",
 ]
+FOR = "AI 휴먼을 직접 만들어야 하는 개발자 · 창업자 · 강사에게."
+TRUST = "모든 수치는 저자가 직접 잰 값이며, 실패한 것도 그대로 실었습니다."
 REPO = "github.com/leelang7/talking-ai-human-book"
 
 
@@ -101,24 +105,32 @@ def main():
         sd.text((px(22) + tw1 + px(3), sp // 2), TITLE2, font=font(SERIF, 900, fs), fill=AMBER_TXT + (255,), anchor="lm")
         sd.text((H - px(22), sp // 2), AUTHOR, font=font(SANS, 600, int(sp * 0.30)), fill=GREY + (255,), anchor="rm")
         sd.text((H // 2, sp // 2), "ALL THAT AI · VOL.03", font=ImageFont.truetype(MONO, int(sp * 0.22)), fill=DIM + (255,), anchor="mm")
-        rot = st.rotate(90, expand=True)
+        rot = st.rotate(-90, expand=True)      # 위→아래로 읽힘: 제목이 위, 저자가 아래 (한국 관행. Vol.02 는 반대로 나갔다)
         canvas.paste(rot, (sx0, 0), rot)
 
-    # 뒤표지(좌) — 흑연 + 앰버 룰 + 시스템 타이포
-    bx, by = bl + px(16), bl + px(26)
+    # 뒤표지(좌) — 흑연 + 앰버 룰 + 시스템 타이포. 독자에게 파는 자리 — 내부 지표는 쓰지 않는다.
+    bx, by = bl + px(16), bl + px(24)
+    maxw = tw - px(32)
     d.rectangle((bx, by, bx + px(14), by + px(0.7)), fill=AMBER)
     d.text((bx + px(18), by - px(1.6)), "FACE · VOICE · BRAIN · MEMORY", font=ImageFont.truetype(MONO, px(3.2)), fill=GREY)
     d.text((bx, by + px(12)), TITLE, font=font(SANS, 900, px(14)), fill=OFF)
     d.text((bx, by + px(29)), TITLE2, font=font(SERIF, 900, px(12)), fill=AMBER_TXT)
     d.text((bx, by + px(46)), SUB, font=font(SERIF, 400, px(4.6)), fill=GREY)
-    yy = by + px(62)
+    yy = by + px(64)
+    d.text((bx, yy), HOOK, font=font(SANS, 700, px(7.2)), fill=OFF); yy += px(13)
+    fb = font(SANS, 400, px(4.6))
     for line in BLURB:
-        d.text((bx, yy), line, font=font(SANS, 400, px(4.8)), fill=OFF); yy += px(7.6)
-    yy += px(6)
+        assert d.textlength(line, font=fb) <= maxw, f"소개 줄이 폭을 넘음: {line}"
+        d.text((bx, yy), line, font=fb, fill=OFF); yy += px(7.4)
+    yy += px(5)
     d.rectangle((bx, yy, bx + px(40), yy + px(0.5)), fill=AMBER); yy += px(7)
+    ff = font(SANS, 500, px(4.2))
     for line in FEATURES:
-        d.text((bx, yy), line, font=font(SANS, 400, px(4.0)), fill=GREY); yy += px(6.6)
-    yy += px(8)
+        assert d.textlength(line, font=ff) <= maxw, f"목록 줄이 폭을 넘음: {line}"
+        d.text((bx, yy), line, font=ff, fill=GREY); yy += px(6.8)
+    yy += px(5)
+    d.text((bx, yy), FOR, font=font(SANS, 400, px(4.2)), fill=GREY); yy += px(7)
+    d.text((bx, yy), TRUST, font=font(SERIF, 400, px(4.0)), fill=DIM); yy += px(9)
     d.text((bx, yy), REPO, font=ImageFont.truetype(MONO, px(3.4)), fill=DIM)
     # 하단은 비워 둔다 — ISBN 바코드·출판사 마크는 업체가 최종 검수 때 배치한다.
 

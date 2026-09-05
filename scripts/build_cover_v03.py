@@ -33,13 +33,32 @@ ACC = (251, 191, 36)                                # 강조 텍스트(밝은 �
 OFF = (244, 244, 246)
 
 _cache = {}
-def f(px, weight=400):
-    k = (px, weight)
+SERIF = "C:/Windows/Fonts/NotoSerifKR-VF.ttf"     # 제목 '해부학' · 부제 — 해부도의 세리프
+MONO = "C:/Windows/Fonts/CascadiaMono.ttf"         # 라벨·시리즈 표기·푸터 — 계측기의 모노스페이스
+
+
+def _vf(path, px, weight):
+    k = (path, px, weight)
     if k not in _cache:
-        ft = ImageFont.truetype(NOTO, px * S)
+        ft = ImageFont.truetype(path, px * S)
         try: ft.set_variation_by_axes([weight])
         except Exception: pass
         _cache[k] = ft
+    return _cache[k]
+
+
+def f(px, weight=400):          # 산세리프 — 윗줄 · 'AI 휴먼' · 저자
+    return _vf(NOTO, px, weight)
+
+
+def fs(px, weight=400):         # 세리프 — '해부학' · 부제
+    return _vf(SERIF, px, max(200, weight))
+
+
+def fm(px, weight=400):         # 모노 — 라벨 · 세로 표기 · 링크
+    k = ("mono", px)
+    if k not in _cache:
+        _cache[k] = ImageFont.truetype(MONO, px * S)
     return _cache[k]
 
 
@@ -68,11 +87,11 @@ def main():
     d = ImageDraw.Draw(img)
 
     # 우측 컬럼 상단 라벨
-    tracked(d, 800 * S, 180 * S, "PIXEL→FACE→VOICE", f(16, 600), (255, 255, 255), 5)
+    tracked(d, 800 * S, 180 * S, "PIXEL→FACE→VOICE", fm(15), (255, 255, 255), 5)
     # 우측 컬럼 세로 시리즈 라벨
     vt = Image.new("RGBA", (H, 420 * S), (0, 0, 0, 0))
     vd = ImageDraw.Draw(vt)
-    tracked(vd, H // 2, 210 * S, "ALL THAT AI · VOL.03 · 2026", f(20, 600),
+    tracked(vd, H // 2, 210 * S, "ALL THAT AI · VOL.03 · 2026", fm(19),
             (255, 255, 255), 11, anchor="m")
     img.paste(vt.rotate(90, expand=True), (780 * S, 0), vt.rotate(90, expand=True))
     # 우측 컬럼 하단 번호 02
@@ -81,31 +100,31 @@ def main():
 
     # 좌측 상단 브랜드 라인
     d.rectangle((90 * S, 150 * S, 150 * S, 153 * S), fill=ACC)
-    tracked(d, 166 * S, 159 * S, "FACE · VOICE · BRAIN · MEMORY", f(17, 600),
+    tracked(d, 166 * S, 159 * S, "FACE · VOICE · BRAIN · MEMORY", fm(16),
             (244, 244, 246), 5)
 
     # 좌측 메인 타이포
     d.text((90 * S, 545 * S), "사진 한 장에서", font=f(50, 400), fill=OFF, anchor="ls")
     d.text((90 * S, 620 * S), "실시간 대화 아바타까지", font=f(50, 400), fill=OFF, anchor="ls")
     d.text((90 * S, 790 * S), "AI 휴먼", font=f(118, 900), fill=OFF, anchor="ls")
-    d.text((90 * S, 895 * S), "해부학", font=f(96, 800), fill=ACC, anchor="ls")
+    d.text((90 * S, 895 * S), "해부학", font=fs(104, 900), fill=ACC, anchor="ls")
 
     # 구분선
     d.rectangle((90 * S, 1000 * S, 270 * S, 1003 * S), fill=ACC)
     # 부제
-    d.text((90 * S, 1065 * S), "얼굴·목소리·두뇌·기억 —", f(26, 500),
+    d.text((90 * S, 1065 * S), "얼굴·목소리·두뇌·기억 —", fs(26, 400),
            fill=(244, 244, 246), anchor="ls") if False else \
         d.text((90 * S, 1065 * S), "얼굴·목소리·두뇌·기억 —",
-               font=f(26, 500), fill=(220, 224, 228), anchor="ls")
+               font=fs(26, 400), fill=(220, 224, 228), anchor="ls")
     d.text((90 * S, 1105 * S), "네 층을 조립하고 실측하는 법.",
-           font=f(26, 500), fill=(220, 224, 228), anchor="ls")
+           font=fs(26, 400), fill=(220, 224, 228), anchor="ls")
 
     # 저자·출판사·푸터
     d.text((90 * S, 1620 * S), "이석창 지음", font=f(36, 700), fill=OFF, anchor="ls")
     d.text((90 * S, 1670 * S), "펴낸곳 · 부크크", font=f(22, 500),
            fill=(210, 214, 218), anchor="ls")
     tracked(d, 90 * S, 1718 * S, "github.com/leelang7 · youtube.com/@aidoer",
-            f(15, 500), (170, 174, 180), 2)
+            fm(14), (170, 174, 180), 2)
 
     out = img.resize((OUT_W, OUT_H), Image.LANCZOS)
     OUT.parent.mkdir(parents=True, exist_ok=True)

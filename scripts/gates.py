@@ -121,7 +121,9 @@ def main():
     if not has_draft:
         print("\n  (원고 폴더가 없습니다 — 코드 회귀 테스트만 돌립니다)")
     if not a.quick:
-        groups += [("회귀 테스트", CODE), ("스모크", SMOKE)]
+        # 원고를 읽는 스모크(조판)는 컴패니언 저장소에서 돌 수 없다 — 빼고 돌린다
+        smoke = SMOKE if has_draft else [s for s in SMOKE if "build_book" not in s[1]]
+        groups += [("회귀 테스트", CODE), ("스모크", smoke)]
     if not groups:
         print("  돌릴 것이 없습니다 — --quick 은 원고가 있을 때만 의미가 있습니다\n")
         return 0

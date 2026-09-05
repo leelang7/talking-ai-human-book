@@ -1,66 +1,82 @@
 {
  "measured": "2026-09-05",
+ "input": "말소리(edge-tts 한국어 → 16kHz PCM, 100ms 청크 실시간 전송)",
  "summary": {
+  "gemini-3.5-live-translate-preview": {
+   "n": 3,
+   "src_audio_median_s": 4.18,
+   "first_after_start_median_s": 3.45,
+   "first_after_end_median_s": -1.07,
+   "out_audio_median_s": 11.5
+  },
   "gemini-3.1-flash-live-preview": {
    "n": 3,
-   "ttfa_median_s": 0.59,
-   "total_median_s": 4.07
+   "src_audio_median_s": 4.18,
+   "first_after_start_median_s": 4.78,
+   "first_after_end_median_s": 0.29,
+   "out_audio_median_s": 3.2
   }
  },
  "rows": [
   {
    "model": "gemini-3.5-live-translate-preview",
    "src": "안녕하세요, 올댓에이아이 안내 창구입니다.",
-   "setup_s": 0.46,
-   "ttfa_s": null,
-   "total_s": 20.07,
-   "audio_s": 0.0,
-   "text": ""
+   "src_audio_s": 4.18,
+   "first_after_start_s": 3.42,
+   "first_after_end_s": -1.07,
+   "out_audio_s": 11.5,
+   "in_transcript": "안녕하세요. 올드세이 안내 창구입니다.",
+   "out_transcript": "Hello. This is the Old Say information desk."
   },
   {
    "model": "gemini-3.5-live-translate-preview",
    "src": "여권과 신청서를 함께 제출해 주세요.",
-   "setup_s": 0.41,
-   "ttfa_s": null,
-   "total_s": 20.07,
-   "audio_s": 0.0,
-   "text": ""
+   "src_audio_s": 3.58,
+   "first_after_start_s": 3.45,
+   "first_after_end_s": -0.44,
+   "out_audio_s": 10.25,
+   "in_transcript": "여권과 신청서를 함께 제출해 주세요.",
+   "out_transcript": "Please submit your passport and application"
   },
   {
    "model": "gemini-3.5-live-translate-preview",
    "src": "처리에는 영업일 기준 3일이 걸리고 수수료는 12,000원입니다.",
-   "setup_s": 0.46,
-   "ttfa_s": null,
-   "total_s": 20.07,
-   "audio_s": 0.0,
-   "text": ""
+   "src_audio_s": 5.42,
+   "first_after_start_s": 3.56,
+   "first_after_end_s": -2.41,
+   "out_audio_s": 14.0,
+   "in_transcript": "처리에는 영업일 기준 3일이 걸리고 수수료는 12,000 원입니다.",
+   "out_transcript": "It takes 3 business days to process, and the fee is 12,000 won."
   },
   {
    "model": "gemini-3.1-flash-live-preview",
    "src": "안녕하세요, 올댓에이아이 안내 창구입니다.",
-   "setup_s": 0.42,
-   "ttfa_s": 0.58,
-   "total_s": 3.82,
-   "audio_s": 3.15,
-   "text": "Hello, this is the All That AI information counter."
+   "src_audio_s": 4.18,
+   "first_after_start_s": 4.78,
+   "first_after_end_s": 0.28,
+   "out_audio_s": 3.2,
+   "in_transcript": "안녕하세요. Oldest AI 안내 창구입니다.",
+   "out_transcript": "Hello, this is the Oldest AI information desk."
   },
   {
    "model": "gemini-3.1-flash-live-preview",
    "src": "여권과 신청서를 함께 제출해 주세요.",
-   "setup_s": 0.44,
-   "ttfa_s": 0.59,
-   "total_s": 4.07,
-   "audio_s": 3.41,
-   "text": "Please submit your passport along with the application."
+   "src_audio_s": 3.58,
+   "first_after_start_s": 4.2,
+   "first_after_end_s": 0.34,
+   "out_audio_s": 2.86,
+   "in_transcript": "여권과 신청서를 함께 제출해 주세요.",
+   "out_transcript": "Please submit your passport and application together."
   },
   {
    "model": "gemini-3.1-flash-live-preview",
    "src": "처리에는 영업일 기준 3일이 걸리고 수수료는 12,000원입니다.",
-   "setup_s": 0.47,
-   "ttfa_s": 0.62,
-   "total_s": 4.95,
-   "audio_s": 4.25,
-   "text": "Processing takes 3 business days, and the fee is 12,000 won."
+   "src_audio_s": 5.42,
+   "first_after_start_s": 6.24,
+   "first_after_end_s": 0.29,
+   "out_audio_s": 5.14,
+   "in_transcript": "처리에는 영업일 기준 삼일이 걸리고, 수수료는 만 이천원입니다.",
+   "out_transcript": "It takes three business days to process, and the fee is 12,000 won."
   }
  ],
  "book_ref": {
@@ -68,5 +84,6 @@
   "translate_median_s": 4.28,
   "tts_first_chunk_s": 0.37,
   "source": "Ch23+ §7"
- }
+ },
+ "text_input_probe": "텍스트 턴에는 두 모델 중 번역 전용 모델이 응답 없음(오류도 없음) — 말소리 전용"
 }

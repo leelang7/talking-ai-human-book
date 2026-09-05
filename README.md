@@ -15,7 +15,7 @@
 
 - 본문의 모든 실측값은 `code/chXX_*/_work/` 의 JSON·로그로 거슬러 올라갑니다.
 - 감사 스크립트(`scripts/claims_audit.py`)가 **근거 없는 숫자를 본문에서 찾아냅니다.**
-- 회귀 테스트 663건이 게이트 하나로 묶여 있습니다.
+- 회귀 테스트 675건이 게이트 하나로 묶여 있습니다.
 
 숫자가 의심스러우면 코드를 돌려 보세요. 다르게 나오면 그것은 오류가 아니라 **자료** 입니다 — [errata.md](errata.md) 로 알려 주세요.
 
@@ -27,7 +27,7 @@
 git clone https://github.com/leelang7/talking-ai-human-book.git
 cd talking-ai-human-book
 pip install -r requirements.txt
-python scripts/gates.py          # 회귀 테스트 663건 + 스모크 19종
+python scripts/gates.py          # 회귀 테스트 675건 + 스모크 20종
 ```
 
 종료 코드 0 = 전부 통과. GPU 는 필요 없습니다 — 무거운 모델을 부르는 장은

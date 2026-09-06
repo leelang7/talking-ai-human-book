@@ -87,7 +87,7 @@ def main():
         print(f"[에러] 앞표지 없음: {FRONT}"); sys.exit(1)
     px = lambda mm: int(round(mm * MM))
     tw, th, bl, sp = px(TRIM_W), px(TRIM_H), px(BLEED), px(a.spine)
-    W, H = tw * 2 + sp + bl * 2, th + bl * 2
+    W, H = px(TRIM_W * 2 + a.spine + BLEED * 2), px(TRIM_H + BLEED * 2)   # 부크크 작업규격과 정확히 일치
 
     canvas = Image.new("RGB", (W, H), BLACK)
     # 앞표지(우) — 합성본을 풀블리드로 (재단 여백까지 채운다)
@@ -140,7 +140,8 @@ def main():
         d.text((bx, yy), line, font=fq, fill=AMBER_TXT); yy += px(6.2)
     d.text((bx, yy), QUOTE_SRC, font=font(SANS, 400, px(2.8)), fill=GREY); yy += px(6)
     # 하단: 분류 태그 · 저장소 (좌) — 바코드 박스 (우). 흐름 끝(yy)과 겹치지 않게 검사한다.
-    tags_y = H - bl - px(22); repo_y = H - bl - px(14)
+    # 부크크는 뒤표지 하단에 자사 로고를 얹는다(등록 화면의 '로고선택'). 왼쪽 아래 25mm 는 비워 둔다.
+    tags_y = H - bl - px(36); repo_y = H - bl - px(28)
     assert yy <= tags_y - px(4), f"뒤표지 본문이 하단 영역과 겹침: 본문 끝 {yy/MM:.1f}mm > 태그 {tags_y/MM:.1f}mm"
     d.text((bx, tags_y), TAGS, font=font(SANS, 400, px(2.9)), fill=GREY)
     d.text((bx, repo_y), REPO, font=ImageFont.truetype(MONO, px(2.7)), fill=DIM)
@@ -149,7 +150,7 @@ def main():
     d.rectangle((bx1, by1, bx1 + bw_, by1 + bh_), fill=(245, 245, 247))
     d.text((bx1 + bw_ // 2, by1 + bh_ // 2 - px(2)), "ISBN BARCODE", font=font(SANS, 700, px(3.0)), fill=(40, 40, 46), anchor="mm")
     d.text((bx1 + bw_ // 2, by1 + bh_ // 2 + px(3.5)), "(인쇄 업체 자동 삽입 영역)", font=font(SANS, 400, px(2.2)), fill=(110, 110, 118), anchor="mm")
-    # 하단은 비워 둔다 — ISBN 바코드·출판사 마크는 업체가 최종 검수 때 배치한다.
+    # 하단 왼쪽 25mm 는 부크크 로고 자리, 오른쪽 박스는 ISBN 바코드 자리 — 둘 다 업체가 넣는다.
 
     canvas.save(OUT, dpi=(DPI, DPI))
     canvas.save(OUT.with_suffix(".pdf"), "PDF", resolution=DPI)

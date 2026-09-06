@@ -71,12 +71,23 @@ def font(path, w, px):
 
 
 def fill_front(cover, w, h):
+    """앞표지 그림을 폭에 맞춰 위로 붙이고, 남는 아래는 그림의 마지막 줄 색으로 늘린다.
+
+    두 가지를 동시에 푼다.
+      ① 부크크가 앞표지 **아래 가운데에 자사 로고** 를 찍는다 — 그림의 저자명·주소 줄과 겹쳤다.
+      ② 예전처럼 꽉 채우면(cover) 그림의 좌우가 잘려 나갔다.
+    그림 아래쪽은 평평한 배경(검정 + 오른쪽 앰버 기둥)이라 마지막 줄을 늘려도 티가 나지 않는다.
+    """
     cw, ch = cover.size
-    scale = max(w / cw, h / ch)
-    r = cover.resize((int(cw * scale), int(ch * scale)), Image.LANCZOS)
-    x = (r.width - w) // 2
-    y = (r.height - h) // 2
-    return r.crop((x, y, x + w, y + h))
+    scale = w / cw                                   # 폭에 맞춘다 — 좌우를 자르지 않는다
+    r = cover.resize((w, max(1, int(ch * scale))), Image.LANCZOS)
+    if r.height >= h:
+        return r.crop((0, 0, w, h))
+    out = Image.new("RGB", (w, h))
+    out.paste(r, (0, 0))
+    tail = r.crop((0, r.height - 1, w, r.height)).resize((w, h - r.height), Image.NEAREST)
+    out.paste(tail, (0, r.height))                   # 마지막 줄을 아래로 늘린다(재단 여백과 같은 요령)
+    return out
 
 
 def main():

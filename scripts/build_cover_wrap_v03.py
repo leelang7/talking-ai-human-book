@@ -107,21 +107,17 @@ def main():
 
     # 책등 — 흑연 + 앰버 가는 선 + 세로 제목
     sx0 = bl + tw
-    # 앰버 세로선 — 접히는 자리에서 2.5mm 안쪽에, **양쪽 대칭** 으로.
-    # 한쪽에만 두면 글자가 반대쪽으로 쏠려 보인다(부크크 미리보기에서 확인, 2026-09-06).
-    # POD 접지는 ±1~2mm 흔들리는데, 대칭이면 흔들려도 한쪽으로 몰려 보이지 않는다.
-    line_w, line_gap = px(1.1), px(2.5)
-    d.rectangle((sx0 + line_gap, 0, sx0 + line_gap + line_w, H), fill=AMBER)
-    d.rectangle((sx0 + sp - line_gap - line_w, 0, sx0 + sp - line_gap, H), fill=AMBER)
+    # 책등에는 장식선을 두지 않는다. 17mm 폭에서는 선이 글자와 부딪히고(2026-09-06 미리보기),
+    # 접지가 ±1~2mm 흔들리면 선이 앞표지로 넘어간 것처럼 보인다. 글자만 정중앙에 둔다.
     if sp > px(8):
         st = Image.new("RGBA", (H, sp), (0, 0, 0, 0))
         sd = ImageDraw.Draw(st)
-        fs = int(sp * 0.42)
+        fs = int(sp * 0.36)          # 책등 폭의 36% — 양옆에 여백을 남긴다
         sd.text((px(22), sp // 2), TITLE, font=font(SANS, 900, fs), fill=OFF + (255,), anchor="lm")
         tw1 = sd.textlength(TITLE, font=font(SANS, 900, fs))
         sd.text((px(22) + tw1 + px(3), sp // 2), TITLE2, font=font(SERIF, 900, fs), fill=AMBER_TXT + (255,), anchor="lm")
-        sd.text((H - px(22), sp // 2), AUTHOR, font=font(SANS, 600, int(sp * 0.30)), fill=GREY + (255,), anchor="rm")
-        sd.text((H // 2, sp // 2), "ALL THAT AI · VOL.03", font=ImageFont.truetype(MONO, int(sp * 0.22)), fill=DIM + (255,), anchor="mm")
+        sd.text((H - px(22), sp // 2), AUTHOR, font=font(SANS, 600, int(sp * 0.26)), fill=GREY + (255,), anchor="rm")
+        sd.text((H // 2, sp // 2), "ALL THAT AI · VOL.03", font=ImageFont.truetype(MONO, int(sp * 0.20)), fill=DIM + (255,), anchor="mm")
         rot = st.rotate(-90, expand=True)      # 위→아래로 읽힘: 제목이 위, 저자가 아래 (한국 관행. Vol.02 는 반대로 나갔다)
         # 글자를 책등 정중앙에 — 글꼴 위아래 여백이 비대칭이라 sp//2 로 그리면 0.3mm 쏠린다.
         # 찍힌 잉크의 상자를 재서 그만큼 밀어 준다(부크크 미리보기에서 '오른쪽 쏠림' 으로 보였다).

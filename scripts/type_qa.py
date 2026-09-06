@@ -165,6 +165,33 @@ def scan(path):
     return out, normal, len(doc)
 
 
+
+def clipped_code_lines(doc):
+    """원고의 코드 줄이 PDF 에 온전히 찍혔는지 대조한다.
+
+    인쇄에서 넘치는 줄은 가로로 스크롤되지 않고 **잘린다** — 그대로 내보내면 문장이 사라진다.
+    Ch04 의 콘솔 예시 한 줄이 그렇게 잘려 나갔고(2026-09-06) 다른 검사는 전부 통과했다."""
+    import glob
+    import os as _os
+    draft = _os.path.join(ROOT, "draft")
+    body = re.sub(r"\s+", "", " ".join(pg.get_text() for pg in doc))
+    out = []
+    for f in glob.glob(_os.path.join(draft, "**", "*.md"), recursive=True):
+        if _os.path.basename(f).startswith("_") or _os.path.basename(f) == "README.md":
+            continue
+        if _os.sep + "online" + _os.sep in f:          # 온라인 부록은 인쇄본에 없다
+            continue
+        src = open(f, encoding="utf-8").read()
+        for blk in re.findall(r"```[^\n]*\n(.*?)```", src, re.S):
+            for line in blk.split("\n"):
+                t = re.sub(r"\s+", "", line)
+                if len(t) < 25 or set(t) <= set("-=\u2500\u00b7\u2192\u2190"):
+                    continue
+                if t not in body:
+                    out.append((_os.path.basename(f), line.strip()[:60]))
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--pdf", default=PDF)
@@ -184,7 +211,15 @@ def main():
     print(f"  ③ 헐렁한 쪽     {len(out['헐렁']):>4}쪽  {[x[0] for x in out['헐렁']][:8]}")
     print(f"  ④ 폭 초과       {len(out['폭초과']):>4}건  {[x[0] for x in out['폭초과']][:6]}")
     print(f"  ⑥ 외톨이 글자   {len(out['외톨이']):>4}문단  {out['외톨이'][:6]}")
+    import fitz as _fz
+    clip = clipped_code_lines(_fz.open(a.pdf))
+    print(f"  ⑦ 코드 줄 잘림  {len(clip):>4}줄  {[c[1][:26] for c in clip[:2]]}")
     print()
+    if clip:
+        print("  ✗ 코드 줄이 잘렸다 — 인쇄에서 overflow 는 소실이다")
+        for f, t in clip[:6]:
+            print("      %s | %s" % (f, t))
+        return 1
     if a.max_orphan is not None and len(out["외톨이"]) > a.max_orphan:
         print("  ✗ 외톨이 글자 %d > 기준 %d" % (len(out["외톨이"]), a.max_orphan))
         return 1

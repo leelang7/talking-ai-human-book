@@ -60,7 +60,8 @@ code{ font-family:"D2Coding","Consolas",monospace; font-size:9pt; background:#f2
 p code, li code{ overflow-wrap:anywhere; }
 p strong, li strong{ overflow-wrap:anywhere; }
 pre{ background:#f6f8fa; border:1px solid var(--line); border-radius:4px; padding:6pt 10pt;
-     overflow-x:auto; page-break-inside:auto; }
+     white-space:pre-wrap; overflow-wrap:anywhere; page-break-inside:auto; }
+     /* 인쇄에서 overflow-x 는 '가로 스크롤' 이 아니라 '잘림' 이다 — 넘치는 줄은 접어서 살린다 */
 pre code{ background:none; padding:0; line-height:1.45; display:block; }
 
 /* 도판 — 핵심: img 가 아니라 figure 를 가운데 둔다.

@@ -35,9 +35,9 @@ PUBLISHER = [("펴낸이", "한건희"), ("펴낸곳", "주식회사 부크크")
 APP_ORDER = "ABCDEFGHLN"          # 인쇄 부록 순서 (폴더에 있는 것만)
 
 BOOK_CSS = CSS + """
-@page{ size:182mm 257mm; margin:18mm 16mm 17mm 16mm; }
-@page :left{ margin-left:13mm; margin-right:19mm; }   /* 제본 쪽(안쪽) 19 · 바깥 13 — 합계 32 유지 → 쪽수 불변 */
-@page :right{ margin-left:19mm; margin-right:13mm; }
+@page{ size:182mm 257mm; margin:18mm 16mm 17mm 16mm; }   /* 좌우 대칭 — 머리글·쪽번호가 종이 정중앙에 찍히므로
+                                                            본문도 정중앙이어야 한다. 거울 여백(안 19/바깥 13)을 쓰면
+                                                            본문 중심이 쪽마다 3mm 움직여 머리글과 어긋난다(2026-09-06). */
 body{ background:#fff; font-family:"Noto Serif KR","Batang","Malgun Gothic",serif; }
 code, pre{ font-family:"D2Coding","Consolas","Malgun Gothic",monospace; }
 .page{ box-shadow:none; margin:0; width:auto; min-height:auto; padding:0; page-break-after:always; }
@@ -457,15 +457,8 @@ MARGIN_MM = (18, 17, 16, 16)         # 위·아래·좌·우 (좌우는 @page :l
 
 
 def mirror_swap(html):
-    """앞붙임이 홀수 쪽일 때 — 본문 1쪽이 물리적 왼쪽 면이 되므로 거울 여백을 뒤집는다.
-
-    이걸 빼먹으면 제본 여백(안쪽 19mm)이 전 쪽에서 바깥으로 가 버린다.
-    눈으로는 잘 안 보이고 제본하고 나서야 안다."""
-    return (html.replace("@page :left{ margin-left:13mm; margin-right:19mm; }",
-                         "@page :left{ margin-left:19mm; margin-right:13mm; }")
-                .replace("@page :right{ margin-left:19mm; margin-right:13mm; }",
-                         "@page :right{ margin-left:13mm; margin-right:19mm; }"))
-
+    """좌우 대칭 여백이라 뒤집을 것이 없다 — 호출부를 그대로 두려고 남긴다."""
+    return html
 
 def close_browser():
     return None                       # 렌더가 프로세스마다 끝나므로 닫을 것이 없다

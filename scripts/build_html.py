@@ -114,19 +114,20 @@ def _strip_tags(s):
 
 def _inline(s):
     """굵게·기울임·코드·링크. 코드 스팬 안의 '*' 는 강조가 아니다 — `sin(p*π)` 의 '*' 가 <em> 을 열어
-    Ch20 부터 책 끝까지 이탤릭이 된 사고(2026-09-05)가 이 함수에서 났다. 코드 스팬을 먼저 떼어 둔다."""
-    parts = re.split(r"(`[^`]+`)", s)
-    for i, part in enumerate(parts):
-        if i % 2:                                              # 코드 스팬 — 그대로, 이스케이프만
-            parts[i] = "<code>" + _esc(part[1:-1]) + "</code>"
-            continue
-        t = _esc(part)
-        t = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", t)
-        t = re.sub(r"(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)", r"<em>\1</em>", t)
-        parts[i] = t
-    s = "".join(parts)
-    s = _LINK.sub(lambda m: '<a href="%s">%s</a>' % (m.group(2), m.group(1)), s)
-    return s
+    Ch20 부터 책 끝까지 이탤릭이 된 사고(2026-09-05). 코드 스팬을 자리표시로 빼 두고 강조를 건 뒤 되돌린다
+    (조각으로 나눠 강조를 걸면 '**기준점은 `x` 에서**' 처럼 코드를 품은 굵게가 깨진다 — 두 번째 사고)."""
+    codes = []
+
+    def stash(m):
+        codes.append("<code>" + _esc(m.group(1)) + "</code>")
+        return "\x00%d\x00" % (len(codes) - 1)
+    t = re.sub(r"`([^`]+)`", stash, s)
+    t = _esc(t)
+    t = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", t, flags=re.S)        # 줄을 건너는 굵게도 짝을 맞춘다
+    t = re.sub(r"(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)", r"<em>\1</em>", t, flags=re.S)
+    t = re.sub(r"\x00(\d+)\x00", lambda m: codes[int(m.group(1))], t)
+    t = _LINK.sub(lambda m: '<a href="%s">%s</a>' % (m.group(2), m.group(1)), t)
+    return t
 
 
 def _inline_block(ln):
@@ -210,7 +211,8 @@ _LATIN = re.compile(r"(?<![A-Za-z/._-])([A-Za-z][a-z]{7,}[A-Za-z]*)(?![A-Za-z/._
 
 
 _CAMEL = re.compile(r"([a-z]{2,})([A-Z][a-z]{2,})")                 # LangChain → Lang<wbr>Chain
-_CODE_BREAK = re.compile(r"([/_.\-:=])(?=[A-Za-z0-9_])")                # 코드 안 경로·식별자 경계
+_CODE_BREAK = re.compile("([/_.:=" + chr(92) * 2 + chr(0xB7) + "-])(?=[A-Za-z0-9_" + chr(0xB7) + "])")   # 코드 안 경로·식별자 경계(역슬래시·가운뎃점 포함)
+_MIDDOT = re.compile(r"(?<=[A-Za-z0-9])(·)(?=[A-Za-z0-9])")           # 580·CUDA 처럼 붙은 라틴·숫자 묶음
 _SHY = {                                                                  # 소프트 하이픈 — 책에 자주 나오는 긴 라틴 낱말
     "Chatterbox": "Chatter\u00adbox", "backchannel": "back\u00adchannel", "retargeting": "re\u00adtarget\u00ading",
     "conversion": "conver\u00adsion", "Holistic": "Holis\u00adtic", "expression": "expres\u00adsion",
@@ -231,12 +233,14 @@ def hyphenate_latin(html):
     for i in range(0, len(parts), 2):                 # 짝수 칸이 태그 밖 텍스트
         t = _LATIN.sub(lambda m: '<span class="hy" lang="en">' + m.group(1) + "</span>", parts[i])
         t = _CAMEL.sub(lambda m: m.group(1) + "<wbr>" + m.group(2), t)
+        t = _MIDDOT.sub(lambda m: m.group(1) + "<wbr>", t)
         for w, hy in _SHY.items():
             t = t.replace(w, hy)
         parts[i] = t
     for i in range(1, len(parts), 2):                 # 홀수 칸이 태그·코드
         if parts[i].startswith("<code>"):
-            parts[i] = "<code>" + _CODE_BREAK.sub(lambda m: m.group(1) + "<wbr>", parts[i][6:-7]) + "</code>"
+            inner = _CODE_BREAK.sub(lambda m: m.group(1) + "<wbr>", parts[i][6:-7])
+            parts[i] = "<code>" + inner + "</code>"
     return "".join(parts)
 
 

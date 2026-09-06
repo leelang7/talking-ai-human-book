@@ -18,6 +18,8 @@
  "params_layer": {
   "clamp_apply_us_per_call": 2.5,
   "share_of_30fps_frame_pct": 0.007,
-  "n_calls": 20000
+  "n_calls": 20000,
+  "share_of_60fps_frame_pct": 0.015,
+  "note": "브라우저 트랙은 60fps 로 돈다 — 16,667µs 예산 기준의 비중이 본문 값이다."
  }
 }

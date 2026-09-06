@@ -42,11 +42,16 @@ def main():
         b.close()
     html = open(HTML, encoding="utf-8").read()
     zero = re.findall(r"(?:그림|표) 0\.\d+", html)
+    body = html.split("<body>", 1)[1] if "<body>" in html else html
+    parts = re.split(r"(<pre>.*?</pre>|<code>.*?</code>|<style>.*?</style>)", body, flags=re.S)
+    text = "".join(re.sub(r"<[^>]+>", "", parts[i]) for i in range(0, len(parts), 2))
+    stars = len(re.findall(r"\*\*", text)) + len(re.findall(r"(?<!\*)\*(?!\*)", text))
     print(f"\n  HTML 스타일 검수 — 블록 {r['n']}개")
     print(f"  ① 기울임 누출  {r['it']:>4}개  {r['ex_it']}")
     print(f"  ② 굵게 누출    {r['bold']:>4}개  {r['ex_b']}")
-    print(f"  ③ 0.x 캡션     {len(zero):>4}개  {zero[:4]}\n")
-    return 1 if (r["it"] or r["bold"] or zero) else 0
+    print(f"  ③ 0.x 캡션     {len(zero):>4}개  {zero[:4]}")
+    print(f"  ④ 본문 '*' 잔존 {stars:>4}개  (마크다운 강조가 변환되지 않은 것)\n")
+    return 1 if (r["it"] or r["bold"] or zero or stars) else 0
 
 
 if __name__ == "__main__":

@@ -12,7 +12,7 @@
     F7  제스처 엔벨로프       — code/ch20_gesture 의 실제 함수
     F10 fps 드리프트         — code/ch14_mux 의 실제 fps_math
     F11 음량 처리 전후        — code/ch17_volume 의 실제 MouthDriver
-    F12 미세 움직임 여섯 주기  — code/ch19_alive 의 실제 상수
+    F12 미세 움직임 여섯 진동수 — code/ch19_alive 의 실제 상수
 
 실행:  python scripts/gen_figures.py
 """
@@ -50,7 +50,8 @@ def save(name, body, w, h, alt):
 
 
 # ── F3 : 230초의 분해 (부록 C 실측) ──────────────────────────────────
-STAGES = [("TTS", 3.0), ("신경망 립싱크", 195.8), ("표정 리타게팅", 32.1), ("ffmpeg mux", 1.5)]
+STAGES = [("신경망 립싱크", 195.8), ("표정 리타게팅", 32.1), ("ffmpeg mux", 1.5)]
+TTS_NOTE = "TTS 는 수 초 — 기계가 아니라 제공자에 달려 있어 위 합계에 넣지 않았다."
 
 
 def f3():
@@ -71,9 +72,13 @@ def f3():
                  % (x0 + w + 8, y + 18, sec, share))
         y += 38
     o.append('<line class="ax" x1="%d" y1="%d" x2="%d" y2="%d"/>' % (x0, y - 6, x0 + bw, y - 6))
-    o.append('<text class="num" x="8" y="%d">병목의 85%% 가 한 단계에 있다</text>' % (y + 22))
-    o.append('<text class="sub" x="8" y="%d">나머지를 전부 0 으로 만들어도 34초만 줄어든다. '
-             '실시간 대비 21배.</text>' % (y + 42))
+    top = max(STAGES, key=lambda s: s[1])
+    rest = total - top[1]
+    o.append('<text class="num" x="8" y="%d">병목의 %.0f%%가 한 단계에 있다</text>'
+             % (y + 22, top[1] / total * 100))
+    o.append('<text class="sub" x="8" y="%d">나머지를 전부 0으로 만들어도 %.0f초밖에 못 줄인다. '
+             '실시간 대비 21배.</text>' % (y + 42, rest))
+    o.append('<text class="sub" x="8" y="%d">%s</text>' % (y + 60, TTS_NOTE))
     return save("f03_breakdown.svg", "\n".join(o), W, H,
                 "230초 중 195.8초가 립싱크 한 단계에 몰려 있다")
 
@@ -122,7 +127,7 @@ def f12():
     from alive import AMPS, PERIODS
     W, H, x0, y0, pw, ph = 512, 266, 40, 44, 452, 156
     secs = 30
-    o = ['<text class="ttl" x="8" y="22">주기가 서로 배수가 아니라서 겹친 파형이 반복되지 않는다</text>']
+    o = ['<text class="ttl" x="8" y="22">진동수가 서로 어긋나 있어 겹친 파형이 오래 반복되지 않는다</text>']
     o.append('<line class="ax" x1="%d" y1="%.1f" x2="%d" y2="%.1f"/>'
              % (x0, y0 + ph / 2, x0 + pw, y0 + ph / 2))
     for s in (0, 10, 20, 30):
@@ -140,12 +145,12 @@ def f12():
         pts.append((x0 + pw * i / N, y0 + ph / 2 - (v / amax) * (ph / 2 - 6)))
     o.append('<polyline class="ln" points="%s"/>' % " ".join("%.1f,%.1f" % p for p in pts))
 
-    o.append('<text class="sub" x="8" y="%d">주기 %s</text>'
+    o.append('<text class="sub" x="8" y="%d">진동수(rad/s) %s — 공통 주기 약 126초</text>'
              % (H - 36, " · ".join("%.2f" % v for v in sorted(PERIODS.values()))))
     o.append('<text class="num" x="8" y="%d">호흡 진폭 0.012 라디안 — 약 0.7도. '
              '끄면 즉시 알아챈다.</text>' % (H - 14))
     return save("f12_micro.svg", "\n".join(o), W, H,
-                "서로 배수가 아닌 여섯 주기를 겹치면 파형이 반복되지 않는다")
+                "서로 어긋난 여섯 진동수를 겹치면 파형이 오래 반복되지 않는다")
 
 
 # ── F10 : fps 드리프트 (code/_lib/media.py 의 실제 상수로) ────────────
@@ -255,7 +260,7 @@ def f11():
                        for i, v in enumerate(vals))
         return '<polyline class="ln" %s points="%s"/>' % (style, pts)
 
-    o = ['<text class="ttl" x="4" y="17">날것의 음량은 못 쓴다 — 네 처리를 거친다</text>']
+    o = ['<text class="ttl" x="4" y="17">날것의 음량은 못 쓴다 — 다섯 처리를 거친다</text>']
 
     o.append('<text class="sub" x="4" y="36">① 날것 RMS</text>')
     o.append(band(42, 54))

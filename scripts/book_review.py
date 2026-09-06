@@ -24,7 +24,7 @@ _sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
 from _pages import CHARS_PER_PAGE, printed_chars   # 산정은 한 곳에서만
 TARGET_PAGES = 265            # 기획안 §11
 
-PARTS = [("Part 0 해부", range(1, 6)), ("Part 1 지연", range(6, 10)),
+PARTS = [("Part 1 해부", range(1, 6)), ("Part 2 지연", range(6, 10)),
          ("Track A 실사", range(10, 16)), ("Track B 무GPU", range(16, 22)),
          ("Track C 인격", range(22, 28)), ("Part 4 내보내기", range(28, 31))]
 

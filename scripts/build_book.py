@@ -26,6 +26,11 @@ SUB = "얼굴·목소리·두뇌·기억 — 네 층을 조립하고 실측하�
 SERIES = "All That AI · Vol.03"
 AUTHOR = "이석창 (Seokchang Lee)"
 REPO = "github.com/leelang7/talking-ai-human-book"          # 공개 컴패니언 저장소 (2026-09-05)
+ISBN = ""                          # 부크크 등록 시 발급 → 여기 넣고 다시 조판 (비면 줄을 찍지 않는다)
+PUB_DATE = "2026년 9월"            # 초판 1쇄 발행
+PUBLISHER = [("펴낸이", "한건희"), ("펴낸곳", "주식회사 부크크"), ("출판사등록", "2014.07.15 (제2014-16호)"),
+             ("주소", "서울특별시 금천구 가산디지털1로 119 SK트윈타워 A동 305-7호"), ("전화", "1670-8316"),
+             ("이메일", "info@bookk.co.kr"), ("홈페이지", "www.bookk.co.kr")]   # 부크크 판권 표준 문구 — 등록 화면의 안내와 대조할 것
 APP_ORDER = "ABCDEFGHLN"          # 인쇄 부록 순서 (폴더에 있는 것만)
 
 BOOK_CSS = CSS + """
@@ -41,7 +46,8 @@ code, pre{ font-family:"D2Coding","Consolas","Malgun Gothic",monospace; }
 .cover h1{ font-size:26pt; margin:14pt 0 8pt; line-height:1.3; }
 .cover .sub{ font-size:11pt; color:#333; margin:0 8mm; line-height:1.6; }
 .cover .author{ margin-top:40mm; font-size:12pt; }
-.colophon{ font-size:9pt; color:#333; padding-top:120mm; }
+.colophon{ font-size:9pt; color:#333; padding-top:64mm; }
+.blank{ min-height:10mm; }
 .colophon table{ font-size:9pt; width:auto; } .colophon td{ border:0; padding:2pt 6pt; }
 .colophon td:first-child{ width:26mm; white-space:nowrap; color:var(--muted); }
 .part{ padding-top:48mm; }
@@ -160,6 +166,11 @@ def sparse_pages(pdf_path):
     return out
 
 
+def part_disp(label):
+    """파트 라벨 표시형 — 세 트랙은 Part 3 의 하위 구분이다 (Part 0 이 있던 시절의 번호를 정리, 2026-09-05)."""
+    return ("Part 3 · " + label) if label.startswith("Track") else label
+
+
 def loose_pages(pdf_path):
     """검수기(type_qa)와 같은 기준 — 머리·꼬리 뺀 본문 블록이 300자 미만이고 쪽의 55%도 못 채우면 헐렁."""
     import fitz
@@ -270,14 +281,7 @@ def build(toc_pages=None, tight=None, index_html=None):
 
     body.append('<section class="page cover"><div class="series">%s</div><h1>%s</h1>'
                 '<div class="sub">%s</div><div class="author">%s 지음</div></section>' % (SERIES, TITLE, SUB, AUTHOR))
-    body.append('<section class="page colophon"><table>'
-                '<tr><td>제목</td><td>%s</td></tr><tr><td>시리즈</td><td>%s</td></tr>'
-                '<tr><td>지은이</td><td>%s</td></tr><tr><td>판</td><td>초판 1쇄 · 2026년</td></tr>'
-                '<tr><td>저장소</td><td>%s</td></tr><tr><td>펴낸곳</td><td>부크크</td></tr>'
-                '<tr><td>측정 환경</td><td>RTX 4070 SUPER 12GB · Windows 11 · 본문 수치는 부록 C의 측정 조건 기준</td></tr>'
-                '</table><p>본문의 코드는 저장소의 라이선스를, 인용된 외부 모델·라이브러리는 각자의 라이선스를 따릅니다. '
-                '이 책의 어떤 부분도 저작권자의 허락 없이 복제·전송할 수 없습니다.</p></section>'
-                % (TITLE, SERIES, AUTHOR, REPO))
+    body.append('<section class="page blank"></section>')   # 표제지 뒷면 — 백지. 판권지는 책 끝에
     for fi, name in enumerate(("00_서문.md", "00_이책의_사용법.md", "00_등장인물.md")):
         body.append(front_html(name, tight.get("front%d" % fi, "")))
 
@@ -291,7 +295,7 @@ def build(toc_pages=None, tight=None, index_html=None):
                        for c, t, b in part["chapters"])
         body.append('<section class="page part"><div class="label">%s</div><h1>%s</h1><div class="blurb">%s</div>'
                     '<div class="tw"><table><tbody>%s</tbody></table></div></section>'
-                    % (part["label"], _esc(part["title"]), _inline(part["blurb"]), rows))
+                    % (part_disp(part["label"]), _esc(part["title"]), _inline(part["blurb"]), rows))
         entries.append(("part", part["label"], part["title"], []))
         for c, _, _ in part["chapters"]:
             label = c[2:].lstrip("0")                          # 'Ch03+' → '3+', 'Ch07' → '7'
@@ -318,7 +322,7 @@ def build(toc_pages=None, tight=None, index_html=None):
             html = keep_tail(html)
             body.append('<section class="page%s">%s</section>' % (" " + tight["app" + letter] if ("app" + letter) in tight else "", html))
             entries.append(("app", letter, title, []))
-    ol = "".join("<li>%s</li>" % _esc(t) for t in online_titles())
+    ol = "".join("<li>%s</li>" % _inline(t) for t in online_titles())   # 제목의 *기울임* 도 변환
     online = ('<div class="online keep"><h1 class="ch cont" id="online">온라인 부록</h1>'
                 '<p>아래 셋은 기준일이 있거나 시리즈 독자용이라 종이에 굳히지 않고 저장소에서 갱신합니다. '
                 '<code>%s</code>의 <code>draft/online/</code>에서 읽을 수 있습니다.</p><ul>%s</ul></div>' % (REPO, ol))
@@ -330,12 +334,19 @@ def build(toc_pages=None, tight=None, index_html=None):
     body.append('<section class="page index"><h1 class="ch" id="index">찾아보기</h1>'
                 + (index_html or "<p>(조판 후 채워집니다)</p>") + "</section>")
     entries.append(("app", "index", "찾아보기", []))
+    # 판권지 — 책 끝 (부크크 표준 항목). ISBN 은 발급 뒤 상수에 넣는다.
+    rows = [("제목", "%s — 얼굴·목소리·두뇌·기억, 네 층을 조립하고 실측하는 법" % TITLE), ("시리즈", SERIES),
+            ("초판 1쇄 발행", PUB_DATE), ("지은이", AUTHOR)] + PUBLISHER + ([("ISBN", ISBN)] if ISBN else []) + \
+           [("컴패니언 저장소", REPO), ("측정 환경", "RTX 4070 SUPER 12GB · Windows 11 · 본문 수치는 부록 C의 측정 조건 기준")]
+    body.append('<section class="page colophon"><table>' + "".join("<tr><td>%s</td><td>%s</td></tr>" % r for r in rows) +
+                '</table><p>ⓒ 이석창 2026. 본 책은 저작자의 지적 재산이므로 무단 전재와 복제를 금합니다. '
+                '본문의 코드는 저장소의 라이선스를, 인용된 외부 모델·라이브러리는 각자의 라이선스를 따릅니다.</p></section>')
 
     pages = toc_pages or {}
     lines = ['<section class="page toc%s"><h1>차례</h1>' % ((" " + tight["toc"]) if "toc" in tight else "")]
     for kind, key, title, secs in entries:
         if kind == "part":
-            lines.append('<div class="p">%s%s</div>' % ("" if key == "부록" else key + ". ", _esc(title)))
+            lines.append('<div class="p">%s%s</div>' % ("" if key == "부록" else part_disp(key) + ". ", _esc(title)))
             continue
         n = pages.get(kind + key, "")
         name = ("Ch%s  " % disp_label(key)) if kind == "ch" else ""
@@ -357,7 +368,7 @@ def build(toc_pages=None, tight=None, index_html=None):
             if o != c:
                 t = re.search(r"<h1[^>]*>(.*?)</h1>", x, re.S)
                 issues.append("태그 불균형 <%s> %d/%d — %s" % (tag, o, c, re.sub(r"<[^>]+>", "", t.group(1))[:30] if t else "?"))
-    return wrap(body), issues, figs, tbls, entries, wrap(body[:2]), wrap(body[2:])
+    return wrap(body), issues, figs, tbls, entries, wrap(body[:2]), wrap(body[-1:]), wrap(body[2:-1])
 
 
 # ── 찾아보기 — 전문 서적의 마지막 한 장 ─────────────────────────────────
@@ -478,7 +489,7 @@ def chapter_pages(pdf_path, entries):
         flat = txt.replace(chr(10), "")
         for kind, key, title, _ in entries:
             if kind == "part" and (kind + key) not in pages:
-                needle = (key + re.sub(r"<[^>]+>", "", title)[:4]).replace(" ", "")
+                needle = (part_disp(key) + re.sub(r"<[^>]+>", "", title)[:4]).replace(" ", "")
                 if flat.startswith(needle):
                     pages[kind + key] = i
     # ③ 앞부분(서문·사용법·등장인물·차례) — 첫 장 이전 쪽에서 제목으로 찾는다 (카피피팅 대상)
@@ -508,7 +519,7 @@ def main():
     shutil.rmtree(dst_fig, ignore_errors=True)
     shutil.copytree(src_fig, dst_fig,
                     ignore=shutil.ignore_patterns("_*", ".*"))
-    html, issues, figs, tbls, entries, html_front, html_body = build()
+    html, issues, figs, tbls, entries, html_front, html_back, html_body = build()
     out = os.path.join(BUILD, "book.html")
     open(out, "w", encoding="utf-8").write(html)
     print("\n  장 %d · 부록 %d · 도판 %d · 표 %d" % (sum(1 for e in entries if e[0] == "ch"),
@@ -526,8 +537,11 @@ def main():
     pdf = os.path.join(BUILD, "book.pdf")
     fh, bh = os.path.join(BUILD, "_front.html"), os.path.join(BUILD, "_body.html")
     fp, bp = os.path.join(BUILD, "_front.pdf"), os.path.join(BUILD, "_body.pdf")
+    kh, kp = os.path.join(BUILD, "_back.html"), os.path.join(BUILD, "_back.pdf")
     open(fh, "w", encoding="utf-8").write(html_front)
-    render_pdf(fh, fp, header=False)                       # 표지·판권: 머리글·쪽번호 없음
+    render_pdf(fh, fp, header=False)                       # 표제지: 머리글·쪽번호 없음
+    open(kh, "w", encoding="utf-8").write(html_back)
+    render_pdf(kh, kp, header=False)                       # 판권지: 머리글·쪽번호 없음 (책 맨 끝)
     open(bh, "w", encoding="utf-8").write(html_body)
     render_pdf(bh, bp)
     pages, n = chapter_pages(bp, entries)                  # 쪽 번호는 본문 기준(서문이 1쪽)
@@ -613,7 +627,7 @@ def main():
     print("  찾아보기 표제어 %d개" % n_terms)
     from pypdf import PdfReader, PdfWriter
     w = PdfWriter()
-    for src in (fp, bp):
+    for src in (fp, bp, kp):
         for pg in PdfReader(src).pages:
             w.add_page(pg)
     # 책갈피(outline) — 파트·장·부록. 본문 쪽 번호 + 앞 2쪽 = PDF 쪽 인덱스
@@ -631,9 +645,9 @@ def main():
             w.add_outline_item(label, pages2[kind + key] - 1 + front_n, parent=parent)
     w.add_metadata({"/Title": TITLE, "/Author": AUTHOR, "/Subject": SERIES, "/Creator": "build_book.py (Chromium)"})
     w.write(pdf)
-    for f in (fh, bh, fp, bp):
+    for f in (fh, bh, fp, bp, kh, kp):
         os.remove(f)
-    print("  차례 쪽 번호 %d개 · 본문 %d쪽 + 앞 2쪽 = %d쪽 · 2패스 후 어긋난 항목 %d" % (len(pages2), n2, n2 + 2, drift))
+    print("  차례 쪽 번호 %d개 · 본문 %d쪽 + 앞 2쪽 + 판권 1쪽 = %d쪽 · 2패스 후 어긋난 항목 %d" % (len(pages2), n2, n2 + 3, drift))
     print("  → %s\n" % pdf)
     close_browser()
     return 0

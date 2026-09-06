@@ -8,7 +8,26 @@
   "mean": 0.007,
   "closed_frames": 299,
   "t_min": 6.93,
-  "t_max": 4.87
+  "t_max": 4.87,
+  "figure_frames": {
+   "0": {
+    "t_s": 0.0,
+    "cavity": 0.005
+   },
+   "146": {
+    "t_s": 4.87,
+    "cavity": 0.075
+   },
+   "200": {
+    "t_s": 6.67,
+    "cavity": 0.053
+   },
+   "319": {
+    "t_s": 10.63,
+    "cavity": 0.002
+   }
+  },
+  "figure_note": "Ch15 도판 p_memorial.jpg 의 네 칸 — 입 공동 비율로 골랐다(시작·최대·둘째 최대·끝)"
  },
  "cat_open2": {
   "frames": 320,

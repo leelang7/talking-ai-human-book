@@ -37,5 +37,34 @@
   "t4x4_wall_s": 37.1,
   "t4x4_speedup": 3.32,
   "t4x4_overhead_pct": 17
+ },
+ "human_figure": {
+  "source": "D:/AllThatLink/coordinator/static — gesture_base.mp4(기본 아나운서 720×1280 10.04s) · interviewer2.mp4(720×1280 8.0s) · demo_t4.mp4(896×1200 23.98s, 무료 T4 노드 렌더)",
+  "demo_frames_s": [
+   0.29,
+   5.92,
+   11.71,
+   16.0,
+   20.54
+  ],
+  "announcer_frames_s": [
+   1,
+   7.0
+  ],
+  "announcer_blink_s": 7.0,
+  "interviewer_frames_s": [
+   1,
+   2.6
+  ],
+  "measured": "프레임 간 눈 영역 변화 최대 — 아나운서 6.7초(9.2) · 면접관 4.2초(29.9); 머리 영역 변화 최대 — 면접관 7.4(끄덕임 아님)",
+  "demo_frames_note": "입 안 어두운 화소 비율로 골랐다 — 0.0367 / 0.0021 / 0.0336 / 0.0015 / 0.0445 (열림·다뭄 교차)",
+  "interviewer_blink_s": 2.6,
+  "demo_frames_s_rounded": [
+   0.3,
+   5.9,
+   11.7,
+   16.0,
+   20.5
+  ]
  }
 }

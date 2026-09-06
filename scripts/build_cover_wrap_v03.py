@@ -148,9 +148,8 @@ def main():
     # 하단: 분류 태그 · 저장소 (좌) — 바코드 박스 (우). 흐름 끝(yy)과 겹치지 않게 검사한다.
     # 부크크는 뒤표지 **왼쪽 아래에 ISBN 바코드** 를, 앞표지 아래에 자사 로고를 얹는다.
     # 바코드는 40×25mm + 여백이라 아래 45mm 는 통째로 비워야 한다 — 25mm 만 비웠더니 글자를 덮었다(2026-09-06).
-    tags_y = H - bl - px(56); repo_y = H - bl - px(48)
-    assert yy <= tags_y - px(4), f"뒤표지 본문이 하단 영역과 겹침: 본문 끝 {yy/MM:.1f}mm > 태그 {tags_y/MM:.1f}mm"
-    d.text((bx, tags_y), TAGS, font=font(SANS, 400, px(2.9)), fill=GREY)
+    repo_y = H - bl - px(50)          # 분류 태그 줄은 뺐다 — 뒤표지에서 겉돌았다
+    assert yy <= repo_y - px(6), f"뒤표지 본문이 하단 영역과 겹침: 본문 끝 {yy/MM:.1f}mm > 저장소 줄 {repo_y/MM:.1f}mm"
     d.text((bx, repo_y), REPO, font=ImageFont.truetype(MONO, px(2.7)), fill=DIM)
     # ISBN 바코드는 부크크가 뒤표지 왼쪽 아래에 직접 얹는다 — 우리가 자리를 그리면 두 개가 된다.
     # 아무것도 그리지 않고 **아래 45mm 를 통째로** 비운다(바코드 40×25mm + 조용한 여백).

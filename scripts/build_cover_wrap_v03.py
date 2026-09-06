@@ -146,13 +146,14 @@ def main():
         d.text((bx, yy), line, font=fq, fill=AMBER_TXT); yy += px(6.2)
     d.text((bx, yy), QUOTE_SRC, font=font(SANS, 400, px(2.8)), fill=GREY); yy += px(6)
     # 하단: 분류 태그 · 저장소 (좌) — 바코드 박스 (우). 흐름 끝(yy)과 겹치지 않게 검사한다.
-    # 부크크는 뒤표지 하단에 자사 로고를 얹는다(등록 화면의 '로고선택'). 왼쪽 아래 25mm 는 비워 둔다.
-    tags_y = H - bl - px(36); repo_y = H - bl - px(28)
+    # 부크크는 뒤표지 **왼쪽 아래에 ISBN 바코드** 를, 앞표지 아래에 자사 로고를 얹는다.
+    # 바코드는 40×25mm + 여백이라 아래 45mm 는 통째로 비워야 한다 — 25mm 만 비웠더니 글자를 덮었다(2026-09-06).
+    tags_y = H - bl - px(56); repo_y = H - bl - px(48)
     assert yy <= tags_y - px(4), f"뒤표지 본문이 하단 영역과 겹침: 본문 끝 {yy/MM:.1f}mm > 태그 {tags_y/MM:.1f}mm"
     d.text((bx, tags_y), TAGS, font=font(SANS, 400, px(2.9)), fill=GREY)
     d.text((bx, repo_y), REPO, font=ImageFont.truetype(MONO, px(2.7)), fill=DIM)
     # ISBN 바코드는 부크크가 뒤표지 왼쪽 아래에 직접 얹는다 — 우리가 자리를 그리면 두 개가 된다.
-    # 그래서 아무것도 그리지 않고 비워 둔다(왼쪽 아래 50×30mm).
+    # 아무것도 그리지 않고 **아래 45mm 를 통째로** 비운다(바코드 40×25mm + 조용한 여백).
 
     canvas.save(OUT, dpi=(DPI, DPI))
     canvas.save(OUT.with_suffix(".pdf"), "PDF", resolution=DPI)

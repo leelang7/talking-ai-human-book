@@ -116,7 +116,9 @@ def main():
         sd.text((px(22), sp // 2), TITLE, font=font(SANS, 900, fs), fill=OFF + (255,), anchor="lm")
         tw1 = sd.textlength(TITLE, font=font(SANS, 900, fs))
         sd.text((px(22) + tw1 + px(3), sp // 2), TITLE2, font=font(SERIF, 900, fs), fill=AMBER_TXT + (255,), anchor="lm")
-        sd.text((H - px(22), sp // 2), AUTHOR, font=font(SANS, 600, int(sp * 0.26)), fill=GREY + (255,), anchor="rm")
+        # 부크크는 **책등 아래쪽에도 자사 로고** 를 찍는다(미리보기에서 저자명을 덮었다).
+        # 아래 45mm 는 비우고 저자명을 그 위에 둔다.
+        sd.text((H - px(50), sp // 2), AUTHOR, font=font(SANS, 600, int(sp * 0.26)), fill=GREY + (255,), anchor="rm")
         sd.text((H // 2, sp // 2), "ALL THAT AI · VOL.03", font=ImageFont.truetype(MONO, int(sp * 0.20)), fill=DIM + (255,), anchor="mm")
         rot = st.rotate(-90, expand=True)      # 위→아래로 읽힘: 제목이 위, 저자가 아래 (한국 관행. Vol.02 는 반대로 나갔다)
         # 글자를 책등 정중앙에 — 글꼴 위아래 여백이 비대칭이라 sp//2 로 그리면 0.3mm 쏠린다.

@@ -54,7 +54,9 @@ blockquote { border-left: 3px solid #F59E0B; margin: 0.9em 0; padding: 0.4em 0.9
 pre { background: #f4f5f7; padding: 0.6em; border-radius: 4px; font-size: 0.82em;
       white-space: pre-wrap; word-break: break-all; }
 code { font-size: 0.9em; }
-table { border-collapse: collapse; width: 100%; font-size: 0.85em; margin: 0.8em 0; }
+table { border-collapse: collapse; width: 100%; font-size: 0.82em; margin: 0.8em 0; }
+tr { page-break-inside: avoid; }
+thead { display: table-header-group; }
 th, td { border: 1px solid #ccc; padding: 3px 6px; text-align: left; }
 th { background: #f2f4f8; }
 img { max-width: 100%; }
@@ -147,10 +149,13 @@ def main():
             "--resource-path=" + DRAFT]
     if os.path.exists(cover):
         args.append("--epub-cover-image=" + cover)
-    pypandoc.convert_file(md_path, "epub3", format="markdown+pipe_tables+backtick_code_blocks",
+    # 부크크는 외부유통에 **EPUB 2.0** 만 받는다(EPUB3 불가) — Vol.02 에서 겪은 것.
+    pypandoc.convert_file(md_path, "epub2", format="markdown+pipe_tables+backtick_code_blocks",
                           outputfile=a.out, extra_args=args)
-    size = os.path.getsize(a.out)
-    print("  → %s  (%.1fMB)" % (a.out, size / 1024 / 1024))
+    size = os.path.getsize(a.out) / 1024 / 1024
+    print("  → %s  (EPUB2 · %.1fMB)" % (a.out, size))
+    if size >= 20:
+        print("  ⚠ 부크크 전자책 상한 20MB 를 넘었다 — 도판을 줄여야 한다(Vol.02 는 shrink_epub.py 로 눌렀다)")
     return 0
 
 

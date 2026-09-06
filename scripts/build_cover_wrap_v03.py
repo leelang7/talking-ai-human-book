@@ -96,9 +96,11 @@ def main():
 
     # 책등 — 흑연 + 앰버 가는 선 + 세로 제목
     sx0 = bl + tw
-    # 앰버 세로선 — 접히는 자리(책등↔앞표지)에서 2.5mm 안쪽에 둔다.
-    # POD 는 접지가 ±1~2mm 흔들린다. 경계에 붙여 두면 앞표지로 넘어가거나 접힘선에 먹힌다.
-    line_w, line_gap = px(1.2), px(2.5)
+    # 앰버 세로선 — 접히는 자리에서 2.5mm 안쪽에, **양쪽 대칭** 으로.
+    # 한쪽에만 두면 글자가 반대쪽으로 쏠려 보인다(부크크 미리보기에서 확인, 2026-09-06).
+    # POD 접지는 ±1~2mm 흔들리는데, 대칭이면 흔들려도 한쪽으로 몰려 보이지 않는다.
+    line_w, line_gap = px(1.1), px(2.5)
+    d.rectangle((sx0 + line_gap, 0, sx0 + line_gap + line_w, H), fill=AMBER)
     d.rectangle((sx0 + sp - line_gap - line_w, 0, sx0 + sp - line_gap, H), fill=AMBER)
     if sp > px(8):
         st = Image.new("RGBA", (H, sp), (0, 0, 0, 0))
@@ -110,7 +112,11 @@ def main():
         sd.text((H - px(22), sp // 2), AUTHOR, font=font(SANS, 600, int(sp * 0.30)), fill=GREY + (255,), anchor="rm")
         sd.text((H // 2, sp // 2), "ALL THAT AI · VOL.03", font=ImageFont.truetype(MONO, int(sp * 0.22)), fill=DIM + (255,), anchor="mm")
         rot = st.rotate(-90, expand=True)      # 위→아래로 읽힘: 제목이 위, 저자가 아래 (한국 관행. Vol.02 는 반대로 나갔다)
-        canvas.paste(rot, (sx0, 0), rot)
+        # 글자를 책등 정중앙에 — 글꼴 위아래 여백이 비대칭이라 sp//2 로 그리면 0.3mm 쏠린다.
+        # 찍힌 잉크의 상자를 재서 그만큼 밀어 준다(부크크 미리보기에서 '오른쪽 쏠림' 으로 보였다).
+        ink = rot.split()[-1].getbbox()
+        shift = (sp - (ink[0] + ink[2])) // 2 if ink else 0
+        canvas.paste(rot, (sx0 + shift, 0), rot)
 
     # 뒤표지(좌) — Vol.01 구조. 도발적 헤드라인, 시장을 치는 문단, ▶ 팩트, 저자, 인용, 태그, 바코드 박스.
     bx, by = bl + px(12), bl + px(18)
@@ -145,12 +151,8 @@ def main():
     assert yy <= tags_y - px(4), f"뒤표지 본문이 하단 영역과 겹침: 본문 끝 {yy/MM:.1f}mm > 태그 {tags_y/MM:.1f}mm"
     d.text((bx, tags_y), TAGS, font=font(SANS, 400, px(2.9)), fill=GREY)
     d.text((bx, repo_y), REPO, font=ImageFont.truetype(MONO, px(2.7)), fill=DIM)
-    bw_, bh_ = px(42), px(24)
-    bx1, by1 = bl + tw - px(12) - bw_, H - bl - px(12) - bh_
-    d.rectangle((bx1, by1, bx1 + bw_, by1 + bh_), fill=(245, 245, 247))
-    d.text((bx1 + bw_ // 2, by1 + bh_ // 2 - px(2)), "ISBN BARCODE", font=font(SANS, 700, px(3.0)), fill=(40, 40, 46), anchor="mm")
-    d.text((bx1 + bw_ // 2, by1 + bh_ // 2 + px(3.5)), "(인쇄 업체 자동 삽입 영역)", font=font(SANS, 400, px(2.2)), fill=(110, 110, 118), anchor="mm")
-    # 하단 왼쪽 25mm 는 부크크 로고 자리, 오른쪽 박스는 ISBN 바코드 자리 — 둘 다 업체가 넣는다.
+    # ISBN 바코드는 부크크가 뒤표지 왼쪽 아래에 직접 얹는다 — 우리가 자리를 그리면 두 개가 된다.
+    # 그래서 아무것도 그리지 않고 비워 둔다(왼쪽 아래 50×30mm).
 
     canvas.save(OUT, dpi=(DPI, DPI))
     canvas.save(OUT.with_suffix(".pdf"), "PDF", resolution=DPI)

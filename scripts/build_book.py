@@ -723,6 +723,18 @@ def main():
         print("  짝수 맞춤 — 마지막에 백지 1쪽 (총 %d쪽)" % len(w.pages))
     w.add_metadata({"/Title": TITLE, "/Author": AUTHOR, "/Subject": SERIES, "/Creator": "build_book.py (Chromium)"})
     w.write(pdf)
+    # 재단 크기를 정확히 152×225mm 로 — 크로미움은 0.24pt 단위로 반올림해 152.06×225.04 로 찍고,
+    # 인쇄소 검수기가 규격 불일치로 잡는다. 상자만 가운데 기준으로 다듬는다(내용·책갈피는 그대로).
+    # pypdf 로 다시 쓰면 책갈피가 날아간다 — PyMuPDF 로 제자리에서 고친다.
+    import fitz as _fz
+    _d = _fz.open(pdf)
+    _TW, _TH = 152 / 25.4 * 72, 225 / 25.4 * 72
+    for _pg in _d:
+        _r = _pg.rect
+        _dx, _dy = (_r.width - _TW) / 2, (_r.height - _TH) / 2
+        _pg.set_mediabox(_fz.Rect(_r.x0 + _dx, _r.y0 + _dy, _r.x1 - _dx, _r.y1 - _dy))
+    _d.save(pdf, incremental=True, encryption=_fz.PDF_ENCRYPT_KEEP)
+    _d.close()
     for f in (fh, bh, fp, bp, kh, kp):
         os.remove(f)
     print("  차례 쪽 번호 %d개 · 본문 %d쪽 + 표제 1쪽 + 판권 1쪽 = %d쪽 · 2패스 후 어긋난 항목 %d" % (len(pages2), n2, n2 + 2, drift))

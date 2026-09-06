@@ -30,12 +30,6 @@ DEDICATION = [   # 표제지 뒷면 — 저자가 한 줄로 바꿔도 되게 �
     "회색 러시안블루, 나의 고양이.",
     "지금은 고양이별에 있습니다.",
 ]
-VOLUMES = [   # 표제지 뒷면(시리즈 쪽) — 앞 두 권은 서문에 적힌 제목 그대로, 다음 권은 온라인 부록 J 의 가제
-    ("Vol.01", "테슬라처럼 만드는 비전 자율주행과 피지컬 AI", "픽셀이 핸들이 된다", False),
-    ("Vol.02", "우리집 AI 의사·수의사·헬스코치", "픽셀이 진단이 된다", False),
-    ("Vol.03", "AI 휴먼 해부학", "픽셀이 사람이 된다", True),
-    ("Vol.04", "우리집 휴머노이드 (준비 중)", "픽셀이 몸이 된다", False),
-]
 AUTHOR = "이석창 (Seokchang Lee)"
 REPO = "github.com/leelang7/talking-ai-human-book"          # 공개 컴패니언 저장소 (2026-09-05)
 ISBN = ""                          # 부크크 등록 시 발급 → 여기 넣고 다시 조판 (비면 줄을 찍지 않는다)
@@ -63,14 +57,6 @@ code, pre{ font-family:"D2Coding","Consolas","Malgun Gothic",monospace; }
 .dedic{ padding-top:86mm; text-align:center; color:#333; }
 .dedic p{ margin:0 0 1.9em; font-size:10.5pt; line-height:1.9; text-align:center; text-align-last:center; }
 .dedic p:first-child{ color:var(--muted); font-size:10pt; }
-.vols{ padding-top:38mm; }
-.vols .h{ font-size:9.5pt; color:var(--muted); letter-spacing:.2em; text-align:center; margin-bottom:16pt; }
-.vols .v{ margin:0 auto 11pt; width:106mm; }
-.vols .v .t{ font-size:10pt; color:#333; }
-.vols .v .l{ font-size:9pt; color:var(--muted); margin-top:1pt; }
-.vols .v.me .t{ font-weight:600; color:#16181d; }
-.vols .v.me .l{ color:#16181d; }
-.vols .n{ width:106mm; margin:20pt auto 0; font-size:8.5pt; color:var(--muted); line-height:1.6; }
 .colophon table{ font-size:9pt; width:auto; } .colophon td{ border:0; padding:2pt 6pt; }
 .colophon td:first-child{ width:26mm; white-space:nowrap; color:var(--muted); }
 .part{ padding-top:48mm; }
@@ -386,13 +372,6 @@ def build(toc_pages=None, tight=None, index_html=None):
     body.append('<section class="page index"><h1 class="ch" id="index">찾아보기</h1>'
                 + (index_html or "<p>(조판 후 채워집니다)</p>") + "</section>")
     entries.append(("app", "index", "찾아보기", []))
-    rows_v = "".join('<div class="v%s"><div class="t">%s &nbsp;·&nbsp; %s</div>'
-                     '<div class="l">%s</div></div>' % (" me" if me else "", vol, t, l)
-                     for vol, t, l, me in VOLUMES)
-    body.append('<section class="page vols"><div class="h">%s 시리즈</div>%s'
-                '<div class="n">각 권은 따로 읽을 수 있습니다. 이 책이 앞의 두 권에서 무엇을 물려받았는지는 '
-                '온라인 부록 I 에 적어 두었습니다.</div></section>'
-                % (SERIES.split(" · ")[0], rows_v))   # 시리즈 쪽 — 판권지 바로 앞(둘 다 머리글·쪽번호 없음)
     # 판권지 — 책 끝 (부크크 표준 항목). ISBN 은 발급 뒤 상수에 넣는다.
     rows = [("제목", "%s — 얼굴·목소리·두뇌·기억, 네 층을 조립하고 실측하는 법" % TITLE), ("시리즈", SERIES),
             ("초판 1쇄 발행", PUB_DATE), ("지은이", AUTHOR)] + PUBLISHER + ([("ISBN", ISBN)] if ISBN else []) + \
@@ -427,7 +406,7 @@ def build(toc_pages=None, tight=None, index_html=None):
             if o != c:
                 t = re.search(r"<h1[^>]*>(.*?)</h1>", x, re.S)
                 issues.append("태그 불균형 <%s> %d/%d — %s" % (tag, o, c, re.sub(r"<[^>]+>", "", t.group(1))[:30] if t else "?"))
-    return wrap(body), issues, figs, tbls, entries, wrap(body[:2]), wrap(body[-2:]), wrap(body[2:-2])
+    return wrap(body), issues, figs, tbls, entries, wrap(body[:2]), wrap(body[-1:]), wrap(body[2:-1])
 
 
 # ── 찾아보기 — 전문 서적의 마지막 한 장 ─────────────────────────────────
@@ -710,7 +689,7 @@ def main():
     w.write(pdf)
     for f in (fh, bh, fp, bp, kh, kp):
         os.remove(f)
-    print("  차례 쪽 번호 %d개 · 본문 %d쪽 + 앞 2쪽(표제·헌정) + 뒤 2쪽(시리즈·판권) = %d쪽 · 2패스 후 어긋난 항목 %d" % (len(pages2), n2, n2 + 4, drift))
+    print("  차례 쪽 번호 %d개 · 본문 %d쪽 + 앞 2쪽(표제·헌정) + 판권 1쪽 = %d쪽 · 2패스 후 어긋난 항목 %d" % (len(pages2), n2, n2 + 3, drift))
     print("  → %s\n" % pdf)
     close_browser()
     return 0

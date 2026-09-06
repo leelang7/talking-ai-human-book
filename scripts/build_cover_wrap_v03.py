@@ -96,7 +96,10 @@ def main():
 
     # 책등 — 흑연 + 앰버 가는 선 + 세로 제목
     sx0 = bl + tw
-    d.rectangle((sx0 + sp - px(0.8), 0, sx0 + sp, H), fill=AMBER)          # 앞표지 쪽 가장자리 앰버 선
+    # 앰버 세로선 — 접히는 자리(책등↔앞표지)에서 2.5mm 안쪽에 둔다.
+    # POD 는 접지가 ±1~2mm 흔들린다. 경계에 붙여 두면 앞표지로 넘어가거나 접힘선에 먹힌다.
+    line_w, line_gap = px(1.2), px(2.5)
+    d.rectangle((sx0 + sp - line_gap - line_w, 0, sx0 + sp - line_gap, H), fill=AMBER)
     if sp > px(8):
         st = Image.new("RGBA", (H, sp), (0, 0, 0, 0))
         sd = ImageDraw.Draw(st)

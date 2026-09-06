@@ -28,6 +28,8 @@ MANUSCRIPT = [
     ("HTML 스타일", "scripts/html_style_check.py", ROOT),
     ("잉여 감사", "scripts/prune_audit.py", ROOT),
     ("체계성·중복", "scripts/structure_audit.py --strict", ROOT),
+    ("내부 링크", "scripts/check_dead_links.py --strict", ROOT),
+    ("마크다운 서식", "scripts/markdown_lint.py", ROOT),          # 경고만 — Vol.02 에서 가져온 검사   # Vol.02 에서 가져온 검사 — 저장소 문서의 상대 링크
     ("강의 자산 대조", "scripts/lecture_audit.py", ROOT),
     ("코드 참조 대조", "scripts/code_refs.py", ROOT),
 ]

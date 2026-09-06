@@ -12,6 +12,7 @@ build_html.py 의 변환기(md_to_html)를 그대로 쓴다 — 도판·표 번�
 인쇄 부록은 draft/appendix/ 에 있는 것, 온라인 부록은 draft/online/ 에 있는 것이다 — 폴더가 진실이다.
 """
 import argparse
+import glob
 import os
 import re
 import shutil
@@ -24,6 +25,17 @@ from build_html import CSS, DRAFT, BUILD, chapters, md_to_html, _inline, _esc, d
 TITLE = "AI 휴먼 해부학"
 SUB = "얼굴·목소리·두뇌·기억 — 네 층을 조립하고 실측하는 법<br>사진 한 장에서 실시간 대화 아바타까지,<br>픽셀이 사람이 되는 여정"
 SERIES = "All That AI · Vol.03"
+DEDICATION = [   # 표제지 뒷면 — 저자가 한 줄로 바꿔도 되게 리스트로 둔다
+    "이 책에서 <em>조건을 재는 사진</em> 은 전부 민트의 것입니다.",
+    "회색 러시안블루, 나의 고양이.",
+    "지금은 고양이별에 있습니다.",
+]
+VOLUMES = [   # 표제지 뒷면(시리즈 쪽) — 앞 두 권은 서문에 적힌 제목 그대로, 다음 권은 온라인 부록 J 의 가제
+    ("Vol.01", "테슬라처럼 만드는 비전 자율주행과 피지컬 AI", "픽셀이 핸들이 된다", False),
+    ("Vol.02", "우리집 AI 의사·수의사·헬스코치", "픽셀이 진단이 된다", False),
+    ("Vol.03", "AI 휴먼 해부학", "픽셀이 사람이 된다", True),
+    ("Vol.04", "우리집 휴머노이드 (준비 중)", "픽셀이 몸이 된다", False),
+]
 AUTHOR = "이석창 (Seokchang Lee)"
 REPO = "github.com/leelang7/talking-ai-human-book"          # 공개 컴패니언 저장소 (2026-09-05)
 ISBN = ""                          # 부크크 등록 시 발급 → 여기 넣고 다시 조판 (비면 줄을 찍지 않는다)
@@ -48,6 +60,17 @@ code, pre{ font-family:"D2Coding","Consolas","Malgun Gothic",monospace; }
 .cover .author{ margin-top:40mm; font-size:12pt; }
 .colophon{ font-size:9pt; color:#333; padding-top:64mm; }
 .blank{ min-height:10mm; }
+.dedic{ padding-top:86mm; text-align:center; color:#333; }
+.dedic p{ margin:0 0 1.9em; font-size:10.5pt; line-height:1.9; text-align:center; text-align-last:center; }
+.dedic p:first-child{ color:var(--muted); font-size:10pt; }
+.vols{ padding-top:38mm; }
+.vols .h{ font-size:9.5pt; color:var(--muted); letter-spacing:.2em; text-align:center; margin-bottom:16pt; }
+.vols .v{ margin:0 auto 11pt; width:106mm; }
+.vols .v .t{ font-size:10pt; color:#333; }
+.vols .v .l{ font-size:9pt; color:var(--muted); margin-top:1pt; }
+.vols .v.me .t{ font-weight:600; color:#16181d; }
+.vols .v.me .l{ color:#16181d; }
+.vols .n{ width:106mm; margin:20pt auto 0; font-size:8.5pt; color:var(--muted); line-height:1.6; }
 .colophon table{ font-size:9pt; width:auto; } .colophon td{ border:0; padding:2pt 6pt; }
 .colophon td:first-child{ width:26mm; white-space:nowrap; color:var(--muted); }
 .part{ padding-top:48mm; }
@@ -139,6 +162,16 @@ def appendix_html(letter, fn, issues):
     title = m.group(1) if m else fn
     if m:
         html = html.replace(m.group(0), '<h1 class="ch" id="app%s">%s</h1>' % (letter, title), 1)
+    return html, title
+
+
+def backmatter_html(name, key, issues):
+    """뒷붙임(참고문헌·저자 후기) — 부록과 같은 모양으로 찍되 번호는 붙이지 않는다."""
+    html, _, _ = md_to_html(open(os.path.join(DRAFT, name), encoding="utf-8").read(), "0", issues)
+    m = re.search(r"<h1>(.*?)</h1>", html)
+    title = m.group(1) if m else name
+    if m:
+        html = html.replace(m.group(0), '<h1 class="ch" id="%s">%s</h1>' % (key, title), 1)
     return html, title
 
 
@@ -281,7 +314,8 @@ def build(toc_pages=None, tight=None, index_html=None):
 
     body.append('<section class="page cover"><div class="series">%s</div><h1>%s</h1>'
                 '<div class="sub">%s</div><div class="author">%s 지음</div></section>' % (SERIES, TITLE, SUB, AUTHOR))
-    body.append('<section class="page blank"></section>')   # 표제지 뒷면 — 백지. 판권지는 책 끝에
+    body.append('<section class="page dedic">%s</section>'
+                % "".join("<p>%s</p>" % x for x in DEDICATION))   # 표제지 뒷면 — 헌정
     for fi, name in enumerate(("00_서문.md", "00_이책의_사용법.md", "00_등장인물.md")):
         body.append(front_html(name, tight.get("front%d" % fi, "")))
 
@@ -323,17 +357,42 @@ def build(toc_pages=None, tight=None, index_html=None):
             body.append('<section class="page%s">%s</section>' % (" " + tight["app" + letter] if ("app" + letter) in tight else "", html))
             entries.append(("app", letter, title, []))
     ol = "".join("<li>%s</li>" % _inline(t) for t in online_titles())   # 제목의 *기울임* 도 변환
-    online = ('<div class="online keep"><h1 class="ch cont" id="online">온라인 부록</h1>'
-                '<p>아래 셋은 기준일이 있거나 시리즈 독자용이라 종이에 굳히지 않고 저장소에서 갱신합니다. '
-                '<code>%s</code>의 <code>draft/online/</code>에서 읽을 수 있습니다.</p><ul>%s</ul></div>' % (REPO, ol))
+    nch = len([x for x in os.listdir(os.path.join(ROOT, "code"))
+                if os.path.isdir(os.path.join(ROOT, "code", x)) and not x.startswith(("_", "."))])
+    nwork = len(glob.glob(os.path.join(ROOT, "code", "*", "_work", "*.json")))
+    ntest = len(glob.glob(os.path.join(ROOT, "code", "*", "test_*.py")))
+    online = ('<div class="online keep"><h1 class="ch cont" id="online">저장소와 온라인 부록</h1>'
+              '<p>이 책의 코드와 실측 근거는 전부 공개 저장소에 있습니다 — <code>%s</code>. '
+              '원고와 조판 PDF 는 저작권 때문에 들어 있지 않습니다.</p>'
+              '<p><strong>장·부록 폴더 %d개.</strong> 각 장 끝의 <em>실습 코드</em> 줄에 적힌 경로가 그 폴더입니다. '
+              '폴더마다 실행 스크립트와 <code>test_*.py</code>(%d개)가 있고, 본문의 수치를 낸 측정 결과는 '
+              '<code>_work/*.json</code>(%d개)로 남아 있습니다. 부록 C §7 의 재현 절차가 이 파일들을 가리킵니다.</p>'
+              '<p>아래 <strong>온라인 부록 셋</strong>은 기준일이 있거나 시리즈 독자용입니다. '
+              '종이에 굳히지 않고 저장소의 <code>draft/online/</code>에서 갱신합니다.</p><ul>%s</ul>'
+              '<p>모델 지형도(부록 K)는 <strong>6개월마다</strong> 기준일과 함께 고쳐 씁니다. '
+              '책을 산 시점과 기준일이 많이 벌어졌다면 저장소 쪽을 보세요 — 본문의 판단 기준은 그대로 쓰되 '
+              '모델 이름만 바뀝니다.</p></div>' % (REPO, nch, ntest, nwork, ol))
     body[-1] = body[-1][:-len("</section>")] + online + "</section>"   # 마지막 부록에 이어 붙인다
     entries.append(("app", "online", "온라인 부록", []))
+
+    for name, key in (("98_참고문헌.md", "refs"), ("97_저자후기.md", "after")):
+        bh, btitle = backmatter_html(name, key, issues)
+        body.append('<section class="page%s">%s</section>'
+                    % (" " + tight[key] if key in tight else "", keep_tail(bh)))
+        entries.append(("app", key, btitle, []))
 
     # 찾아보기 — 쪽 번호는 조판이 끝나야 알 수 있다. 자리만 잡아 두고 마지막 패스에서 채운다.
     idx_idx = len(body)
     body.append('<section class="page index"><h1 class="ch" id="index">찾아보기</h1>'
                 + (index_html or "<p>(조판 후 채워집니다)</p>") + "</section>")
     entries.append(("app", "index", "찾아보기", []))
+    rows_v = "".join('<div class="v%s"><div class="t">%s &nbsp;·&nbsp; %s</div>'
+                     '<div class="l">%s</div></div>' % (" me" if me else "", vol, t, l)
+                     for vol, t, l, me in VOLUMES)
+    body.append('<section class="page vols"><div class="h">%s 시리즈</div>%s'
+                '<div class="n">각 권은 따로 읽을 수 있습니다. 이 책이 앞의 두 권에서 무엇을 물려받았는지는 '
+                '온라인 부록 I 에 적어 두었습니다.</div></section>'
+                % (SERIES.split(" · ")[0], rows_v))   # 시리즈 쪽 — 판권지 바로 앞(둘 다 머리글·쪽번호 없음)
     # 판권지 — 책 끝 (부크크 표준 항목). ISBN 은 발급 뒤 상수에 넣는다.
     rows = [("제목", "%s — 얼굴·목소리·두뇌·기억, 네 층을 조립하고 실측하는 법" % TITLE), ("시리즈", SERIES),
             ("초판 1쇄 발행", PUB_DATE), ("지은이", AUTHOR)] + PUBLISHER + ([("ISBN", ISBN)] if ISBN else []) + \
@@ -368,7 +427,7 @@ def build(toc_pages=None, tight=None, index_html=None):
             if o != c:
                 t = re.search(r"<h1[^>]*>(.*?)</h1>", x, re.S)
                 issues.append("태그 불균형 <%s> %d/%d — %s" % (tag, o, c, re.sub(r"<[^>]+>", "", t.group(1))[:30] if t else "?"))
-    return wrap(body), issues, figs, tbls, entries, wrap(body[:2]), wrap(body[-1:]), wrap(body[2:-1])
+    return wrap(body), issues, figs, tbls, entries, wrap(body[:2]), wrap(body[-2:]), wrap(body[2:-2])
 
 
 # ── 찾아보기 — 전문 서적의 마지막 한 장 ─────────────────────────────────
@@ -643,11 +702,15 @@ def main():
         elif (kind + key) in pages2:
             label = ("Ch%s  %s" % (disp_label(key), plain)) if kind == "ch" else plain
             w.add_outline_item(label, pages2[kind + key] - 1 + front_n, parent=parent)
+    if len(w.pages) % 2:                      # 제작 규격은 짝수 쪽 — 마지막 낱장의 뒷면을 백지로 채운다
+        box = w.pages[-1].mediabox
+        w.add_blank_page(width=float(box.width), height=float(box.height))
+        print("  짝수 맞춤 — 마지막에 백지 1쪽 (총 %d쪽)" % len(w.pages))
     w.add_metadata({"/Title": TITLE, "/Author": AUTHOR, "/Subject": SERIES, "/Creator": "build_book.py (Chromium)"})
     w.write(pdf)
     for f in (fh, bh, fp, bp, kh, kp):
         os.remove(f)
-    print("  차례 쪽 번호 %d개 · 본문 %d쪽 + 앞 2쪽 + 판권 1쪽 = %d쪽 · 2패스 후 어긋난 항목 %d" % (len(pages2), n2, n2 + 3, drift))
+    print("  차례 쪽 번호 %d개 · 본문 %d쪽 + 앞 2쪽(표제·헌정) + 뒤 2쪽(시리즈·판권) = %d쪽 · 2패스 후 어긋난 항목 %d" % (len(pages2), n2, n2 + 4, drift))
     print("  → %s\n" % pdf)
     close_browser()
     return 0

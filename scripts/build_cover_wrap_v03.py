@@ -28,7 +28,7 @@ SERIF = "C:/Windows/Fonts/NotoSerifKR-VF.ttf"
 MONO = "C:/Windows/Fonts/CascadiaMono.ttf"
 DPI = 300
 MM = DPI / 25.4
-TRIM_W, TRIM_H = 152, 225       # 본문 판형 mm (build_book.py @page)
+TRIM_W, TRIM_H = 182, 257       # 부크크 B5 — 종이책 규격은 46판·A5·B5·A4 넷뿐이다(신국판 없음)
 BLEED = 3
 
 BLACK = (11, 12, 16)

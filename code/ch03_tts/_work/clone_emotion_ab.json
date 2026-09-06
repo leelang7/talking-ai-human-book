@@ -1,0 +1,138 @@
+[
+ {
+  "file": "OpenVoice_1_neutral.wav",
+  "folder": "_감정_XTTS_vs_OpenVoice",
+  "sec": 34.53,
+  "tail_s": 0.174,
+  "f0_med": 240.2,
+  "f0_iqr": 137.9
+ },
+ {
+  "file": "OpenVoice_2_joy.wav",
+  "folder": "_감정_XTTS_vs_OpenVoice",
+  "sec": 32.93,
+  "tail_s": 0.174,
+  "f0_med": 240.6,
+  "f0_iqr": 118.8
+ },
+ {
+  "file": "OpenVoice_3_anger.wav",
+  "folder": "_감정_XTTS_vs_OpenVoice",
+  "sec": 36.95,
+  "tail_s": 0.151,
+  "f0_med": 230.5,
+  "f0_iqr": 159.7
+ },
+ {
+  "file": "OpenVoice_4_sadness.wav",
+  "folder": "_감정_XTTS_vs_OpenVoice",
+  "sec": 34.35,
+  "tail_s": 0.081,
+  "f0_med": 248.7,
+  "f0_iqr": 156.4
+ },
+ {
+  "file": "XTTS_finetune_2_joy.wav",
+  "folder": "_감정_XTTS_vs_OpenVoice",
+  "sec": 4.27,
+  "tail_s": 0.331,
+  "f0_med": 240.0,
+  "f0_iqr": 80.3
+ },
+ {
+  "file": "XTTS_finetune_3_anger.wav",
+  "folder": "_감정_XTTS_vs_OpenVoice",
+  "sec": 5.61,
+  "tail_s": 0.352,
+  "f0_med": 201.6,
+  "f0_iqr": 123.5
+ },
+ {
+  "file": "XTTS_finetune_4_sadness.wav",
+  "folder": "_감정_XTTS_vs_OpenVoice",
+  "sec": 5.66,
+  "tail_s": 0.608,
+  "f0_med": 219.1,
+  "f0_iqr": 91.7
+ },
+ {
+  "file": "XTTS_zeroshot_1_neutral.wav",
+  "folder": "_감정_XTTS_vs_OpenVoice",
+  "sec": 5.19,
+  "tail_s": 0.715,
+  "f0_med": 211.9,
+  "f0_iqr": 57.9
+ },
+ {
+  "file": "XTTS_zeroshot_2_joy.wav",
+  "folder": "_감정_XTTS_vs_OpenVoice",
+  "sec": 5.53,
+  "tail_s": 0.373,
+  "f0_med": 240.6,
+  "f0_iqr": 83.4
+ },
+ {
+  "file": "XTTS_zeroshot_3_anger.wav",
+  "folder": "_감정_XTTS_vs_OpenVoice",
+  "sec": 7.01,
+  "tail_s": 0.619,
+  "f0_med": 197.2,
+  "f0_iqr": 77.9
+ },
+ {
+  "file": "XTTS_zeroshot_4_sadness.wav",
+  "folder": "_감정_XTTS_vs_OpenVoice",
+  "sec": 6.18,
+  "tail_s": 0.576,
+  "f0_med": 209.4,
+  "f0_iqr": 75.8
+ },
+ {
+  "file": "OpenVoice_KSS_2_joy.wav",
+  "folder": "_감정_XTTS_vs_OpenVoice_감정대사",
+  "sec": 14.48,
+  "tail_s": 0.163,
+  "f0_med": 232.7,
+  "f0_iqr": 126.2
+ },
+ {
+  "file": "OpenVoice_KSS_3_anger.wav",
+  "folder": "_감정_XTTS_vs_OpenVoice_감정대사",
+  "sec": 13.22,
+  "tail_s": 0.557,
+  "f0_med": 227.3,
+  "f0_iqr": 141.2
+ },
+ {
+  "file": "OpenVoice_KSS_4_sadness.wav",
+  "folder": "_감정_XTTS_vs_OpenVoice_감정대사",
+  "sec": 14.15,
+  "tail_s": 1.068,
+  "f0_med": 221.5,
+  "f0_iqr": 141.6
+ },
+ {
+  "file": "XTTS_FT_2_joy.wav",
+  "folder": "_감정_XTTS_vs_OpenVoice_감정대사",
+  "sec": 14.49,
+  "tail_s": 0.651,
+  "f0_med": 208.1,
+  "f0_iqr": 89.9
+ },
+ {
+  "file": "XTTS_FT_3_anger.wav",
+  "folder": "_감정_XTTS_vs_OpenVoice_감정대사",
+  "sec": 13.23,
+  "tail_s": 0.555,
+  "f0_med": 197.9,
+  "f0_iqr": 104.8
+ },
+ {
+  "file": "XTTS_FT_4_sadness.wav",
+  "folder": "_감정_XTTS_vs_OpenVoice_감정대사",
+  "sec": 14.15,
+  "tail_s": 1.035,
+  "f0_med": 208.9,
+  "f0_iqr": 121.2
+ }
+]

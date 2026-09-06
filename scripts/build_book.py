@@ -35,9 +35,9 @@ PUBLISHER = [("펴낸이", "한건희"), ("펴낸곳", "주식회사 부크크")
 APP_ORDER = "ABCDEFGHLN"          # 인쇄 부록 순서 (폴더에 있는 것만)
 
 BOOK_CSS = CSS + """
-@page{ size:152mm 225mm; margin:17mm 15mm 16mm 15mm; }
-@page :left{ margin-left:13mm; margin-right:17mm; }   /* 제본 쪽(안쪽) 17 · 바깥 13 — 합계 30 유지 → 쪽수 불변 */
-@page :right{ margin-left:17mm; margin-right:13mm; }
+@page{ size:182mm 257mm; margin:18mm 16mm 17mm 16mm; }
+@page :left{ margin-left:13mm; margin-right:19mm; }   /* 제본 쪽(안쪽) 19 · 바깥 13 — 합계 32 유지 → 쪽수 불변 */
+@page :right{ margin-left:19mm; margin-right:13mm; }
 body{ background:#fff; font-family:"Noto Serif KR","Batang","Malgun Gothic",serif; }
 code, pre{ font-family:"D2Coding","Consolas","Malgun Gothic",monospace; }
 .page{ box-shadow:none; margin:0; width:auto; min-height:auto; padding:0; page-break-after:always; }
@@ -447,58 +447,51 @@ def build_index_html(body_pdf, front_pages, first_body_page):
     return "\n".join(out), sum(len(i) for _, i in rows)
 
 
-# 조판은 카피피팅 때문에 같은 문서를 대여섯 번 다시 찍는다. 브라우저를 매번 띄우면
-# 기동 시간만 쌓이므로 한 번 띄워 재사용한다. 끝에 close_browser() 로 닫는다.
-_BROWSER = {"pw": None, "b": None}
-
-
-def _page():
-    if _BROWSER["b"] is None:
-        from playwright.sync_api import sync_playwright
-        _BROWSER["pw"] = sync_playwright().start()
-        _BROWSER["b"] = _BROWSER["pw"].chromium.launch()
-    return _BROWSER["b"].new_page()
-
-
-def close_browser():
-    if _BROWSER["b"] is not None:
-        _BROWSER["b"].close()
-        _BROWSER["pw"].stop()
-        _BROWSER["b"] = _BROWSER["pw"] = None
-
-
+# 조판은 카피피팅 때문에 같은 문서를 열 번 넘게 다시 찍는다.
+# 렌더 한 번마다 자식 프로세스를 띄운다 — 기동 3초가 붙지만 중간에 끊겨도 그 한 번만 잃는다.
 _PASS = {"n": 0}
 
+
+PAGE_MM = (182, 257)                 # 부크크 B5 — 종이책 규격은 46판·A5·B5·A4 넷뿐(신국판 없음)
+MARGIN_MM = (18, 17, 16, 16)         # 위·아래·좌·우 (좌우는 @page :left/:right 가 19/13 으로 다시 나눈다)
 
 
 def mirror_swap(html):
     """앞붙임이 홀수 쪽일 때 — 본문 1쪽이 물리적 왼쪽 면이 되므로 거울 여백을 뒤집는다.
 
-    이걸 빼먹으면 제본 여백(안쪽 17mm)이 전 쪽에서 바깥으로 가 버린다. 눈으로는 잘 안 보이고
-    제본하고 나서야 안다."""
-    return (html.replace("@page :left{ margin-left:13mm; margin-right:17mm; }",
-                         "@page :left{ margin-left:17mm; margin-right:13mm; }")
-                .replace("@page :right{ margin-left:17mm; margin-right:13mm; }",
-                         "@page :right{ margin-left:13mm; margin-right:17mm; }"))
+    이걸 빼먹으면 제본 여백(안쪽 19mm)이 전 쪽에서 바깥으로 가 버린다.
+    눈으로는 잘 안 보이고 제본하고 나서야 안다."""
+    return (html.replace("@page :left{ margin-left:13mm; margin-right:19mm; }",
+                         "@page :left{ margin-left:19mm; margin-right:13mm; }")
+                .replace("@page :right{ margin-left:19mm; margin-right:13mm; }",
+                         "@page :right{ margin-left:13mm; margin-right:19mm; }"))
+
+
+def close_browser():
+    return None                       # 렌더가 프로세스마다 끝나므로 닫을 것이 없다
+
 
 def render_pdf(html_path, pdf_path, header=True):
+    """렌더 한 번 = 프로세스 한 번.
+
+    한 프로세스에서 크로미움을 열여섯 번 돌리면 중간에 드라이버가 끊긴다(2026-09-06 세 번).
+    sync API 는 재시작이 안 돼 복구도 못 한다 — 그래서 자식 프로세스로 분리하고 한 번 재시도한다."""
+    import subprocess
     import time as _t
     _PASS["n"] += 1
     t0 = _t.time()
-    pg = _page()
-    try:
-        pg.goto("file:///" + html_path.replace("\\", "/"))
-        pg.wait_for_timeout(500)
-        pg.pdf(path=pdf_path, width="152mm", height="225mm", print_background=True,
-               margin={"top": "17mm", "bottom": "16mm", "left": "15mm", "right": "15mm"},
-               display_header_footer=header,
-               header_template='<div style="font-size:7pt;color:#888;width:100%;text-align:center;'
-                               'font-family:serif">' + TITLE + '</div>',
-               footer_template='<div style="font-size:8pt;color:#444;width:100%;text-align:center;'
-                               'font-family:serif"><span class="pageNumber"></span></div>')
-    finally:
-        pg.close()
-        print("    렌더 %d회차 %.0fs" % (_PASS["n"], _t.time() - t0), flush=True)
+    args = [sys.executable, os.path.join(ROOT, "scripts", "_render_one.py"), html_path, pdf_path,
+            "1" if header else "0", str(PAGE_MM[0]), str(PAGE_MM[1]),
+            str(MARGIN_MM[0]), str(MARGIN_MM[1]), str(MARGIN_MM[2]), str(MARGIN_MM[3]), TITLE]
+    env = dict(os.environ, PYTHONUTF8="1")
+    for attempt in (1, 2):
+        r = subprocess.run(args, capture_output=True, text=True, encoding="utf-8", errors="replace", env=env)
+        if r.returncode == 0 and os.path.exists(pdf_path):
+            break
+        if attempt == 2:
+            raise RuntimeError("렌더 실패: %s" % (r.stderr or "")[-400:])
+        print("    렌더 끊김 — 다시 시도합니다", flush=True)
+    print("    렌더 %d회차 %.0fs" % (_PASS["n"], _t.time() - t0), flush=True)
 
 
 def chapter_pages(pdf_path, entries):
@@ -723,12 +716,12 @@ def main():
         print("  짝수 맞춤 — 마지막에 백지 1쪽 (총 %d쪽)" % len(w.pages))
     w.add_metadata({"/Title": TITLE, "/Author": AUTHOR, "/Subject": SERIES, "/Creator": "build_book.py (Chromium)"})
     w.write(pdf)
-    # 재단 크기를 정확히 152×225mm 로 — 크로미움은 0.24pt 단위로 반올림해 152.06×225.04 로 찍고,
+    # 재단 크기를 정확히 182×257mm(부크크 B5) 로 — 크로미움은 0.24pt 단위로 반올림해 152.06×225.04 로 찍고,
     # 인쇄소 검수기가 규격 불일치로 잡는다. 상자만 가운데 기준으로 다듬는다(내용·책갈피는 그대로).
     # pypdf 로 다시 쓰면 책갈피가 날아간다 — PyMuPDF 로 제자리에서 고친다.
     import fitz as _fz
     _d = _fz.open(pdf)
-    _TW, _TH = 152 / 25.4 * 72, 225 / 25.4 * 72
+    _TW, _TH = 182 / 25.4 * 72, 257 / 25.4 * 72
     for _pg in _d:
         _r = _pg.rect
         _dx, _dy = (_r.width - _TW) / 2, (_r.height - _TH) / 2

@@ -25,11 +25,6 @@ from build_html import CSS, DRAFT, BUILD, chapters, md_to_html, _inline, _esc, d
 TITLE = "AI 휴먼 해부학"
 SUB = "얼굴·목소리·두뇌·기억 — 네 층을 조립하고 실측하는 법<br>사진 한 장에서 실시간 대화 아바타까지,<br>픽셀이 사람이 되는 여정"
 SERIES = "All That AI · Vol.03"
-DEDICATION = [   # 표제지 뒷면 — 저자가 한 줄로 바꿔도 되게 리스트로 둔다
-    "이 책에서 <em>조건을 재는 사진</em> 은 전부 민트의 것입니다.",
-    "회색 러시안블루, 나의 고양이.",
-    "지금은 고양이별에 있습니다.",
-]
 AUTHOR = "이석창 (Seokchang Lee)"
 REPO = "github.com/leelang7/talking-ai-human-book"          # 공개 컴패니언 저장소 (2026-09-05)
 ISBN = ""                          # 부크크 등록 시 발급 → 여기 넣고 다시 조판 (비면 줄을 찍지 않는다)
@@ -54,9 +49,6 @@ code, pre{ font-family:"D2Coding","Consolas","Malgun Gothic",monospace; }
 .cover .author{ margin-top:40mm; font-size:12pt; }
 .colophon{ font-size:9pt; color:#333; padding-top:64mm; }
 .blank{ min-height:10mm; }
-.dedic{ padding-top:86mm; text-align:center; color:#333; }
-.dedic p{ margin:0 0 1.9em; font-size:10.5pt; line-height:1.9; text-align:center; text-align-last:center; }
-.dedic p:first-child{ color:var(--muted); font-size:10pt; }
 .colophon table{ font-size:9pt; width:auto; } .colophon td{ border:0; padding:2pt 6pt; }
 .colophon td:first-child{ width:26mm; white-space:nowrap; color:var(--muted); }
 .part{ padding-top:48mm; }
@@ -300,8 +292,6 @@ def build(toc_pages=None, tight=None, index_html=None):
 
     body.append('<section class="page cover"><div class="series">%s</div><h1>%s</h1>'
                 '<div class="sub">%s</div><div class="author">%s 지음</div></section>' % (SERIES, TITLE, SUB, AUTHOR))
-    body.append('<section class="page dedic">%s</section>'
-                % "".join("<p>%s</p>" % x for x in DEDICATION))   # 표제지 뒷면 — 헌정
     for fi, name in enumerate(("00_서문.md", "00_이책의_사용법.md", "00_등장인물.md")):
         body.append(front_html(name, tight.get("front%d" % fi, "")))
 
@@ -406,7 +396,7 @@ def build(toc_pages=None, tight=None, index_html=None):
             if o != c:
                 t = re.search(r"<h1[^>]*>(.*?)</h1>", x, re.S)
                 issues.append("태그 불균형 <%s> %d/%d — %s" % (tag, o, c, re.sub(r"<[^>]+>", "", t.group(1))[:30] if t else "?"))
-    return wrap(body), issues, figs, tbls, entries, wrap(body[:2]), wrap(body[-1:]), wrap(body[2:-1])
+    return wrap(body), issues, figs, tbls, entries, wrap(body[:1]), wrap(body[-1:]), wrap(body[1:-1])
 
 
 # ── 찾아보기 — 전문 서적의 마지막 한 장 ─────────────────────────────────
@@ -479,6 +469,17 @@ def close_browser():
 
 _PASS = {"n": 0}
 
+
+
+def mirror_swap(html):
+    """앞붙임이 홀수 쪽일 때 — 본문 1쪽이 물리적 왼쪽 면이 되므로 거울 여백을 뒤집는다.
+
+    이걸 빼먹으면 제본 여백(안쪽 17mm)이 전 쪽에서 바깥으로 가 버린다. 눈으로는 잘 안 보이고
+    제본하고 나서야 안다."""
+    return (html.replace("@page :left{ margin-left:13mm; margin-right:17mm; }",
+                         "@page :left{ margin-left:17mm; margin-right:13mm; }")
+                .replace("@page :right{ margin-left:17mm; margin-right:13mm; }",
+                         "@page :right{ margin-left:13mm; margin-right:17mm; }"))
 
 def render_pdf(html_path, pdf_path, header=True):
     import time as _t
@@ -580,7 +581,7 @@ def main():
     render_pdf(fh, fp, header=False)                       # 표제지: 머리글·쪽번호 없음
     open(kh, "w", encoding="utf-8").write(html_back)
     render_pdf(kh, kp, header=False)                       # 판권지: 머리글·쪽번호 없음 (책 맨 끝)
-    open(bh, "w", encoding="utf-8").write(html_body)
+    open(bh, "w", encoding="utf-8").write(mirror_swap(html_body))   # 앞붙임 1쪽 → 본문 1쪽이 왼쪽 면
     render_pdf(bh, bp)
     pages, n = chapter_pages(bp, entries)                  # 쪽 번호는 본문 기준(서문이 1쪽)
     # 차례 쪽 번호 맞추기(2패스)는 카피피팅이 끝난 뒤에 한다 — 그 전에 맞춰 봐야
@@ -616,7 +617,7 @@ def main():
         for k in spill:
             tight[k] = LADDER[(LADDER.index(tight[k]) if k in tight else -1) + 1]
         *_, html_body2 = build(toc_pages=pages2, tight=tight)
-        open(bh, "w", encoding="utf-8").write(html_body2)
+        open(bh, "w", encoding="utf-8").write(mirror_swap(html_body2))
         render_pdf(bh, bp)
         pages2, n2 = chapter_pages(bp, entries)
         print("  카피피팅 %d패스: %s" % (_pass + 1, ", ".join("%s→%s" % (k, tight[k]) for k in spill)))
@@ -629,7 +630,7 @@ def main():
         for k in revert:
             del tight[k]
         *_, html_body2 = build(toc_pages=pages2, tight=tight)
-        open(bh, "w", encoding="utf-8").write(html_body2)
+        open(bh, "w", encoding="utf-8").write(mirror_swap(html_body2))
         render_pdf(bh, bp)
         pages2, n2 = chapter_pages(bp, entries)
         print("  카피피팅 되돌림(조여도 안 빠짐): %s" % ", ".join(revert))
@@ -644,25 +645,60 @@ def main():
         for k in orph:
             ORPH[k] = "ob" if ORPH.get(k) == "oa" else "oa"
         *_, html_body2 = build(toc_pages=pages2, tight=tight)
-        open(bh, "w", encoding="utf-8").write(html_body2)
+        open(bh, "w", encoding="utf-8").write(mirror_swap(html_body2))
         render_pdf(bh, bp)
         pages2, n2 = chapter_pages(bp, entries)
         print("  외톨이 글자 %d패스: %d문단 조정" % (_op + 1, len(orph)))
     print("  외톨이 글자 남음: %d · 헐렁한 쪽: %s" % (len(orphan_paras(bp)), sorted(loose_pages(bp)) or "없음"))
     # ── 찾아보기 — 쪽 번호가 굳은 뒤에 채우고, 한 번 더 찍어 차례까지 맞춘다 ──
     first_body = min(pages2.values()) if pages2 else 1
-    idx_html, n_terms = build_index_html(bp, 2, first_body)
+    idx_html, n_terms = build_index_html(bp, 1, first_body)
     *_, html_body2 = build(toc_pages=pages2, tight=tight, index_html=idx_html)
-    open(bh, "w", encoding="utf-8").write(html_body2)
+    open(bh, "w", encoding="utf-8").write(mirror_swap(html_body2))
     render_pdf(bh, bp)
     pages2, n2 = chapter_pages(bp, entries)
     *_, html_body2 = build(toc_pages=pages2, tight=tight, index_html=idx_html)   # 차례 쪽 번호를 최종 위치로
-    open(bh, "w", encoding="utf-8").write(html_body2)
+    open(bh, "w", encoding="utf-8").write(mirror_swap(html_body2))
     render_pdf(bh, bp)
+    # ── 홀짝 맞춤 — 앞 1쪽 + 본문 + 판권 1쪽. 본문이 홀수면 마지막에 백지가 붙는다.
+    #    백지를 붙이느니 한 구역의 간격을 한 단계 바꿔 쪽수를 맞춘다. 다만 그 대가로
+    #    성긴 꼬리 쪽이 새로 생기면 안 된다 — 그래서 조합을 하나씩 시험하고 합격 조건을 본다.
+    PARITY_ORDER = ["ch28", "ch26", "ch24", "ch25", "ch22", "ch12", "ch19", "appF", "appC", "ch07"]
+
+    def _render_once():
+        *_x, hb = build(toc_pages=pages2, tight=tight, index_html=idx_html)
+        open(bh, "w", encoding="utf-8").write(mirror_swap(hb))
+        render_pdf(bh, bp)
+        return chapter_pages(bp, entries)
+
+    if n2 % 2:
+        base_tight = dict(tight)
+        base_sparse = len(sparse_pages(bp))
+        ok = False
+        for k in PARITY_ORDER[:4]:
+            for lvl in ("tight1", "loose1"):
+                tight = dict(base_tight)
+                tight[k] = lvl
+                pages2, n2 = _render_once()
+                bad = len(loose_pages(bp)), len(sparse_pages(bp))
+                print("  홀짝 맞춤 시험 — %s→%s · 본문 %d쪽 · 헐렁 %d · 성김 %d" % (k, lvl, n2, bad[0], bad[1]))
+                if n2 % 2 == 0 and bad[0] == 0 and bad[1] <= base_sparse:
+                    ok = True
+                    break
+            if ok:
+                break
+        if not ok:                                   # 못 맞추면 원래 조판으로 되돌리고 백지로 간다
+            tight = dict(base_tight)
+            pages2, n2 = _render_once()
+            print("  홀짝 맞춤 실패 — 원래 조판 유지(마지막에 백지가 붙는다)")
+        pages2, n2 = _render_once()                  # 차례 쪽 번호를 최종 위치로 한 번 더
     pages_before = dict(pages2)
     pages2, n2 = chapter_pages(bp, entries)
     drift = sum(1 for k in pages_before if pages2.get(k) != pages_before[k])   # 마지막 두 패스 사이의 어긋남
     print("  찾아보기 표제어 %d개" % n_terms)
+    if (1 + n2 + 1) % 2 == 0:            # 총 쪽이 짝수 → 판권지는 왼쪽 면
+        open(kh, "w", encoding="utf-8").write(mirror_swap(html_back))
+        render_pdf(kh, kp, header=False)
     from pypdf import PdfReader, PdfWriter
     w = PdfWriter()
     for src in (fp, bp, kp):
@@ -689,7 +725,7 @@ def main():
     w.write(pdf)
     for f in (fh, bh, fp, bp, kh, kp):
         os.remove(f)
-    print("  차례 쪽 번호 %d개 · 본문 %d쪽 + 앞 2쪽(표제·헌정) + 판권 1쪽 = %d쪽 · 2패스 후 어긋난 항목 %d" % (len(pages2), n2, n2 + 3, drift))
+    print("  차례 쪽 번호 %d개 · 본문 %d쪽 + 표제 1쪽 + 판권 1쪽 = %d쪽 · 2패스 후 어긋난 항목 %d" % (len(pages2), n2, n2 + 2, drift))
     print("  → %s\n" % pdf)
     close_browser()
     return 0

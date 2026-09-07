@@ -28,9 +28,9 @@ SERIES = "All That AI · Vol.03"
 AUTHOR = "이석창 (Seokchang Lee)"
 REPO = "github.com/leelang7/talking-ai-human-book"          # 공개 컴패니언 저장소 (2026-09-05)
 ISBN = ""                          # 부크크 등록 시 발급 → 여기 넣고 다시 조판 (비면 줄을 찍지 않는다)
-PUB_DATE = "2026년 9월"            # 초판 1쇄 발행
-PUBLISHER = [("펴낸이", "한건희"), ("펴낸곳", "주식회사 부크크"), ("출판사등록", "2014.07.15 (제2014-16호)"),
-             ("주소", "서울특별시 금천구 가산디지털1로 119 SK트윈타워 A동 305-7호"), ("전화", "1670-8316"),
+PUB_DATE = "2026년 9월 8일"        # 부크크: 판·쇄 표기 금지, 발행일만. 과거 날짜 불가 · 제출일~2주 뒤까지
+PUBLISHER = [("펴낸이", "한건희"), ("펴낸곳", "주식회사 부크크"), ("출판사등록", "2014.07.15.(제2014-16호)"),
+             ("주소", "서울특별시 금천구 가산디지털1로 119 SK트윈타워 A동 305호"), ("전화", "1670-8316"),
              ("이메일", "info@bookk.co.kr"), ("홈페이지", "www.bookk.co.kr")]   # 부크크 판권 표준 문구 — 등록 화면의 안내와 대조할 것
 APP_ORDER = "ABCDEFGHLN"          # 인쇄 부록 순서 (폴더에 있는 것만)
 
@@ -363,9 +363,11 @@ def build(toc_pages=None, tight=None, index_html=None):
                 + (index_html or "<p>(조판 후 채워집니다)</p>") + "</section>")
     entries.append(("app", "index", "찾아보기", []))
     # 판권지 — 책 끝 (부크크 표준 항목). ISBN 은 발급 뒤 상수에 넣는다.
+    # 부크크 양식 — 판·쇄를 쓰지 않고 '발행일' 만 둔다(주문제작이라 1판 1쇄가 성립하지 않는다).
+    # 양식에 없는 항목(저장소·측정 환경)은 넣지 않는다 — 2026-09-07 반려 사유.
     rows = [("제목", "%s — 얼굴·목소리·두뇌·기억, 네 층을 조립하고 실측하는 법" % TITLE), ("시리즈", SERIES),
-            ("초판 1쇄 발행", PUB_DATE), ("지은이", AUTHOR)] + PUBLISHER + ([("ISBN", ISBN)] if ISBN else []) + \
-           [("컴패니언 저장소", REPO), ("측정 환경", "RTX 4070 SUPER 12GB · Windows 11 · 본문 수치는 부록 C의 측정 조건 기준")]
+            ("발행일", PUB_DATE), ("지은이", AUTHOR)] + PUBLISHER + \
+           ([("ISBN", ISBN)] if ISBN else [])
     body.append('<section class="page colophon"><table>' + "".join("<tr><td>%s</td><td>%s</td></tr>" % r for r in rows) +
                 '</table><p>ⓒ 이석창 2026. 본 책은 저작자의 지적 재산이므로 무단 전재와 복제를 금합니다. '
                 '본문의 코드는 저장소의 라이선스를, 인용된 외부 모델·라이브러리는 각자의 라이선스를 따릅니다.</p></section>')

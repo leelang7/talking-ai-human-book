@@ -26,12 +26,14 @@ TITLE = "AI 휴먼 해부학"
 SUB = "얼굴·목소리·두뇌·기억 — 네 층을 조립하고 실측하는 법<br>사진 한 장에서 실시간 대화 아바타까지,<br>픽셀이 사람이 되는 여정"
 SERIES = "All That AI · Vol.03"
 AUTHOR = "이석창 (Seokchang Lee)"
+AUTHOR_NAME = "이석창"      # 판권지의 저자명 — 양식에는 이름만
 REPO = "github.com/leelang7/talking-ai-human-book"          # 공개 컴패니언 저장소 (2026-09-05)
-ISBN = ""                          # 부크크 등록 시 발급 → 여기 넣고 다시 조판 (비면 줄을 찍지 않는다)
-PUB_DATE = "2026년 9월 8일"        # 부크크: 판·쇄 표기 금지, 발행일만. 과거 날짜 불가 · 제출일~2주 뒤까지
-PUBLISHER = [("펴낸이", "한건희"), ("펴낸곳", "주식회사 부크크"), ("출판사등록", "2014.07.15.(제2014-16호)"),
-             ("주소", "서울특별시 금천구 가산디지털1로 119 SK트윈타워 A동 305호"), ("전화", "1670-8316"),
-             ("이메일", "info@bookk.co.kr"), ("홈페이지", "www.bookk.co.kr")]   # 부크크 판권 표준 문구 — 등록 화면의 안내와 대조할 것
+PUB_YMD = (2026, 9, 8)             # 발행일 — 부크크: 판·쇄 표기 금지, 과거 날짜 불가 · 제출일~2주 뒤까지
+PUBLISHER = [("펴낸이", "한건희"), ("펴낸곳", "주식회사 부크크"),
+             ("출판사등록", "2014.07.15.(제2014-16호)"),
+             ("주 소", "서울특별시 금천구 가산디지털1로 119 SK트윈타워 A동 305호"),
+             ("전 화", "1670-8316"), ("이메일", "info@bookk.co.kr")]
+# 홈페이지는 라벨 줄로 넣지 않는다 — 양식에서는 아래쪽에 www.bookk.co.kr 한 줄뿐이다
 APP_ORDER = "ABCDEFGHLN"          # 인쇄 부록 순서 (폴더에 있는 것만)
 
 BOOK_CSS = CSS + """
@@ -47,10 +49,15 @@ code, pre{ font-family:"D2Coding","Consolas","Malgun Gothic",monospace; }
 .cover h1{ font-size:26pt; margin:14pt 0 8pt; line-height:1.3; }
 .cover .sub{ font-size:11pt; color:#333; margin:0 8mm; line-height:1.6; }
 .cover .author{ margin-top:40mm; font-size:12pt; }
-.colophon{ font-size:9pt; color:#333; padding-top:64mm; }
+.colophon{ font-size:9.5pt; color:#222; padding-top:52mm; line-height:1.85; }
+.colophon .bt{ font-size:12pt; font-weight:700; margin-bottom:9mm; }
+.colophon .im .k{ display:inline-block; min-width:20mm; font-weight:700; }
+.colophon .isbn{ margin-top:8mm; font-weight:700; }
+.colophon .foot{ margin-top:10mm; }
+.colophon .site{ font-weight:700; }
+.colophon .cr{ font-weight:700; margin-top:1mm; }
+.colophon .note{ margin-top:1mm; }
 .blank{ min-height:10mm; }
-.colophon table{ font-size:9pt; width:auto; } .colophon td{ border:0; padding:2pt 6pt; }
-.colophon td:first-child{ width:26mm; white-space:nowrap; color:var(--muted); }
 .part{ padding-top:48mm; }
 .part .label{ font-size:11pt; color:var(--muted); letter-spacing:.15em; }
 .part h1{ font-size:22pt; margin:8pt 0 12pt; }
@@ -362,15 +369,19 @@ def build(toc_pages=None, tight=None, index_html=None):
     body.append('<section class="page index"><h1 class="ch" id="index">찾아보기</h1>'
                 + (index_html or "<p>(조판 후 채워집니다)</p>") + "</section>")
     entries.append(("app", "index", "찾아보기", []))
-    # 판권지 — 책 끝 (부크크 표준 항목). ISBN 은 발급 뒤 상수에 넣는다.
-    # 부크크 양식 — 판·쇄를 쓰지 않고 '발행일' 만 둔다(주문제작이라 1판 1쇄가 성립하지 않는다).
-    # 양식에 없는 항목(저장소·측정 환경)은 넣지 않는다 — 2026-09-07 반려 사유.
-    rows = [("제목", "%s — 얼굴·목소리·두뇌·기억, 네 층을 조립하고 실측하는 법" % TITLE), ("시리즈", SERIES),
-            ("발행일", PUB_DATE), ("지은이", AUTHOR)] + PUBLISHER + \
-           ([("ISBN", ISBN)] if ISBN else [])
-    body.append('<section class="page colophon"><table>' + "".join("<tr><td>%s</td><td>%s</td></tr>" % r for r in rows) +
-                '</table><p>ⓒ 이석창 2026. 본 책은 저작자의 지적 재산이므로 무단 전재와 복제를 금합니다. '
-                '본문의 코드는 저장소의 라이선스를, 인용된 외부 모델·라이브러리는 각자의 라이선스를 따릅니다.</p></section>')
+    # 판권지 — 부크크 공식 양식 그대로. 바꾸는 것은 도서명·저자명·발행일자뿐이다(2026-09-07 반려 반영).
+    # 판·쇄를 쓰지 않고, 시리즈·판형·정가 같은 줄도 넣지 않는다.
+    imprint = [("발 행", "%d 년 %02d 월 %02d 일" % PUB_YMD), ("저 자", AUTHOR_NAME)] + PUBLISHER
+    body.append('<section class="page colophon">'
+                '<div class="bt">%s</div>'
+                '<div class="im">%s</div>'
+                '<div class="foot"><div class="site">www.bookk.co.kr</div>'
+                '<div class="cr">\u24d2 %s %d</div>'
+                '<div class="note">본 책은 저작자의 지적 재산으로서 무단 전재와 복제를 금합니다.</div></div>'
+                '</section>'
+                % (TITLE,
+                   "".join('<div><span class="k">%s</span> | %s</div>' % r for r in imprint),
+                   AUTHOR_NAME, PUB_YMD[0]))
 
     pages = toc_pages or {}
     lines = ['<section class="page toc%s"><h1>차례</h1>' % ((" " + tight["toc"]) if "toc" in tight else "")]

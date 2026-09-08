@@ -169,6 +169,11 @@ def online_titles():
     return out
 
 
+# 머리글·쪽번호를 본문에서 잘라 내는 띠 — 부크크 여백 규정으로 둘을 안쪽으로 옮긴 뒤의 실측값이다.
+# 머리글 36.1~43.9pt · 본문 49.9~677.4pt · 쪽번호 685.5~694.4pt (B5 728.5pt, 2026-09-08).
+# 이 값이 틀어지면 '헐렁한 쪽' 검출이 통째로 눈이 먼다 — 렌더러(_render_one.EDGE_PAD_MM)와 한 쌍이다.
+HEAD_PT, FOOT_PT = 47, 48
+
 def sparse_pages(pdf_path):
     """채움 40% 미만인 쪽(파트 표지 제외) — 헐렁(loose)보다 넓은 그물. 장 꼬리가 여기 걸리면 조이기만 시도한다."""
     import fitz
@@ -178,7 +183,7 @@ def sparse_pages(pdf_path):
     for i, pg in enumerate(d, 1):
         if pg.get_text().strip().startswith(("Pa r t", "Part")):
             continue
-        bl = [b for b in pg.get_text("dict")["blocks"] if b.get("lines") and b["bbox"][3] > 36 and b["bbox"][1] < H - 36]
+        bl = [b for b in pg.get_text("dict")["blocks"] if b.get("lines") and b["bbox"][3] > HEAD_PT and b["bbox"][1] < H - FOOT_PT]
         if not bl or max(b["bbox"][3] for b in bl) / H < 0.40:
             out.add(i)
     return out
@@ -197,7 +202,7 @@ def loose_pages(pdf_path):
     out = set()
     for i, pg in enumerate(d, 1):
         # 머리글(y<36)·꼬리글(y>H-36)만 뺀다 — 본문 첫 줄이 y=48 에서 시작하므로 60 으로 자르면 한 줄짜리 쪽을 놓친다(p295 '관련 —' 한 줄)
-        bl = [b for b in pg.get_text("dict")["blocks"] if b.get("lines") and b["bbox"][3] > 36 and b["bbox"][1] < H - 36]
+        bl = [b for b in pg.get_text("dict")["blocks"] if b.get("lines") and b["bbox"][3] > HEAD_PT and b["bbox"][1] < H - FOOT_PT]
         if not bl:
             out.add(i)                                    # 본문이 아예 없는 쪽
             continue

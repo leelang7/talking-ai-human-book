@@ -10,6 +10,19 @@ sync API 는 한 프로세스에서 다시 start() 할 수도 없어서 복구�
 import sys
 
 
+# 부크크 원고 규정 — 글자는 재단선에서 10mm 이상 안쪽(2026-09-08 반려 사유).
+# 크로미움은 머리글·쪽번호를 @page 여백과 무관하게 종이 가장자리 6mm 안쪽에 찍는다.
+# 그래서 템플릿에 7mm 를 직접 준다 — 실측 머리글 12.85mm · 쪽번호 12.14mm.
+EDGE_PAD_MM = 7
+
+_HF = ('<div style="font-size:{sz}pt;color:{col};width:100%;text-align:center;'
+       'font-family:serif;padding-{side}:{pad}mm;box-sizing:border-box">{body}</div>')
+
+
+def _hf(sz, col, side, body):
+    return _HF.format(sz=sz, col=col, side=side, pad=EDGE_PAD_MM, body=body)
+
+
 def main(argv):
     html, pdf, header = argv[1], argv[2], argv[3] == "1"
     w, h, mt, mb, ml, mr = argv[4:10]
@@ -24,10 +37,8 @@ def main(argv):
             pg.pdf(path=pdf, width=w + "mm", height=h + "mm", print_background=True,
                    margin={"top": mt + "mm", "bottom": mb + "mm", "left": ml + "mm", "right": mr + "mm"},
                    display_header_footer=header,
-                   header_template='<div style="font-size:7pt;color:#888;width:100%;text-align:center;'
-                                   'font-family:serif">' + title + '</div>',
-                   footer_template='<div style="font-size:8pt;color:#444;width:100%;text-align:center;'
-                                   'font-family:serif"><span class="pageNumber"></span></div>')
+                   header_template=_hf(7, "#888", "top", title),
+                   footer_template=_hf(8, "#444", "bottom", '<span class="pageNumber"></span>'))
         finally:
             # 크로미움을 닫는 도중에 드라이버 연결이 끊기는 일이 잦다(2026-09-06).
             # PDF 는 이미 다 써진 뒤라 여기서 죽으면 안 된다 — 닫기 실패는 삼킨다.

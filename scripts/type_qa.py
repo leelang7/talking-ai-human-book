@@ -32,6 +32,11 @@ MIN_CHARS = 150          # 그러면서 글자도 이만큼 적으면 (≈ 3줄)
 MONO = ("Consolas", "D2Coding", "Courier", "Mono")
 
 
+# 머리글·쪽번호를 본문에서 잘라 내는 띠 — 부크크 여백 규정으로 둘을 안쪽으로 옮긴 뒤의 실측값이다.
+# 머리글 36.1~43.9pt · 본문 49.9~677.4pt · 쪽번호 685.5~694.4pt (B5 728.5pt, 2026-09-08).
+# 이 값이 틀어지면 '헐렁한 쪽' 검출이 통째로 눈이 먼다 — 렌더러(_render_one.EDGE_PAD_MM)와 한 쌍이다.
+HEAD_PT, FOOT_PT = 47, 48
+
 def skip_bands(page):
     """검사에서 뺄 세로 구간 — 코드 상자(고정폭 글꼴)와 서식 빈칸.
 
@@ -116,7 +121,7 @@ def scan(path):
             continue
         # 머리글(제목)·꼬리글(쪽 번호)은 본문이 아니다 — 이걸 세면 꼬리글이 늘 쪽 맨 아래에 있어
         # '채움' 이 항상 가득으로 나오고, 서명 한 줄만 남은 쪽도 통과한다(2026-09-05 실제로 놓쳤다).
-        body_blocks = [b for b in blocks if b["bbox"][3] > 36 and b["bbox"][1] < H - 36]   # 본문 첫 줄 y=48
+        body_blocks = [b for b in blocks if b["bbox"][3] > HEAD_PT and b["bbox"][1] < H - FOOT_PT]   # 본문 첫 줄 y=48
         if not body_blocks:
             if i > 2:
                 out["헐렁"].append((i, 0, 0.0))
@@ -192,6 +197,35 @@ def clipped_code_lines(doc):
     return out
 
 
+def edge_margins(doc, limit=10.0):
+    """⑧ 재단 여백 — 글자·도판·선이 재단선에서 limit mm 안에 들어와 있는가.
+
+    부크크는 상하좌우 10mm 미만이면 반려한다(2026-09-08). 크로미움 머리글·쪽번호는
+    @page 여백을 따르지 않으므로 조판 설정만 보고 판단하면 안 된다 — 찍힌 잉크를 잰다.
+    """
+    mm = 72 / 25.4
+    bad = []
+    for i, p in enumerate(doc):
+        W, H = p.rect.width, p.rect.height
+        boxes = [tuple(b[:4]) for b in p.get_text("blocks") if b[4].strip()]
+        for im in p.get_images(full=True):
+            try:
+                boxes += [(r.x0, r.y0, r.x1, r.y1) for r in p.get_image_rects(im[0])]
+            except Exception:
+                pass
+        for dr in p.get_drawings():
+            r = dr["rect"]
+            if r.width > 1 and r.height > 1:
+                boxes.append((r.x0, r.y0, r.x1, r.y1))
+        if not boxes:
+            continue
+        m = (min(b[0] for b in boxes) / mm, min(b[1] for b in boxes) / mm,
+             (W - max(b[2] for b in boxes)) / mm, (H - max(b[3] for b in boxes)) / mm)
+        if min(m) < limit:
+            bad.append((i + 1, m))
+    return bad
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--pdf", default=PDF)
@@ -214,7 +248,15 @@ def main():
     import fitz as _fz
     clip = clipped_code_lines(_fz.open(a.pdf))
     print(f"  ⑦ 코드 줄 잘림  {len(clip):>4}줄  {[c[1][:26] for c in clip[:2]]}")
+    edge = edge_margins(_fz.open(a.pdf))
+    print(f"  ⑧ 재단 여백    {len(edge):>4}쪽  "
+          + str([(p, "%.1f/%.1f/%.1f/%.1f" % m) for p, m in edge[:3]]))
     print()
+    if edge:
+        print("  ✗ 재단선 10mm 안으로 잉크가 들어갔다 — 부크크 반려 사유다")
+        for p, m in edge[:6]:
+            print("      p%-4d 좌%.2f 상%.2f 우%.2f 하%.2f" % ((p,) + m))
+        return 1
     if clip:
         print("  ✗ 코드 줄이 잘렸다 — 인쇄에서 overflow 는 소실이다")
         for f, t in clip[:6]:

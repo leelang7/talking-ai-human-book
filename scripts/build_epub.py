@@ -47,6 +47,8 @@ COLOPHON = """
 
 이메일 | info@bookk.co.kr
 
+ISBN | 979-11-12-28705-2
+
 www.bookk.co.kr
 
 ⓒ 이석창 2026
@@ -129,6 +131,68 @@ def build_markdown():
     return md
 
 
+
+COVER_PAGE = """<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko">
+<head><title>앞표지</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">body{margin:0;padding:0;text-align:center}img{max-width:100%;height:auto}</style></head>
+<body><div><img src="{IMG}" alt="" /></div></body>
+</html>
+"""
+
+
+def insert_cover_page(path):
+    """부크크 요청(2026-09-16) — 원고 1페이지를 앞표지로.
+
+    pandoc 이 만든 표지(cover.xhtml)는 읽기 도구가 표지로만 다루기도 해서,
+    본문 첫 쪽으로도 같은 그림을 한 장 더 놓는다. 그림은 이미 안에 있는 것을 가리키므로
+    파일 크기는 거의 안 늘어난다.
+    """
+    import re
+    import shutil
+    import zipfile
+
+    src = zipfile.ZipFile(path)
+    names = src.namelist()
+    opf_name = [n for n in names if n.endswith(".opf")][0]
+    opf = src.read(opf_name).decode("utf-8")
+    cover_id = re.search(r'<meta[^>]*name="cover"[^>]*content="([^"]+)"', opf)
+    if not cover_id:
+        src.close()
+        print("  ⚠ 표지 메타데이터가 없다 — 앞표지 쪽을 넣지 못했다")
+        return
+    href = re.search(r'<item id="%s"[^>]*href="([^"]+)"' % re.escape(cover_id.group(1)), opf).group(1)
+    base = opf_name.rsplit("/", 1)[0] + "/" if "/" in opf_name else ""
+    page_href = "text/coverpage.xhtml"
+    rel = "../" + href if href.startswith("media/") else href
+
+    opf2 = opf.replace("</manifest>",
+                       '  <item id="coverpage" href="%s" media-type="application/xhtml+xml" />\n  </manifest>'
+                       % page_href, 1)
+    # 읽기 순서 — 표지 다음, 나머지 앞
+    m = re.search(r'<spine[^>]*>\s*', opf2)
+    after = re.search(r'(<itemref[^>]*idref="[^"]*cover[^"]*"[^>]*/>)', opf2)
+    ref = '<itemref idref="coverpage" />'
+    if after:
+        opf2 = opf2.replace(after.group(1), after.group(1) + "\n    " + ref, 1)
+    else:
+        opf2 = opf2[:m.end()] + ref + "\n    " + opf2[m.end():]
+
+    tmp = path + ".tmp"
+    out = zipfile.ZipFile(tmp, "w", zipfile.ZIP_DEFLATED)
+    out.writestr(src.getinfo("mimetype"), src.read("mimetype"), zipfile.ZIP_STORED)
+    for n in names:
+        if n == "mimetype":
+            continue
+        out.writestr(n, opf2.encode("utf-8") if n == opf_name else src.read(n))
+    out.writestr(base + page_href, COVER_PAGE.replace("{IMG}", rel).encode("utf-8"))
+    out.close()
+    src.close()
+    shutil.move(tmp, path)
+    print("  원고 1쪽 = 앞표지 (%s)" % rel)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default=os.path.join(ROOT, "ebook", "AI휴먼해부학_Vol03.epub"))
@@ -153,7 +217,8 @@ def main():
             "rights: 'Copyright 2026 %s. All rights reserved.'" % AUTHOR, "---", ""]
     open(meta_path, "w", encoding="utf-8", newline=chr(10)).write(chr(10).join(meta))
 
-    cover = os.path.join(ROOT, "ebook", "cover", "cover_final_2k.png")
+    # 부크크가 로고를 찍어 보내 준 앞표지 — 우리 원본(cover_final_2k.png)이 아니라 이것을 쓴다.
+    cover = os.path.join(ROOT, "ebook", "cover", "bookk_front.jpeg")
     import pypandoc
     args = ["--toc", "--toc-depth=2", "--split-level=1",
             "--css=" + css_path, "--metadata-file=" + meta_path,
@@ -163,6 +228,7 @@ def main():
     # 부크크는 외부유통에 **EPUB 2.0** 만 받는다(EPUB3 불가) — Vol.02 에서 겪은 것.
     pypandoc.convert_file(md_path, "epub2", format="markdown+pipe_tables+backtick_code_blocks",
                           outputfile=a.out, extra_args=args)
+    insert_cover_page(a.out)                   # 부크크 요청 — 원고 1페이지를 앞표지로
     size = os.path.getsize(a.out) / 1024 / 1024
     print("  → %s  (EPUB2 · %.1fMB)" % (a.out, size))
     if size >= 20:

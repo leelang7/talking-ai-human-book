@@ -94,6 +94,20 @@ cp book.config.example.json book.config.json     # 열어서 여러분의 경로
 
 ---
 
+## 책 구하기
+
+**AI 휴먼 해부학** · 이석창 지음 · 부크크 펴냄 · 2026-09-11 · 종이책 31,000원
+
+| 서점 | |
+|---|---|
+| 알라딘 | https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=402449110 |
+| 예스24 | https://www.yes24.com/product/goods/196555788 |
+| 부크크 | https://bookk.co.kr/bookStore/6aa11cf94b709dfd0a812330 |
+
+교보문고는 입점 대기 중입니다. 시리즈 전체는 [allthatai.kr](https://allthatai.kr/#book) 에 모여 있습니다.
+
+---
+
 ## 시리즈
 
 | 권 | 제목 | 핵심 |
